@@ -27,7 +27,11 @@ ignore =
     # F841: unused variables are acceptable in diagnostics
     F841,
     # E741: ambiguous variable names acceptable in math contexts
-    E741
+    E741,
+    # C901: complexity warnings
+    C901,
+    # E226: missing whitespace around operator
+    E226
 
 docstring-convention = google
 rst-roles = class,const,func,meth,mod,ref
