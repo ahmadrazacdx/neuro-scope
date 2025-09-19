@@ -5,14 +5,12 @@ Research-validated diagnostic tools for neural network training:
 - Pre-training analysis for architecture and initialization validation  
 - Real-time training monitoring with comprehensive health indicators
 - Post-training evaluation and performance analysis
-
 Convenient function access:
     >>> from neuroscope.diagnostics import (
     ...     PreTrainingAnalyzer, TrainingMonitor, PostTrainingEvaluator,
     ...     monitor_dead_neurons, monitor_vanishing_gradients, monitor_exploding_gradients,
     ...     analyze_initial_loss, analyze_weight_init, analyze_architecture_sanity
     ... )
-
 Based on established deep learning research and best practices.
 """
 

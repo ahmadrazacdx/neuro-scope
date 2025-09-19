@@ -778,7 +778,7 @@ class Visualizer:
             ax.plot(
                 epochs,
                 y_values,
-                label=f"Layer {i+1}",
+                label=f"Layer {i + 1}",
                 color=color,
                 linewidth=self.line_style["width"],
                 marker="o",

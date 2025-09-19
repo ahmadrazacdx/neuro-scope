@@ -17,20 +17,16 @@ Example:
     >>>
     >>> # Create and train model
     >>> model = MLP([784, 128, 10], activation="relu", out_activation="softmax")
-    >>> model.compile(optimizer="adam", lr=1e-3)
-    >>> 
+    >>> model.compile(optimizer="adam", lr=1e-3) 
     >>> # Analyze before training
     >>> analyzer = PreTrainingAnalyzer(model)
     >>> analyzer.analyze(X_train, y_train)
-    >>>
     >>> # Train with monitoring
     >>> monitor = TrainingMonitor()
     >>> history = model.fit(X_train, y_train, monitor=monitor, epochs=100)
-    >>>
     >>> # Use functions directly
     >>> loss = mse(y_true, y_pred)
     >>> acc = accuracy_binary(y_true, y_pred)
-    >>>
     >>> # Visualize results
     >>> viz = Visualizer(history)
     >>> viz.plot_learning_curves()

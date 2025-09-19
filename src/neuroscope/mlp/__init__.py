@@ -9,7 +9,6 @@ Core neural network implementation with modern features:
 
 Convenient function access:
     >>> from neuroscope.mlp import MLP, mse, bce, accuracy_binary, relu, he_init
-    >>> 
     >>> # Use functions directly without class prefixes
     >>> loss = mse(y_true, y_pred)
     >>> acc = accuracy_binary(y_true, y_pred)
