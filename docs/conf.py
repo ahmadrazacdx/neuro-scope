@@ -1,4 +1,5 @@
 """Sphinx configuration."""
+
 project = "neuroscope"
 author = "Ahmad Raza"
 copyright = "2025, Ahmad Raza"

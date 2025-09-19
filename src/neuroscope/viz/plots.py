@@ -244,7 +244,7 @@ class Visualizer:
         ci_upper = []
         ci_lower = []
         for i in range(len(y)):
-            window_data = padded_y[i: i + window]
+            window_data = padded_y[i : i + window]
             mean_val = np.mean(window_data)
             std_val = np.std(window_data)
             ci_upper.append(mean_val + 1.96 * std_val / np.sqrt(len(window_data)))
@@ -1062,7 +1062,11 @@ class Visualizer:
                 fontweight="bold",
                 fontsize=16,
             )
-            if (hasattr(self, "gradient_stats_over_epochs") and self.gradient_stats_over_epochs and current_epoch > 0):
+            if (
+                hasattr(self, "gradient_stats_over_epochs")
+                and self.gradient_stats_over_epochs
+                and current_epoch > 0
+            ):
                 layer_colors = [
                     colors["primary"],
                     colors["secondary"],

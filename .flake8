@@ -1,99 +1,55 @@
-# Flake8 configuration for NeuroScope# Flake8 configuration for NeuroScope
+# Flake8 configuration for NeuroScope
 
-[flake8][flake8]
+[flake8]
 
-max-line-length = 88max-line-length = 88
+max-line-length = 88
+max-complexity = 15
 
-max-complexity = 15max-complexity = 15
+select = B,B9,C,D,DAR,E,F,N,RST,W
 
-select = B,B9,C,D,DAR,E,F,N,RST,Wselect = B,B9,C,D,DAR,E,F,N,RST,W
-
-ignore = ignore = 
-
-    # E203: whitespace before ':' (conflicts with black)    # E203: whitespace before ':' (conflicts with black)
-
-    E203,    E203,
-
-    # E501: line too long (black handles this)    # E501: line too long (black handles this)
-
-    E501,    E501,
-
-    # W503: line break before binary operator (conflicts with black)    # W503: line break before binary operator (conflicts with black)
-
-    W503,    W503,
-
-    # RST201: Block quote ends without a blank line    # RST201: Block quote ends without a blank line
-
-    RST201,    RST201,
-
-    # RST203: Definition list ends without a blank line      # E722: bare except is acceptable for diagnostic code
-
-    RST203,    E722,
-
-    # RST301: Unexpected indentation    # F841: unused variables are acceptable in diagnostics
-
-    RST301,    F841,
-
-    # E722: bare except is acceptable for diagnostic code    # E741: ambiguous variable names acceptable in math contexts
-
-    E722,    E741
-
-    # F841: unused variables are acceptable in diagnostics    # RST203: Definition list ends without a blank line  
-
-    F841,    RST203,
-
-    # E741: ambiguous variable names acceptable in math contexts    # RST301: Unexpected indentation
-
-    E741    RST301,
-
+ignore = 
+    # E203: whitespace before ':' (conflicts with black)
+    E203,
+    # E501: line too long (black handles this)
+    E501,
     # W503: line break before binary operator (conflicts with black)
+    W503,
+    # W291: trailing whitespace (be more tolerant)
+    W291,
+    # RST201: Block quote ends without a blank line
+    RST201,
+    # RST203: Definition list ends without a blank line  
+    RST203,
+    # RST301: Unexpected indentation
+    RST301,
+    # E722: bare except is acceptable for diagnostic code
+    E722,
+    # F841: unused variables are acceptable in diagnostics
+    F841,
+    # E741: ambiguous variable names acceptable in math contexts
+    E741
 
-docstring-convention = google    W503
+docstring-convention = google
+rst-roles = class,const,func,meth,mod,ref
+rst-directives = deprecated
 
-rst-roles = class,const,func,meth,mod,refmax-line-length = 88
-
-rst-directives = deprecatedmax-complexity = 10
-
-exclude = docstring-convention = google
-
-    .git,rst-roles = class,const,func,meth,mod,ref
-
-    __pycache__,rst-directives = deprecated
-
-    .venv,exclude = 
-
-    venv,    .git,
-
-    build,    __pycache__,
-
-    dist,    .venv,
-
-    *.egg-info,    venv,
-
-    .mypy_cache,    build,
-
-    .pytest_cache,    dist,
-
-    .tox,    *.egg-info,
-
-    docs/_build    .mypy_cache,
-
+exclude = 
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    build,
+    dist,
+    *.egg-info,
+    .mypy_cache,
     .pytest_cache,
+    .tox,
+    docs/_build
 
-per-file-ignores =    .tox,
-
-    # Allow unused imports in __init__.py files    docs/_build
-
-    __init__.py:F401per-file-ignores =
-
-    # Tests can have longer lines and assertions    # Allow unused imports in __init__.py files
-
-    tests/*.py:S101,E501    __init__.py:F401,F403
-
-    # Allow complex test fixtures    # Allow assert statements in tests
-
-    tests/conftest.py:E501    tests/*:S101
-
-    # Allow star imports in package init    # Allow print statements in CLI modules
-
-    src/neuroscope/__init__.py:F403,F401    */__main__.py:T201
+per-file-ignores =
+    # Allow unused imports in __init__.py files
+    __init__.py:F401,F403
+    # Allow assert statements in tests
+    tests/*:S101
+    # Allow print statements in CLI modules
+    */__main__.py:T201

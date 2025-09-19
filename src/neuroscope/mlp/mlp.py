@@ -633,7 +633,7 @@ class MLP:
                             all_grads, self.gradient_clip
                         )
                         dW = clipped_grads[: len(dW)]
-                        db = clipped_grads[len(dW):]
+                        db = clipped_grads[len(dW) :]
 
                     # Add L2 regularization
                     if self.reg:
@@ -694,7 +694,11 @@ class MLP:
                         ].append(update_ratio)
 
                     # Compute actual weight updates for monitoring
-                    if (capture_monitor and monitor_activations is not None and prev_weights is not None):
+                    if (
+                        capture_monitor
+                        and monitor_activations is not None
+                        and prev_weights is not None
+                    ):
                         monitor_weight_updates = [
                             prev - curr
                             for prev, curr in zip(prev_weights, self.weights)

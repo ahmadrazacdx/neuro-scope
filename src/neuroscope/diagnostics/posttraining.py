@@ -71,7 +71,8 @@ class PostTrainingEvaluator:
                 accuracy_drop = baseline_accuracy - noisy_accuracy
                 if baseline_predictions.shape[1] > 1:
                     consistency = np.mean(
-                        np.argmax(baseline_predictions, axis=1) == np.argmax(noisy_predictions, axis=1)
+                        np.argmax(baseline_predictions, axis=1)
+                        == np.argmax(noisy_predictions, axis=1)
                     )
                 else:
                     consistency = max(
@@ -230,7 +231,7 @@ class PostTrainingEvaluator:
             stability_scores = []
 
             for idx in test_indices:
-                x_ref = X[idx: idx + 1]
+                x_ref = X[idx : idx + 1]
                 pred_ref = self.model.predict(x_ref)
 
                 distances = np.linalg.norm(X - x_ref, axis=1)
@@ -239,7 +240,7 @@ class PostTrainingEvaluator:
 
                 if distances[neighbor_idx] == np.inf:
                     continue
-                pred_neighbor = self.model.predict(X[neighbor_idx: neighbor_idx + 1])
+                pred_neighbor = self.model.predict(X[neighbor_idx : neighbor_idx + 1])
 
                 if pred_ref.shape[1] > 1:
                     stability = (
@@ -357,7 +358,8 @@ class PostTrainingEvaluator:
         print(f"OVERALL STATUS: {overall_status}")
         print(f"EVALUATIONS PASSED: {pass_count}/{len(evaluations)}")
         if (
-            "Performance" in all_results and all_results["Performance"].get("status") != "ERROR"
+            "Performance" in all_results
+            and all_results["Performance"].get("status") != "ERROR"
         ):
             self._display_metrics_evaluation(all_results["Performance"])
         print("=" * 80)

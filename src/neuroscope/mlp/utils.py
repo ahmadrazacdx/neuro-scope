@@ -45,7 +45,7 @@ class Utils:
         if shuffle:
             np.random.shuffle(idx)
         for start in range(0, N, batch_size):
-            batch_idx = idx[start: start + batch_size]
+            batch_idx = idx[start : start + batch_size]
             yield X[batch_idx], y[batch_idx].reshape(-1, 1)
 
     @staticmethod

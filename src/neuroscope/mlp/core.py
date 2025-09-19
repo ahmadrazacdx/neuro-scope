@@ -209,8 +209,12 @@ class _BackwardPass:
                 if layer == 0:
                     A_prev = X
                 else:
-                    A_prev = activations[layer - 1]  # [A1, A2, ..., AL] , each(N, fan_in)
-                dW[layer] = A_prev.T @ dZ  # (fan_in, N) @ (N, fan_out) -> (fan_in, fan_out)
+                    A_prev = activations[
+                        layer - 1
+                    ]  # [A1, A2, ..., AL] , each(N, fan_in)
+                dW[layer] = (
+                    A_prev.T @ dZ
+                )  # (fan_in, N) @ (N, fan_out) -> (fan_in, fan_out)
                 db[layer] = np.sum(dZ, axis=0, keepdims=True)
             except Exception as e:
                 raise RuntimeError(f"Error computing gradients for layer {layer}: {e}")
