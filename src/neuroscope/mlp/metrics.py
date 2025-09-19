@@ -2,7 +2,9 @@
 Metrics Module
 Comprehensive evaluation metrics for regression and classification tasks.
 """
+
 import numpy as np
+
 
 class Metrics:
     """
@@ -12,7 +14,7 @@ class Metrics:
     classification tasks. All metrics handle edge cases and provide
     meaningful results for model evaluation.
     """
-    
+
     @staticmethod
     def accuracy_multiclass(y_true, y_pred):
         """
@@ -131,13 +133,13 @@ class Metrics:
     def _get_classification_data(y_true, y_pred, threshold=0.5):
         """
         Convert predictions to class arrays and compute confusion matrix elements.
-        
+
         Returns:
             tuple: (y_true_classes, y_pred_classes, num_classes, tp, fp, fn)
         """
         y_true = np.asarray(y_true)
         y_pred = np.asarray(y_pred)
-        
+
         if y_pred.ndim == 1 or (y_pred.ndim == 2 and y_pred.shape[1] == 1):
             # Binary classification
             y_pred_classes = (y_pred.flatten() >= threshold).astype(int)
@@ -151,26 +153,28 @@ class Metrics:
             else:
                 y_true_classes = np.argmax(y_true, axis=1)
             num_classes = max(np.max(y_true_classes), np.max(y_pred_classes)) + 1
-        
+
         # Compute confusion matrix elements for all classes at once
         tp = np.zeros(num_classes)
         fp = np.zeros(num_classes)
         fn = np.zeros(num_classes)
-        
+
         for i in range(num_classes):
             tp[i] = np.sum((y_true_classes == i) & (y_pred_classes == i))
             fp[i] = np.sum((y_true_classes != i) & (y_pred_classes == i))
             fn[i] = np.sum((y_true_classes == i) & (y_pred_classes != i))
-        
+
         return y_true_classes, y_pred_classes, num_classes, tp, fp, fn
-    
+
     @staticmethod
     def _apply_averaging(scores, y_true_classes, num_classes, average):
         """Apply averaging strategy to per-class scores."""
-        if average == 'macro':
+        if average == "macro":
             return float(np.mean(scores))
-        elif average == 'weighted':
-            support = np.array([np.sum(y_true_classes == i) for i in range(num_classes)])
+        elif average == "weighted":
+            support = np.array(
+                [np.sum(y_true_classes == i) for i in range(num_classes)]
+            )
             total_support = np.sum(support)
             if total_support == 0:
                 return 0.0
@@ -180,64 +184,76 @@ class Metrics:
             return scores
 
     @staticmethod
-    def precision(y_true, y_pred, average='weighted', threshold=0.5):
+    def precision(y_true, y_pred, average="weighted", threshold=0.5):
         """
         Compute precision score: TP / (TP + FP)
-        
+
         Args:
             y_true: True labels
             y_pred: Predicted probabilities or labels
             average: 'macro', 'weighted', or None for per-class scores
             threshold: Decision threshold for binary classification
         """
-        y_true_classes, y_pred_classes, num_classes, tp, fp, fn = Metrics._get_classification_data(
-            y_true, y_pred, threshold)
-        
+        y_true_classes, y_pred_classes, num_classes, tp, fp, fn = (
+            Metrics._get_classification_data(y_true, y_pred, threshold)
+        )
+
         precision_scores = np.zeros(num_classes)
         for i in range(num_classes):
-            precision_scores[i] = tp[i] / (tp[i] + fp[i]) if (tp[i] + fp[i]) > 0 else 0.0
-        
-        return Metrics._apply_averaging(precision_scores, y_true_classes, num_classes, average)
+            precision_scores[i] = (
+                tp[i] / (tp[i] + fp[i]) if (tp[i] + fp[i]) > 0 else 0.0
+            )
+
+        return Metrics._apply_averaging(
+            precision_scores, y_true_classes, num_classes, average
+        )
 
     @staticmethod
-    def recall(y_true, y_pred, average='weighted', threshold=0.5):
+    def recall(y_true, y_pred, average="weighted", threshold=0.5):
         """
         Compute recall score: TP / (TP + FN)
-        
+
         Args:
             y_true: True labels
             y_pred: Predicted probabilities or labels
             average: 'macro', 'weighted', or None for per-class scores
             threshold: Decision threshold for binary classification
         """
-        y_true_classes, y_pred_classes, num_classes, tp, fp, fn = Metrics._get_classification_data(
-            y_true, y_pred, threshold)
-        
+        y_true_classes, y_pred_classes, num_classes, tp, fp, fn = (
+            Metrics._get_classification_data(y_true, y_pred, threshold)
+        )
+
         recall_scores = np.zeros(num_classes)
         for i in range(num_classes):
             recall_scores[i] = tp[i] / (tp[i] + fn[i]) if (tp[i] + fn[i]) > 0 else 0.0
-        
-        return Metrics._apply_averaging(recall_scores, y_true_classes, num_classes, average)
+
+        return Metrics._apply_averaging(
+            recall_scores, y_true_classes, num_classes, average
+        )
 
     @staticmethod
-    def f1_score(y_true, y_pred, average='weighted', threshold=0.5):
+    def f1_score(y_true, y_pred, average="weighted", threshold=0.5):
         """
         Compute F1 score: 2 * (Precision * Recall) / (Precision + Recall)
-        
+
         Args:
             y_true: True labels
             y_pred: Predicted probabilities or labels
             average: 'macro', 'weighted', or None for per-class scores
             threshold: Decision threshold for binary classification
         """
-        y_true_classes, y_pred_classes, num_classes, tp, fp, fn = Metrics._get_classification_data(
-            y_true, y_pred, threshold)
-        
+        y_true_classes, y_pred_classes, num_classes, tp, fp, fn = (
+            Metrics._get_classification_data(y_true, y_pred, threshold)
+        )
+
         f1_scores = np.zeros(num_classes)
         for i in range(num_classes):
             precision_i = tp[i] / (tp[i] + fp[i]) if (tp[i] + fp[i]) > 0 else 0.0
             recall_i = tp[i] / (tp[i] + fn[i]) if (tp[i] + fn[i]) > 0 else 0.0
-            f1_scores[i] = (2 * precision_i * recall_i / (precision_i + recall_i) 
-                           if (precision_i + recall_i) > 0 else 0.0)
-        
+            f1_scores[i] = (
+                2 * precision_i * recall_i / (precision_i + recall_i)
+                if (precision_i + recall_i) > 0
+                else 0.0
+            )
+
         return Metrics._apply_averaging(f1_scores, y_true_classes, num_classes, average)

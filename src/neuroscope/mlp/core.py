@@ -2,23 +2,35 @@
 Core Neural Network Operations
 Internal forward and backward propagation implementations.
 """
-import numpy as np
+
 import warnings
+
+import numpy as np
+
 from .activations import ActivationFunctions
 from .utils import Utils
+
 
 class _ForwardPass:
     """
     Internal class for forward propagation operations.
-    
+
     Implements efficient forward pass through multi-layer perceptrons with
     support for various activation functions, dropout, and numerical stability.
     This class is part of the internal API and should not be used directly.
     """
-    
+
     @staticmethod
-    def forward_mlp(X, weights: list, biases: list, hidden_activation=None, out_activation=None, 
-                    dropout_rate=0.0, dropout_type='normal', training=True):
+    def forward_mlp(
+        X,
+        weights: list,
+        biases: list,
+        hidden_activation=None,
+        out_activation=None,
+        dropout_rate=0.0,
+        dropout_type="normal",
+        training=True,
+    ):
         """
         Perform forward propagation through the entire network.
 
@@ -37,77 +49,95 @@ class _ForwardPass:
             training (bool, optional): Whether in training mode. Defaults to True.
 
         Returns:
-            tuple: (activations, z_values) where activations contains the output 
+            tuple: (activations, z_values) where activations contains the output
                    of each layer and z_values contains pre-activation values.
         """
         # X = input(X_train/X_test) --> (N, input_dim)
         # weights = [(inputxhidden), (hiddenxhidden), (hiddenxhidden),...,(hidden, out)] for N layers
         # biases = [(1, hidden), (1, hidden),...,(1, out)] for N layers
-        z_values = []  # [(N, hidden_dim), (N, hidden_dim),...,(N, hidden_dim)] for all Layers
-        activations = [] # [(N, hidden_dim), (N, hidden_dim),...,(N, hidden_dim)] for all Layers
+        z_values = (
+            []
+        )  # [(N, hidden_dim), (N, hidden_dim),...,(N, hidden_dim)] for all Layers
+        activations = (
+            []
+        )  # [(N, hidden_dim), (N, hidden_dim),...,(N, hidden_dim)] for all Layers
         # First layer: input to first hidden
         A = X
         L = len(weights)
-        
+
         for i in range(L):
             # Linear transformation: Z = X @ W + b
-            Z = A @ weights[i] + biases[i] # (N, fan_out)
+            Z = A @ weights[i] + biases[i]  # (N, fan_out)
             z_values.append(Z)
-            
+
             # Apply activation function
             if i == L - 1:  # Output layer
                 if out_activation is None:
                     A = Z
                 elif out_activation == "sigmoid":
                     A = ActivationFunctions.sigmoid(Z)
-                elif out_activation == 'softmax':
+                elif out_activation == "softmax":
                     A = ActivationFunctions.softmax(Z)
                 else:
-                    raise ValueError(f"Unknown output activation function: {out_activation}")
+                    raise ValueError(
+                        f"Unknown output activation function: {out_activation}"
+                    )
 
             else:  # Hidden layers
                 if hidden_activation is None:
                     A = Z
-                elif hidden_activation == 'leaky_relu':
+                elif hidden_activation == "leaky_relu":
                     A = ActivationFunctions.leaky_relu(Z)
-                elif hidden_activation == 'relu':
+                elif hidden_activation == "relu":
                     A = ActivationFunctions.relu(Z)
-                elif hidden_activation == 'sigmoid':
+                elif hidden_activation == "sigmoid":
                     A = ActivationFunctions.sigmoid(Z)
-                elif hidden_activation == 'tanh':
+                elif hidden_activation == "tanh":
                     A = ActivationFunctions.tanh(Z)
-                elif hidden_activation == 'selu':
+                elif hidden_activation == "selu":
                     A = ActivationFunctions.selu(Z)
                 else:
-                    raise ValueError(f"Unknown activation function: {hidden_activation}")
-                
+                    raise ValueError(
+                        f"Unknown activation function: {hidden_activation}"
+                    )
+
                 # Apply dropout to hidden layers (not output layer)
                 if dropout_rate > 0 and training:
-                    if dropout_type == 'normal':
-                        A = ActivationFunctions.inverted_dropout(A, dropout_rate, training)
-                    elif dropout_type == 'alpha':
+                    if dropout_type == "normal":
+                        A = ActivationFunctions.inverted_dropout(
+                            A, dropout_rate, training
+                        )
+                    elif dropout_type == "alpha":
                         A = ActivationFunctions.alpha_dropout(A, dropout_rate, training)
                     else:
                         raise ValueError(f"Unknown dropout type: {dropout_type}")
-            
+
             activations.append(A)
-        
+
         return activations, z_values
 
 
 class _BackwardPass:
     """
     Internal class for backward propagation operations.
-    
+
     Implements efficient backpropagation algorithm for computing gradients
     with respect to weights and biases. Includes numerical stability checks
-    and handles various activation functions. This class is part of the 
+    and handles various activation functions. This class is part of the
     internal API and should not be used directly.
     """
-    
+
     @staticmethod
-    def backward_mlp(y_true, activations, z_values, weights, biases, 
-                        X, hidden_activation=None, out_activation=None):
+    def backward_mlp(
+        y_true,
+        activations,
+        z_values,
+        weights,
+        biases,
+        X,
+        hidden_activation=None,
+        out_activation=None,
+    ):
         """
         Perform backward propagation to compute gradients.
 
@@ -132,7 +162,7 @@ class _BackwardPass:
             ValueError: If activation function is not supported.
             RuntimeError: If gradient computation fails due to numerical issues.
         """
-        
+
         # Input validation
         X = Utils.validate_array_input(X, "X", min_dims=2, max_dims=2)
         y_true = Utils.validate_array_input(y_true, "y_true", min_dims=1, max_dims=2)
@@ -143,7 +173,7 @@ class _BackwardPass:
 
         y_true = np.asarray(y_true)
         if y_true.ndim == 1:
-            y_true =  y_true.reshape(-1,1)
+            y_true = y_true.reshape(-1, 1)
         if y_true.shape[1] != out_dim:
             if out_dim == 1:
                 # Binary classification
@@ -154,11 +184,13 @@ class _BackwardPass:
                     y_true_onehot = np.eye(out_dim)[y_true.flatten()]
                     y_true = y_true_onehot
                 else:
-                    raise ValueError(f"y_true shape {y_true.shape} incompatible with output dim {out_dim}")
+                    raise ValueError(
+                        f"y_true shape {y_true.shape} incompatible with output dim {out_dim}"
+                    )
 
         dW = [np.zeros_like(W) for W in weights]
-        db  = [np.zeros_like(b) for b in biases]
-        AL = activations[-1] # Y_pred : Activation of last layer (N, out_dim)
+        db = [np.zeros_like(b) for b in biases]
+        AL = activations[-1]  # Y_pred : Activation of last layer (N, out_dim)
 
         # Check numerical stability of outputs
         stability_issues = Utils.check_numerical_stability([AL], "output_activations")
@@ -168,24 +200,24 @@ class _BackwardPass:
         if out_activation is None:
             dZ = (AL - y_true) / N
         elif out_activation in ("sigmoid", "softmax"):
-            dZ = (AL - y_true) / N   # (N, out_dim)
+            dZ = (AL - y_true) / N  # (N, out_dim)
         else:
             raise ValueError("Unsupported final_activation for simplified derivative")
 
-        for l in range(L - 1, -1, -1):
+        for layer in range(L - 1, -1, -1):
             try:
-                if l == 0:
+                if layer == 0:
                     A_prev = X
                 else:
-                    A_prev = activations[l-1] # [A1, A2, ..., AL] , each(N, fan_in)
-                dW[l] = A_prev.T @ dZ     # (fan_in, N) @ (N, fan_out) -> (fan_in, fan_out)
-                db[l] = np.sum(dZ, axis=0, keepdims=True)
+                    A_prev = activations[layer - 1]  # [A1, A2, ..., AL] , each(N, fan_in)
+                dW[layer] = A_prev.T @ dZ  # (fan_in, N) @ (N, fan_out) -> (fan_in, fan_out)
+                db[layer] = np.sum(dZ, axis=0, keepdims=True)
             except Exception as e:
-                raise RuntimeError(f"Error computing gradients for layer {l}: {e}")
+                raise RuntimeError(f"Error computing gradients for layer {layer}: {e}")
 
-            if l > 0:
-                dA_prev = dZ @ weights[l].T   # (N, fan_in_prev)
-                Z_prev = z_values[l - 1]      # Z_{l}
+            if layer > 0:
+                dA_prev = dZ @ weights[layer].T  # (N, fan_in_prev)
+                Z_prev = z_values[layer - 1]  # Z_{l}
                 if hidden_activation is None:
                     dZ = dA_prev
                 elif hidden_activation == "leaky_relu":
@@ -200,10 +232,10 @@ class _BackwardPass:
                     dZ = dA_prev * ActivationFunctions.selu_derivative(Z_prev)
                 else:
                     raise ValueError("Unknown hidden_activation: " + hidden_activation)
-                
+
         # Check gradient numerical stability
         gradient_issues = Utils.check_numerical_stability(dW + db, "gradients")
         if gradient_issues:
             warnings.warn(f"Gradient numerical issues: {gradient_issues[0]}")
-        
+
         return dW, db

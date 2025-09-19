@@ -2,18 +2,21 @@
 Utilities Module
 Helper functions for training, validation, and data processing.
 """
-import numpy as np
+
 import warnings
+
+import numpy as np
+
 
 class Utils:
     """
     Utility functions for neural network training and data processing.
-    
+
     Provides essential helper functions for batch processing, gradient clipping,
     input validation, and numerical stability checks. All methods are static
     and can be used independently throughout the framework.
     """
-    
+
     @staticmethod
     def get_batches(X, y, batch_size=32, shuffle=True):
         """
@@ -42,7 +45,7 @@ class Utils:
         if shuffle:
             np.random.shuffle(idx)
         for start in range(0, N, batch_size):
-            batch_idx = idx[start:start + batch_size]
+            batch_idx = idx[start: start + batch_size]
             yield X[batch_idx], y[batch_idx].reshape(-1, 1)
 
     @staticmethod
@@ -109,7 +112,9 @@ class Utils:
             except Exception as e:
                 raise TypeError(f"{name} must be convertible to numpy array: {e}")
         if arr.ndim < min_dims or arr.ndim > max_dims:
-            raise ValueError(f"{name} must have {min_dims}-{max_dims} dimensions, got {arr.ndim}")
+            raise ValueError(
+                f"{name} must have {min_dims}-{max_dims} dimensions, got {arr.ndim}"
+            )
         if arr.size == 0:
             raise ValueError(f"{name} cannot be empty")
         if np.any(np.isnan(arr)):
@@ -123,14 +128,20 @@ class Utils:
         if not isinstance(layer_dims, (list, tuple)):
             raise TypeError("layer_dims must be a list or tuple")
         if len(layer_dims) < 2:
-            raise ValueError("layer_dims must have at least 2 layers (input and output)")
-        layer_dims = list(layer_dims) 
-        
+            raise ValueError(
+                "layer_dims must have at least 2 layers (input and output)"
+            )
+        layer_dims = list(layer_dims)
+
         for i, dim in enumerate(layer_dims):
             if not isinstance(dim, int) or dim <= 0:
-                raise ValueError(f"Layer {i} dimension must be positive integer, got {dim}")
+                raise ValueError(
+                    f"Layer {i} dimension must be positive integer, got {dim}"
+                )
         if layer_dims[0] != input_dim:
-            raise ValueError(f"First layer dimension {layer_dims[0]} must match input features {input_dim}")
+            raise ValueError(
+                f"First layer dimension {layer_dims[0]} must match input features {input_dim}"
+            )
         return layer_dims
 
     @staticmethod
@@ -142,16 +153,24 @@ class Utils:
             # Check for NaN
             nan_count = np.sum(np.isnan(arr))
             if nan_count > 0:
-                issues.append(f"Array {i} in {context}: {nan_count} NaN values detected")
+                issues.append(
+                    f"Array {i} in {context}: {nan_count} NaN values detected"
+                )
             # Check for Inf
             inf_count = np.sum(np.isinf(arr))
             if inf_count > 0:
-                issues.append(f"Array {i} in {context}: {inf_count} infinite values detected")
+                issues.append(
+                    f"Array {i} in {context}: {inf_count} infinite values detected"
+                )
             # Check for very large values
             max_val = np.max(np.abs(arr))
             if max_val > 1e10:
-                issues.append(f"Array {i} in {context}: very large values detected (max: {max_val:.2e})")
+                issues.append(
+                    f"Array {i} in {context}: very large values detected (max: {max_val:.2e})"
+                )
             # Check for very small gradients
             if context == "gradients" and max_val < 1e-10:
-                issues.append(f"Array {i} in {context}: very small gradients detected (max: {max_val:.2e})")
+                issues.append(
+                    f"Array {i} in {context}: very small gradients detected (max: {max_val:.2e})"
+                )
         return issues

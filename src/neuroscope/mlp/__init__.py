@@ -17,12 +17,13 @@ Convenient function access:
     >>> weights, biases = he_init([784, 128, 10])
 """
 
-# Main classes
-from .mlp import MLP
-from .losses import LossFunctions
-from .metrics import Metrics
 from .activations import ActivationFunctions
 from .initializers import WeightInits
+from .losses import LossFunctions
+from .metrics import Metrics
+
+# Main classes
+from .mlp import MLP
 from .utils import Utils
 
 # Direct function access - Loss Functions
@@ -70,18 +71,48 @@ validate_array_input = Utils.validate_array_input
 
 __all__ = [
     # Main classes
-    "MLP", "LossFunctions", "Metrics", "ActivationFunctions", "WeightInits", "Utils",
+    "MLP",
+    "LossFunctions",
+    "Metrics",
+    "ActivationFunctions",
+    "WeightInits",
+    "Utils",
     # Loss functions
-    "mse", "bce", "cce", "mse_with_reg", "bce_with_reg", "cce_with_reg",
+    "mse",
+    "bce",
+    "cce",
+    "mse_with_reg",
+    "bce_with_reg",
+    "cce_with_reg",
     # Metrics
-    "accuracy_binary", "accuracy_multiclass", "rmse", "mae", "r2_score", 
-    "f1_score", "precision", "recall",
+    "accuracy_binary",
+    "accuracy_multiclass",
+    "rmse",
+    "mae",
+    "r2_score",
+    "f1_score",
+    "precision",
+    "recall",
     # Activations
-    "relu", "leaky_relu", "sigmoid", "tanh", "selu", "softmax",
-    "relu_derivative", "leaky_relu_derivative", "sigmoid_derivative", 
-    "tanh_derivative", "selu_derivative",
+    "relu",
+    "leaky_relu",
+    "sigmoid",
+    "tanh",
+    "selu",
+    "softmax",
+    "relu_derivative",
+    "leaky_relu_derivative",
+    "sigmoid_derivative",
+    "tanh_derivative",
+    "selu_derivative",
     # Initializers
-    "he_init", "xavier_init", "random_init", "selu_init", "smart_init",
+    "he_init",
+    "xavier_init",
+    "random_init",
+    "selu_init",
+    "smart_init",
     # Utilities
-    "get_batches", "gradient_clipping", "validate_array_input"
+    "get_batches",
+    "gradient_clipping",
+    "validate_array_input",
 ]

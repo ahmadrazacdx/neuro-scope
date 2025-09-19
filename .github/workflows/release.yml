@@ -1,79 +1,206 @@
+# GitHub Actions workflow for automated releases
 name: Release
 
 on:
   push:
-    branches:
-      - main
-      - master
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
 
 jobs:
-  release:
-    name: Release
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4.6.1
-        with:
-          python-version: "3.10"
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
 
-      - name: Upgrade pip
-        run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
-          pip --version
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.7.1
 
-      - name: Install Poetry
-        run: |
-          pip install --constraint=.github/workflows/constraints.txt poetry
-          poetry --version
+    - name: Install dependencies
+      run: poetry install --with dev
 
-      - name: Check if there is a parent commit
-        id: check-parent-commit
-        run: |
-          echo "::set-output name=sha::$(git rev-parse --verify --quiet HEAD^)"
+    - name: Run tests
+      run: poetry run pytest --cov=neuroscope
 
-      - name: Detect and tag new version
-        id: check-version
-        if: steps.check-parent-commit.outputs.sha
-        uses: salsify/action-detect-and-tag-new-version@v2.0.1
-        with:
-          version-command: |
-            bash -o pipefail -c "poetry version | awk '{ print \$2 }'"
+    - name: Run quality checks
+      run: |
+        poetry run black --check .
+        poetry run flake8 .
+        poetry run mypy src/neuroscope
 
-      - name: Bump version for developmental release
-        if: "! steps.check-version.outputs.tag"
-        run: |
-          poetry version patch &&
-          version=$(poetry version | awk '{ print $2 }') &&
-          poetry version $version.dev.$(date +%s)
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-      - name: Build package
-        run: |
-          poetry build --ansi
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
 
-      - name: Publish package on PyPI
-        if: steps.check-version.outputs.tag
-        uses: pypa/gh-action-pypi-publish@v1.8.6
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.7.1
 
-      - name: Publish package on TestPyPI
-        if: "! steps.check-version.outputs.tag"
-        uses: pypa/gh-action-pypi-publish@v1.8.6
-        with:
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
+    - name: Extract version
+      id: version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION"
 
-      - name: Publish the release notes
-        uses: release-drafter/release-drafter@v5.23.0
-        with:
-          publish: ${{ steps.check-version.outputs.tag != '' }}
-          tag: ${{ steps.check-version.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Update version in pyproject.toml
+      run: |
+        poetry version ${{ steps.version.outputs.version }}
+
+    - name: Build package
+      run: poetry build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+  github-release:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+    - name: Generate changelog
+      id: changelog
+      run: |
+        if [[ -f CHANGELOG.md ]]; then
+          # Extract changelog for this version
+          CHANGELOG=$(awk '/^## \[?${{ needs.build.outputs.version }}\]?/{flag=1; next} /^## \[?[0-9]/{flag=0} flag' CHANGELOG.md)
+        else
+          CHANGELOG="Release ${{ needs.build.outputs.version }}"
+        fi
+        
+        # Save changelog to file for multiline output
+        echo "$CHANGELOG" > release_notes.txt
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ needs.build.outputs.version }}
+        name: Release v${{ needs.build.outputs.version }}
+        body_path: release_notes.txt
+        files: |
+          dist/*
+        draft: false
+        prerelease: ${{ contains(needs.build.outputs.version, 'alpha') || contains(needs.build.outputs.version, 'beta') || contains(needs.build.outputs.version, 'rc') }}
+
+  pypi-release:
+    needs: [test, build, github-release]
+    runs-on: ubuntu-latest
+    environment: pypi
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+        packages_dir: dist/
+
+  docs-deploy:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.7.1
+
+    - name: Install dependencies
+      run: poetry install --with dev
+
+    - name: Build documentation
+      run: |
+        cd docs
+        poetry run sphinx-build -b html . _build/html
+        
+        # Add version info
+        echo "v${{ needs.build.outputs.version }}" > _build/html/VERSION
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/_build/html
+        publish_branch: gh-pages
+        commit_message: 'Deploy docs for v${{ needs.build.outputs.version }}'
+
+  notify:
+    needs: [test, build, github-release, pypi-release, docs-deploy]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Notify success
+      if: needs.pypi-release.result == 'success'
+      run: |
+        echo "🎉 Successfully released NeuroScope v${{ needs.build.outputs.version }}!"
+        echo "📦 Package: https://pypi.org/project/neuroscope/${{ needs.build.outputs.version }}/"
+        echo "📖 Documentation: https://ahmadrazacdx.github.io/neuroscope/"
+        echo "🏷️ GitHub Release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ needs.build.outputs.version }}"
+
+    - name: Notify failure
+      if: needs.pypi-release.result == 'failure' || needs.github-release.result == 'failure'
+      run: |
+        echo "❌ Release failed!"
+        echo "Check the logs for details."
+        exit 1

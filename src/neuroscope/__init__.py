@@ -36,19 +36,20 @@ Example:
     >>> viz.plot_learning_curves()
 """
 
-# Main classes
-from neuroscope.mlp.mlp import MLP
+from neuroscope.__version__ import __version__
+from neuroscope.diagnostics.posttraining import PostTrainingEvaluator
 from neuroscope.diagnostics.pretraining import PreTrainingAnalyzer
 from neuroscope.diagnostics.training_monitors import TrainingMonitor
-from neuroscope.diagnostics.posttraining import PostTrainingEvaluator
-from neuroscope.viz.plots import Visualizer
+from neuroscope.mlp.activations import ActivationFunctions
+from neuroscope.mlp.initializers import WeightInits
 
 # Direct function access for convenience
 from neuroscope.mlp.losses import LossFunctions
 from neuroscope.mlp.metrics import Metrics
-from neuroscope.mlp.activations import ActivationFunctions
-from neuroscope.mlp.initializers import WeightInits
-from neuroscope.__version__ import __version__
+
+# Main classes
+from neuroscope.mlp.mlp import MLP
+from neuroscope.viz.plots import Visualizer
 
 # Export loss functions directly
 mse = LossFunctions.mse
@@ -84,29 +85,51 @@ selu_init = WeightInits.selu_init
 
 # Aliases for convenient imports
 PTA = PreTrainingAnalyzer  # Pre-Training Analyzer
-TM = TrainingMonitor       # Training Monitor  
-PTE = PostTrainingEvaluator # Post-Training Evaluator
-VIZ = Visualizer          # Visualizer
+TM = TrainingMonitor  # Training Monitor
+PTE = PostTrainingEvaluator  # Post-Training Evaluator
+VIZ = Visualizer  # Visualizer
 
 
 __all__ = [
     # Main classes
     "MLP",
-    "PreTrainingAnalyzer", 
+    "PreTrainingAnalyzer",
     "TrainingMonitor",
     "PostTrainingEvaluator",
     "Visualizer",
     # Convenient aliases
-    "PTA", "TM", "PTE", "VIZ",
+    "PTA",
+    "TM",
+    "PTE",
+    "VIZ",
     # Loss functions
-    "mse", "bce", "cce", "mse_with_reg", "bce_with_reg", "cce_with_reg",
+    "mse",
+    "bce",
+    "cce",
+    "mse_with_reg",
+    "bce_with_reg",
+    "cce_with_reg",
     # Metrics
-    "accuracy_binary", "accuracy_multiclass", "rmse", "mae", "r2_score", 
-    "f1_score", "precision", "recall",
+    "accuracy_binary",
+    "accuracy_multiclass",
+    "rmse",
+    "mae",
+    "r2_score",
+    "f1_score",
+    "precision",
+    "recall",
     # Activations
-    "relu", "leaky_relu", "sigmoid", "tanh", "selu", "softmax",
+    "relu",
+    "leaky_relu",
+    "sigmoid",
+    "tanh",
+    "selu",
+    "softmax",
     # Initializers
-    "he_init", "xavier_init", "random_init", "selu_init",
+    "he_init",
+    "xavier_init",
+    "random_init",
+    "selu_init",
     # Version
-    "__version__"
+    "__version__",
 ]

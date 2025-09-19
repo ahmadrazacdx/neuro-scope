@@ -2,18 +2,20 @@
 Weight Initialization Module
 Professional weight initialization strategies for neural networks.
 """
+
 import numpy as np
+
 
 class WeightInits:
     """
     Research-validated weight initialization strategies for neural networks.
-    
+
     Provides implementations of modern weight initialization methods that
     help maintain proper gradient flow and accelerate training convergence.
     All methods follow established theoretical foundations from deep learning
     research.
     """
-    
+
     @staticmethod
     def he_init(layer_dims: list, seed=42):
         """
@@ -32,15 +34,17 @@ class WeightInits:
                 according to He initialization and biases are zero-initialized.
 
         Note:
-            Based on "Delving Deep into Rectifiers: Surpassing Human-Level 
+            Based on "Delving Deep into Rectifiers: Surpassing Human-Level
             Performance on ImageNet Classification" (He et al. 2015).
 
         Example:
             >>> weights, biases = WeightInits.he_init([784, 128, 10])
         """
         np.random.seed(seed)
-        weights = []   # [(inputxhidden), (hiddenxhidden), (hiddenxhidden),...,(hidden, out)]
-        biases = []    # [(1, hidden), (1, hidden),...,(1, out)]
+        weights = (
+            []
+        )  # [(inputxhidden), (hiddenxhidden), (hiddenxhidden),...,(hidden, out)]
+        biases = []  # [(1, hidden), (1, hidden),...,(1, out)]
         for i in range(len(layer_dims) - 1):
             fan_in = layer_dims[i]
             fan_out = layer_dims[i + 1]
@@ -69,7 +73,7 @@ class WeightInits:
             tuple[list, list]: (weights, biases) with Xavier-initialized weights and zero biases.
 
         Note:
-            Based on "Understanding the difficulty of training deep feedforward 
+            Based on "Understanding the difficulty of training deep feedforward
             neural networks" (Glorot & Bengio 2010).
 
         Example:
@@ -98,7 +102,7 @@ class WeightInits:
             fan_out = layer_dims[i + 1]
             W = np.random.randn(fan_in, fan_out) * scale
             weights.append(W)
-            b = np.random.randn(1, fan_out) * (scale * 0.1) 
+            b = np.random.randn(1, fan_out) * (scale * 0.1)
             biases.append(b)
         return weights, biases
 
@@ -117,7 +121,7 @@ class WeightInits:
         return weights, biases
 
     @staticmethod
-    def smart_init(layer_dims: list, hidden_activation='leaky_relu', seed=42):
+    def smart_init(layer_dims: list, hidden_activation="leaky_relu", seed=42):
         """
         Intelligent initialization selection based on activation function.
 
@@ -135,18 +139,18 @@ class WeightInits:
 
         Initialization Strategy:
             - ReLU/Leaky ReLU: He initialization
-            - Tanh/Sigmoid: Xavier initialization  
+            - Tanh/Sigmoid: Xavier initialization
             - SELU: LeCun initialization
             - Unknown: Xavier initialization (safe default)
 
         Example:
             >>> weights, biases = WeightInits.smart_init([784, 128, 10], 'relu')
         """
-        if hidden_activation.lower() in ['relu', 'leaky_relu']:
+        if hidden_activation.lower() in ["relu", "leaky_relu"]:
             return WeightInits.he_init(layer_dims, seed)
-        elif hidden_activation.lower() in ['tanh', 'sigmoid']:
+        elif hidden_activation.lower() in ["tanh", "sigmoid"]:
             return WeightInits.xavier_init(layer_dims, seed)
-        elif hidden_activation.lower() == 'selu':
+        elif hidden_activation.lower() == "selu":
             return WeightInits.selu_init(layer_dims, seed)
         else:
             return WeightInits.xavier_init(layer_dims, seed)

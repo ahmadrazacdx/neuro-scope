@@ -2,7 +2,9 @@
 Activation Functions Module
 A comprehensive collection of activation functions and their derivatives for neural networks.
 """
+
 import numpy as np
+
 
 class ActivationFunctions:
     """
@@ -12,7 +14,7 @@ class ActivationFunctions:
     including their derivatives for backpropagation. All functions are numerically
     stable and handle edge cases appropriately.
     """
-    
+
     @staticmethod
     def sigmoid(x):
         """
@@ -30,11 +32,11 @@ class ActivationFunctions:
         Example:
             >>> activated = ActivationFunctions.sigmoid(z)
             >>> # Values are now between 0 and 1
-        """ 
+        """
         return 1 / (1 + np.exp(-np.clip(x, -500, 500)))
-    
+
     @staticmethod
-    def sigmoid_derivative(x): 
+    def sigmoid_derivative(x):
         return ActivationFunctions.sigmoid(x) * (1 - ActivationFunctions.sigmoid(x))
 
     @staticmethod
@@ -44,12 +46,12 @@ class ActivationFunctions:
         return exp_z / np.sum(exp_z, axis=1, keepdims=True)
 
     @staticmethod
-    def tanh(x): 
+    def tanh(x):
         return np.tanh(x)
-    
+
     @staticmethod
-    def tanh_derivative(z): 
-        return 1 - np.tanh(z)**2
+    def tanh_derivative(z):
+        return 1 - np.tanh(z) ** 2
 
     @staticmethod
     def relu(x):
@@ -69,11 +71,11 @@ class ActivationFunctions:
         Example:
             >>> activated = ActivationFunctions.relu(z)
             >>> # Negative values become 0, positive values unchanged
-        """ 
+        """
         return np.maximum(0, x)
-    
+
     @staticmethod
-    def relu_derivative(x): 
+    def relu_derivative(x):
         return (x > 0).astype(float)
 
     @staticmethod
@@ -95,9 +97,9 @@ class ActivationFunctions:
         Example:
             >>> activated = ActivationFunctions.leaky_relu(z, negative_slope=0.01)
             >>> # Positive values unchanged, negative values scaled by 0.01
-        """ 
+        """
         return np.where(x > 0, x, negative_slope * x)
-    
+
     @staticmethod
     def leaky_relu_derivative(x, negative_slope=0.01):
         grad = np.ones_like(x)
@@ -131,7 +133,7 @@ class ActivationFunctions:
         alpha = 1.6732632423543772848170429916717
         scale = 1.0507009873554804934193349852946
         keep_prob = 1 - rate
-        a = ((1 - rate) * (1 + rate * (alpha**2 * scale**2)))**(-0.5)
+        a = ((1 - rate) * (1 + rate * (alpha**2 * scale**2))) ** (-0.5)
         b = -a * (alpha * scale) * rate
         mask = np.random.binomial(1, keep_prob, size=x.shape)
         return a * (x * mask + alpha * scale * (1 - mask)) + b

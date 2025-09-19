@@ -2,7 +2,9 @@
 Loss Functions Module
 Collection of loss functions for different machine learning tasks.
 """
+
 import numpy as np
+
 
 class LossFunctions:
     """
@@ -12,7 +14,7 @@ class LossFunctions:
     classification tasks, with support for L2 regularization. All functions
     handle numerical stability and edge cases appropriately.
     """
-    
+
     @staticmethod
     def mse(y_true, y_pred):
         """
@@ -57,7 +59,7 @@ class LossFunctions:
             >>> print(f"BCE Loss: {loss:.4f}")
         """
         y_pred = np.clip(np.asarray(y_pred).reshape(-1), eps, 1 - eps)  # shape (N,)
-        y_true = np.asarray(y_true).reshape(-1)                        # shape (N,)
+        y_true = np.asarray(y_true).reshape(-1)  # shape (N,)
         loss = -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
         return loss
 
