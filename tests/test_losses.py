@@ -186,10 +186,14 @@ class TestLossFunctions:
         """Test edge cases for loss functions."""
         # Empty arrays (if supported)
         try:
-            y_empty = np.array([])
-            loss = LossFunctions.mse(y_empty, y_empty)
-            # If it works, should be 0 or NaN
-            assert np.isnan(loss) or loss == 0
+            import warnings
+
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", category=RuntimeWarning)
+                y_empty = np.array([])
+                loss = LossFunctions.mse(y_empty, y_empty)
+                # If it works, should be 0 or NaN
+                assert np.isnan(loss) or loss == 0
         except (ValueError, ZeroDivisionError):
             # This is acceptable behavior
             pass

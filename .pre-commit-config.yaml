@@ -29,3 +29,12 @@ repos:
         types: [python]
         require_serial: true
 
+      # MyPy type checker - uses pyproject.toml config
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        types: [python]
+        require_serial: true
+        args: ["--config-file=pyproject.toml"]
+
