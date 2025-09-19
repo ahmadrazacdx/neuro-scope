@@ -1,0 +1,40 @@
+# Flake8 configuration for NeuroScope
+[flake8]
+select = B,B9,C,D,DAR,E,F,N,RST,W
+ignore = 
+    # E203: whitespace before ':' (conflicts with black)
+    E203,
+    # E501: line too long (black handles this)
+    E501,
+    # RST201: Block quote ends without a blank line
+    RST201,
+    # RST203: Definition list ends without a blank line  
+    RST203,
+    # RST301: Unexpected indentation
+    RST301,
+    # W503: line break before binary operator (conflicts with black)
+    W503
+max-line-length = 88
+max-complexity = 10
+docstring-convention = google
+rst-roles = class,const,func,meth,mod,ref
+rst-directives = deprecated
+exclude = 
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    build,
+    dist,
+    *.egg-info,
+    .mypy_cache,
+    .pytest_cache,
+    .tox,
+    docs/_build
+per-file-ignores =
+    # Allow unused imports in __init__.py files
+    __init__.py:F401,F403
+    # Allow assert statements in tests
+    tests/*:S101
+    # Allow print statements in CLI modules
+    */__main__.py:T201

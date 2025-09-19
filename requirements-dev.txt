@@ -1,0 +1,38 @@
+# NeuroScope Testing Infrastructure
+# =================================
+
+# Core testing framework
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-xdist>=3.0.0  # Parallel testing
+pytest-benchmark>=4.0.0  # Performance testing
+
+# Code quality and formatting
+black>=23.0.0  # Code formatting
+isort>=5.12.0  # Import sorting  
+flake8>=6.0.0  # Linting
+flake8-docstrings>=1.7.0  # Docstring linting
+flake8-bugbear>=23.0.0  # Additional bug detection
+flake8-comprehensions>=3.10.0  # List/dict comprehension improvements
+
+# Type checking
+mypy>=1.0.0
+types-setuptools
+
+# Security scanning
+bandit>=1.7.5
+
+# Documentation coverage
+docstring-coverage>=2.2.0
+
+# Performance and profiling
+memory-profiler>=0.60.0
+line-profiler>=4.0.0
+
+# Test data generation
+hypothesis>=6.68.0  # Property-based testing
+faker>=18.0.0  # Test data generation
+
+# Additional utilities
+tox>=4.0.0  # Testing across Python versions
+pre-commit>=3.0.0  # Git hooks for quality checks
