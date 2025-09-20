@@ -6,9 +6,11 @@ NeuroScope provides a clean, education-oriented interface for building and analy
 
 ## Getting Started
 
-New to NeuroScope? Start here:
+New to neuroscope? Start here:
 
 ::::{grid} 2
+:gutter: 3
+
 :::{grid-item-card} Quickstart Guide
 :link: quickstart
 :link-type: doc
@@ -39,6 +41,8 @@ Complete API documentation with detailed function and class references.
 ::::
 
 ::::{grid} 2
+:gutter: 3
+
 :::{grid-item-card} Examples
 :link: https://github.com/ahmadrazacdx/neuro-scope/tree/main/examples
 :link-type: url
@@ -60,7 +64,7 @@ Source code, issues, and contributions on GitHub.
 - **Flexible Architecture**: Arbitrary layer sizes with customizable activations
 - **Advanced Optimizers**: Adam, SGD with momentum, RMSprop, and adaptive learning rates
 - **Smart Initialization**: He, Xavier, SELU, and intelligent auto-selection
-- **Regularization**: L1/L2 regularization, dropout with multiple variants
+- **Regularization**: L2 regularization, dropout with multiple variants
 
 ### Comprehensive Diagnostics
 - **Pre-Training Analysis**: Architecture validation, weight initialization checks
@@ -76,7 +80,7 @@ Source code, issues, and contributions on GitHub.
 
 ## Learning Path
 
-1. **Install NeuroScope** → Start with installation and setup
+1. **Install neuroscope** → Start with installation and setup
 2. **Quickstart Guide** → Learn the basics with your first neural network
 3. **Build First Model** → Create and train a simple classifier
 4. **Add Diagnostics** → Use pre-training analysis and monitoring
@@ -118,6 +122,8 @@ viz.plot_activation_hist()
 ## Community & Support
 
 ::::{grid} 3
+:gutter: 3
+
 :::{grid-item-card} Issues
 :link: https://github.com/ahmadrazacdx/neuro-scope/issues
 :link-type: url
