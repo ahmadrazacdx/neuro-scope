@@ -13,7 +13,7 @@ Here is a list of important resources for contributors:
 
 [apache 2.0 license]: https://opensource.org/licenses/Apache-2.0
 [source code]: https://github.com/ahmadrazacdx/neuro-scope
-[documentation]: https://ahmadrazacdx.github.io/neuroscope/
+[documentation]: https://ahmadrazacdx.github.io/neuro-scope/
 [issue tracker]: https://github.com/ahmadrazacdx/neuro-scope/issues
 
 ## How to report a bug
