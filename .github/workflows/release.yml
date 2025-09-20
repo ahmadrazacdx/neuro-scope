@@ -152,8 +152,8 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.TESTPYPI_API_TOKEN }}
-        repository_url: https://test.pypi.org/legacy/
-        packages_dir: dist/
+        repository-url: https://test.pypi.org/legacy/
+        packages-dir: dist/
 
   pypi-release:
     needs: [test, build, github-release, testpypi-release]
@@ -172,7 +172,7 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.PYPI_API_TOKEN }}
-        packages_dir: dist/
+        packages-dir: dist/
 
   docs-deploy:
     needs: [test, build]
@@ -197,11 +197,7 @@ jobs:
 
     - name: Build documentation
       run: |
-        cd docs
-        poetry run sphinx-build -b html . _build/html
-        
-        # Add version info
-        echo "v${{ needs.build.outputs.version }}" > _build/html/VERSION
+        poetry run nox -s docs-build
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3

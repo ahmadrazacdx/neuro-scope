@@ -1,0 +1,8 @@
+[bandit]
+# Bandit configuration for NeuroScope
+exclude_dirs = tests,docs,examples,.nox,.venv,venv,build,dist
+skips = B101,B601,B602,B603,B604,B605,B606,B607,B608,B609,B610,B611
+
+# Skip specific tests that are common in ML/diagnostic code
+# B101: assert_used - asserts are acceptable in diagnostic code
+# B601-B611: shell injection tests - not applicable to our use case

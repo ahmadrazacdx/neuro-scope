@@ -6,6 +6,11 @@ on:
       - main
       - master
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   labeler:
     runs-on: ubuntu-latest
@@ -17,3 +22,5 @@ jobs:
         uses: crazy-max/ghaction-github-labeler@v4.1.0
         with:
           skip-delete: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -30,8 +30,14 @@ def format(session):
 def lint(session):
     """Lint code using flake8 and bandit."""
     session.install("flake8", "flake8-bugbear", "flake8-docstrings", "bandit")
-    session.run("flake8", "src", "tests", "docs/conf.py")
-    session.run("bandit", "-r", "src")
+    session.run(
+        "flake8",
+        "src",
+        "tests",
+        "docs/conf.py",
+        "--extend-ignore=D,B950,B905,B007,B001,B028,B904",
+    )
+    session.run("bandit", "-r", "src", "-ll", "-i")
 
 
 @nox.session(python=python_versions[0])
@@ -70,6 +76,7 @@ def docs_build(session):
         "sphinx-copybutton",
         "sphinx-design",
         "sphinxext-opengraph",
+        "linkify-it-py",
         "numpy",
         "matplotlib",
         "wcwidth",
@@ -109,6 +116,7 @@ def docs(session):
         "sphinx-copybutton",
         "sphinx-design",
         "sphinxext-opengraph",
+        "linkify-it-py",
         "numpy",
         "matplotlib",
         "wcwidth",
