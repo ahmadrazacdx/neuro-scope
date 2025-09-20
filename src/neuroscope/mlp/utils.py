@@ -117,10 +117,13 @@ class Utils:
             )
         if arr.size == 0:
             raise ValueError(f"{name} cannot be empty")
-        if np.any(np.isnan(arr)):
-            raise ValueError(f"{name} contains NaN values")
-        if np.any(np.isinf(arr)):
-            raise ValueError(f"{name} contains infinite values")
+
+        # Only check for NaN/inf if array contains floating point data
+        if np.issubdtype(arr.dtype, np.floating):
+            if np.any(np.isnan(arr)):
+                raise ValueError(f"{name} contains NaN values")
+            if np.any(np.isinf(arr)):
+                raise ValueError(f"{name} contains infinite values")
         return arr
 
     @staticmethod

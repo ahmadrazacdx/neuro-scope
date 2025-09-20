@@ -3,11 +3,14 @@ Test suite for Visualization module.
 Tests plotting and visualization functionality.
 """
 
+import matplotlib
+
+from neuroscope.viz.plots import Visualizer
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-
-from neuroscope.viz.plots import Visualizer
 
 
 class TestVisualizer:

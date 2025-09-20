@@ -33,7 +33,7 @@ ignore =
     # C901: complexity warnings
     C901,
     # E226: missing whitespace around operator
-    E226,
+    E226, E402
     # Docstring issues - be more tolerant for now
     D100,D101,D102,D103,D104,D105,D106,D107,
     D200,D201,D202,D203,D204,D205,D206,D207,D208,D209,D210,D211,D212,D213,D214,D215,
@@ -44,7 +44,7 @@ ignore =
     N801,N802,N803,N804,N805,N806,N807,N811,N812,N813,N814,N815,N816,N817,N818,
     # Darglint docstring argument checking
     DAR101,DAR102,DAR103,DAR201,DAR202,DAR301,DAR401,DAR402,DAR501
-    RST213
+    RST213, 
 
 docstring-convention = google
 rst-roles = class,const,func,meth,mod,ref
