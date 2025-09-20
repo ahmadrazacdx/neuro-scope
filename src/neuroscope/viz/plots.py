@@ -747,6 +747,7 @@ class Visualizer:
     ):
         """
         Plot weight update ratios per layer across epochs.
+
         Args:
             update_ratios: Dict of layer update ratios (optional - uses collected data if None)
                           Format: {'layer_0': [ratio_epoch_0, ratio_epoch_1, ...], ...}

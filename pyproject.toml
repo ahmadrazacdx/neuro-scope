@@ -1,12 +1,22 @@
 [tool.poetry]
 name = "neuroscope"
 version = "0.1.0"
-description = "neuroscope"
+description = "A microscope for informed training of multi-layer perceptron, diagnosing training issues at granular level and accelerating learning and rapid prototyping."
 authors = ["Ahmad Raza <ahmadrazacdx@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-homepage = "https://github.com/ahmadrazacdx/neuroscope"
+homepage = "https://ahmadrazacdx.github.io/neuroscope/"
 repository = "https://github.com/ahmadrazacdx/neuro-scope"
+keywords = [
+    "neural-networks",
+    "machine-learning", 
+    "deep-learning",
+    "mlp",
+    "diagnostics",
+    "visualization",
+    "education",
+    "research"
+]
 documentation = "https://ahmadrazacdx.github.io/neuroscope"
 packages = [
     { include = "neuroscope", from = "src" },
@@ -48,7 +58,11 @@ sphinx-autobuild = ">=2021.3.14"
 sphinx-click = ">=3.0.2"
 typeguard = ">=2.13.3"
 xdoctest = {extras = ["colors"], version = ">=0.15.10"}
-myst-parser = {version = ">=0.16.1"}
+myst-parser = {extras = ["linkify"], version = "^4.0.1"}
+sphinx-copybutton = "^0.5.2"
+sphinx-design = "^0.6.1"
+sphinxext-opengraph = "^0.13.0"
+nox = "^2025.5.1"
 
 [tool.poetry.scripts]
 neuroscope = "neuroscope.__main__:main"

@@ -2,7 +2,7 @@
 NeuroScope Diagnostics Module
 
 Research-validated diagnostic tools for neural network training:
-- Pre-training analysis for architecture and initialization validation  
+- Pre-training analysis for architecture and initialization validation
 - Real-time training monitoring with comprehensive health indicators
 - Post-training evaluation and performance analysis
 Convenient function access:

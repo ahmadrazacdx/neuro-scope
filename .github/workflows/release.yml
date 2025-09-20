@@ -37,13 +37,12 @@ jobs:
       run: poetry install --with dev
 
     - name: Run tests
-      run: poetry run pytest --cov=neuroscope
+      run: poetry run nox -s tests
 
     - name: Run quality checks
       run: |
-        poetry run black --check .
-        poetry run flake8 .
-        poetry run mypy src/neuroscope
+        poetry run nox -s lint
+        poetry run nox -s mypy
 
   build:
     needs: test

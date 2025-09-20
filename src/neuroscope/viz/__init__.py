@@ -11,7 +11,7 @@ Convenient function access:
     >>> from neuroscope.viz import (
     ...     Visualizer, plot_learning_curves, plot_activation_hist,
     ...     plot_gradient_hist, plot_weight_hist, plot_activation_stats
-    ... ) 
+    ... )
     >>> # Use functions directly with training history
     >>> plot_learning_curves(history)
     >>> plot_activation_hist(history, epoch=50)
