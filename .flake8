@@ -22,6 +22,8 @@ ignore =
     RST203,
     # RST301: Unexpected indentation
     RST301,
+    # RST213: Inline emphasis issues
+    RST213,
     # E722: bare except is acceptable for diagnostic code
     E722,
     # F841: unused variables are acceptable in diagnostics
@@ -37,7 +39,12 @@ ignore =
     D200,D201,D202,D203,D204,D205,D206,D207,D208,D209,D210,D211,D212,D213,D214,D215,
     D300,D301,D302,D400,D401,D402,D403,D404,D405,D406,D407,D408,D409,D410,D411,D412,D413,D414,D415,D416,D417,
     # Bandit issues - be tolerant for diagnostic code
-    B001,B007,B028,B904,B905,B950
+    B001,B007,B028,B904,B905,B950,
+    # Naming conventions - be tolerant for ML code
+    N801,N802,N803,N804,N805,N806,N807,N811,N812,N813,N814,N815,N816,N817,N818,
+    # Darglint docstring argument checking
+    DAR101,DAR102,DAR103,DAR201,DAR202,DAR301,DAR401,DAR402,DAR501
+    RST213
 
 docstring-convention = google
 rst-roles = class,const,func,meth,mod,ref

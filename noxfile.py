@@ -89,7 +89,7 @@ def docs_build(session):
     session.run("sphinx-build", "-b", "html", "-a", "-E", "docs", "docs/_build/html")
 
 
-@nox.session(python=python_versions[0])
+@nox.session(name="pre-commit", python=python_versions[0])
 def pre_commit(session):
     """Run pre-commit hooks."""
     session.install("pre-commit")
