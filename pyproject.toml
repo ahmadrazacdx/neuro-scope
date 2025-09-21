@@ -27,7 +27,10 @@ classifiers = [
 
 [tool.poetry.urls]
 Changelog = "https://github.com/ahmadrazacdx/neuroscope/releases"
-
+Logo = "https://raw.githubusercontent.com/ahmadrazacdx/neuro-scope/main/docs/_static/logo.webp"
+Documentation = "https://ahmadrazacdx.github.io/neuroscope"
+Source = "https://github.com/ahmadrazacdx/neuro-scope"
+Issues = "https://github.com/ahmadrazacdx/neuro-scope/issues"
 [tool.poetry.dependencies]
 python = ">=3.12,<4.0"
 numpy = ">=1.21.0"

@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/ahmadrazacdx/neuro-scope/main/docs/_static/logo.png" alt="Framework Logo" width="300" height="135" />
+  <img src="https://raw.githubusercontent.com/ahmadrazacdx/neuro-scope/main/docs/_static/logo.webp" alt="Framework Logo" width="300" height="135" />
 </div>
 
 [![PyPI](https://img.shields.io/pypi/v/neuroscope.svg)][pypi status]
