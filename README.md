@@ -1,5 +1,5 @@
 # NeuroScope
-![Framework Logo](./docs/_static/logo.png)
+![Framework Logo](https://raw.githubusercontent.com/ahmadrazacdx/neuro-scope/main/docs/_static/logo.png)
 
 [![PyPI](https://img.shields.io/pypi/v/neuroscope.svg)][pypi status]
 [![Status](https://img.shields.io/pypi/status/neuroscope.svg)][pypi status]
