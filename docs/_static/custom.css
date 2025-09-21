@@ -1,0 +1,26 @@
+/* Custom sidebar styling */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.sidebar-logo {
+    height: 2.5rem;
+    margin-right: 0.5rem;
+}
+
+.sidebar-brand-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-sidebar-brand-text);
+    white-space: nowrap;
+}
+
+/* Make the brand clickable */
+.sidebar-brand a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}

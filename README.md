@@ -1,4 +1,5 @@
 # NeuroScope
+![Framework Logo](./docs/_static/logo.png)
 
 [![PyPI](https://img.shields.io/pypi/v/neuroscope.svg)][pypi status]
 [![Status](https://img.shields.io/pypi/status/neuroscope.svg)][pypi status]
@@ -13,7 +14,7 @@
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
 
 [pypi status]: https://pypi.org/project/neuroscope/
-[read the docs]: https://ahmadrazacdx.github.io/neuroscope/
+[read the docs]: https://www.neuroscope.dev/
 [tests]: https://github.com/ahmadrazacdx/neuro-scope/actions?workflow=Tests
 [codecov]: https://app.codecov.io/gh/ahmadrazacdx/neuro-scope
 [pre-commit]: https://github.com/pre-commit/pre-commit
@@ -25,17 +26,17 @@
 
 ### Modern MLP Implementation
 - **Flexible Architecture**: Arbitrary layer sizes with customizable activations
-- **Advanced Optimizers**: Adam, SGD with momentum, RMSprop, and adaptive learning rates
+- **Advanced Optimizers**: SGD, Adam
 - **Smart Initialization**: He, Xavier, SELU, and intelligent auto-selection
-- **Regularization**: L1/L2 regularization, dropout with multiple variants
+- **Regularization**: L2 regularization, dropout with multiple variants
 
 ### Comprehensive Diagnostics
 - **Pre-Training Analysis**: Architecture validation, weight initialization checks
-- **Real-Time Monitoring**: Dead neuron detection, gradient flow analysis
+- **Real-Time Monitoring**: Dead neuron detection, gradient flow analysis and 8 other moitors
 - **Post-Training Evaluation**: Robustness testing, performance profiling
 - **Research-Validated Metrics**: Based on established deep learning principles
 
-### Publication-Quality Visualization
+### High Quality Visualization
 - **Training Dynamics**: Learning curves, loss landscapes, convergence analysis
 - **Network Internals**: Activation distributions, gradient flows, weight evolution
 - **Diagnostic Plots**: Health indicators, training stability metrics
@@ -108,9 +109,9 @@ weights, biases = he_init([784, 128, 10])
 
 ## Documentation
 
-- **[Full Documentation](https://ahmadrazacdx.github.io/neuroscope/)**: Complete API reference and guides
-- **[Quickstart Guide](https://ahmadrazacdx.github.io/neuroscope/quickstart.html)**: Get up and running in minutes
-- **[API Reference](https://ahmadrazacdx.github.io/neuroscope/reference.html)**: Detailed function and class documentation
+- **[Full Documentation](https://www.neuroscope.dev/)**: Complete API reference and guides
+- **[Quickstart Guide](https://www.neuroscope.dev/quickstart.html)**: Get up and running in minutes
+- **[API Reference](https://www.neuroscope.dev/reference.html)**: Detailed function and class documentation
 - **[Examples](https://github.com/ahmadrazacdx/neuro-scope/tree/main/examples)**: Jupyter notebooks and scripts
 
 ## Use Cases
@@ -166,7 +167,7 @@ NeuroScope is free and open source software.
 If you encounter any problems:
 - **[File an Issue](https://github.com/ahmadrazacdx/neuro-scope/issues)**: Bug reports and feature requests
 - **[Discussions](https://github.com/ahmadrazacdx/neuro-scope/discussions)**: Questions and community support
-- **[Documentation](https://ahmadrazacdx.github.io/neuroscope/)**: Comprehensive guides and API reference
+- **[Documentation](https://www.neuroscope.dev/)**: Comprehensive guides and API reference
 
 ## Acknowledgments
 

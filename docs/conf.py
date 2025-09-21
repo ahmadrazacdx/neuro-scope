@@ -109,8 +109,11 @@ site_url = "https://ahmadrazacdx.github.io/neuroscope/"
 # HTML output configuration
 html_theme = "furo"
 html_title = f"{project} {release}"
+html_favicon = "./docs/_static/favicon.png"
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
 html_theme_options = {
-    "sidebar_hide_name": False,
+    "sidebar_hide_name": True,
     "navigation_with_keys": True,
     "top_of_page_button": "edit",
     "source_repository": "https://github.com/ahmadrazacdx/neuro-scope/",
