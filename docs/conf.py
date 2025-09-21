@@ -113,6 +113,11 @@ html_favicon = "_static/favicon.png"
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
 html_templates_path = ["_templates"]
+
+# Ensure templates are found
+templates_path = ["_templates"]
+
+# Theme options
 html_theme_options = {
     "sidebar_hide_name": True,
     "navigation_with_keys": True,

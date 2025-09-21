@@ -4,3 +4,8 @@
 {{ super() }}
 <link rel="stylesheet" href="{{ pathto('_static/custom.css', 1) }}" type="text/css" />
 {% endblock %}
+
+{% block sidebar_primary %}
+  {% include "sidebar/brand.html" %}
+  {{ super() }}
+{% endblock %}
