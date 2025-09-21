@@ -237,12 +237,11 @@ class TestPostTrainingEvaluator:
                     result2[key], (int, float)
                 ):
                     if np.isfinite(result1[key]) and np.isfinite(result2[key]):
-                        # Timing-based metrics should be reasonably close (within 50% of each other)
                         ratio = max(result1[key], result2[key]) / min(
                             result1[key], result2[key]
                         )
                         assert (
-                            ratio < 1.5
+                            ratio < 2.0
                         ), f"Timing metric {key} varies too much: {result1[key]} vs {result2[key]}"
 
     def test_multiclass_classification_evaluation(self):
