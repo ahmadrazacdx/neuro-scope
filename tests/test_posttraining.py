@@ -220,13 +220,30 @@ class TestPostTrainingEvaluator:
         result2 = evaluator.evaluate_performance(X, y)
 
         # Results should be identical (deterministic), but skip inf/nan values
+        # Exclude timing-based metrics as they can vary between platforms
+        timing_metrics = {"samples_per_second"}
         for key in result1:
-            if key in result2:
+            if key in result2 and key not in timing_metrics:
                 if isinstance(result1[key], (int, float)) and isinstance(
                     result2[key], (int, float)
                 ):
                     if np.isfinite(result1[key]) and np.isfinite(result2[key]):
                         assert abs(result1[key] - result2[key]) < 1e-10
+
+        # Check timing-based metrics with appropriate tolerance
+        for key in timing_metrics:
+            if key in result1 and key in result2:
+                if isinstance(result1[key], (int, float)) and isinstance(
+                    result2[key], (int, float)
+                ):
+                    if np.isfinite(result1[key]) and np.isfinite(result2[key]):
+                        # Timing-based metrics should be reasonably close (within 50% of each other)
+                        ratio = max(result1[key], result2[key]) / min(
+                            result1[key], result2[key]
+                        )
+                        assert (
+                            ratio < 1.5
+                        ), f"Timing metric {key} varies too much: {result1[key]} vs {result2[key]}"
 
     def test_multiclass_classification_evaluation(self):
         """Test evaluation with multiclass classification."""
