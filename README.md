@@ -194,11 +194,66 @@ If you encounter any problems:
 
 ## Acknowledgments
 
-Built with modern Python best practices and inspired by the educational philosophy of making neural networks transparent and understandable.
+We extend our sincere gratitude to the following individuals and works that have profoundly influenced the development of NeuroScope:
+
+### Foundational Inspirations
+
+**Geoffrey Hinton** - The "Godfather of Deep Learning" whose groundbreaking work on neural networks, backpropagation, and deep learning architectures laid the foundation for modern AI. His decades of research have made frameworks like NeuroScope possible.
+
+**Andrej Karpathy** ([karpathy](https://github.com/karpathy)) - For his pioneering work on granular mastery and educational transparency in deep learning. His philosophy of "building neural networks from scratch" has been instrumental in shaping NeuroScope's educational approach and commitment to algorithmic transparency.
+
+**Deep Learning (MIT Press, 2016)** ([Goodfellow et al.](https://www.deeplearningbook.org/)) . This seminal work provided the theoretical foundation and mathematical rigor that underlies NeuroScope's diagnostic capabilities and research-validated implementations.
+
+**Jeremy Howard** ([jph00](https://github.com/jph00)) - For his his innovative approach to making complex machine learning concepts accessible. His work has inspired NeuroScope's philosophy of combining educational clarity with production-grade performance and simplicity of use.
+
+### Technical Contributions
+
+**Muhammad Talha** ([mtalhacdx](https://github.com/mtalhacdx)) - For the elegant logo design and visual identity that captures NeuroScope's beauty of simplicity.
+
+**GitHub Copilot (Claude Sonnet 4)** - For invaluable assistance in documentation generation, comprehensive test suite development, workflows optimization, and guidance throughout the development process.
+
+
+
+### Research Community
+
+Special recognition to the neural network research community whose decades of theoretical advances and empirical insights have made frameworks like NeuroScope possible. We stand on the shoulders of giants in machine learning, optimization theory, and computational neuroscience.
 
 ---
 
-**[Star us on GitHub](https://github.com/ahmadrazacdx/neuro-scope)** if you find NeuroScope useful!
+*NeuroScope is built with modern Python best practices and inspired by the educational philosophy of making neural networks transparent, understandable, and accessible to learners and researchers worldwide.*
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/ahmadrazacdx/neuro-scope.git
+cd neuro-scope
+
+# Set up development environment
+make dev
+
+# Run tests
+make test
+
+# Build documentation
+make docs
+```
+
+## License
+
+Distributed under the terms of the [Apache 2.0 license][license],
+NeuroScope is free and open source software.
+
+## Issues & Support
+
+If you encounter any problems:
+- **[File an Issue](https://github.com/ahmadrazacdx/neuro-scope/issues)**: Bug reports and feature requests
+- **[Discussions](https://github.com/ahmadrazacdx/neuro-scope/discussions)**: Questions and community support
+- **[Documentation](https://www.neuroscope.dev/)**: Comprehensive guides and API reference
 
 <!-- github-only -->
 

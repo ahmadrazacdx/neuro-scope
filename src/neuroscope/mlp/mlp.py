@@ -1127,7 +1127,11 @@ class MLP:
         }
 
     def fit_batch(self, X_batch, y_batch, epochs=10, verbose=True, metric="smart"):
-        """Train on a single batch for specified epochs. Uses 2-8 samples of given batch."""
+        """Train on a single batch for specified epochs. Uses 2-8 samples of given batch.
+        The range (2-8) samples is based on PyTorch implementation and literature such as
+        Karpathy's blog post (A Recipe for Training Neural Networks), Universal Approximation Theorem (Hornik et al., 1989),
+        Empirical Risk Minimization (Vapnik, 1998) and others.
+        """
         if not self.compiled:
             raise ValueError(
                 "Model must be compiled before training. Call model.compile() first."
