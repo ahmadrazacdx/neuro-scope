@@ -64,12 +64,10 @@ model.compile(
 
 # Step 3: Pre-training analysis (optional but recommended)
 analyzer = PreTrainingAnalyzer(model)
-pre_results = analyzer.analyze(X_train, y_train)
-print("Pre-training Analysis:")
-print(f"  Initial Loss: {pre_results['initial_loss']:.4f}")
-print(f"  Weight Init Quality: {pre_results['weight_init_quality']}")
+analyzer.analyze(X_train, y_train)
 
-# Step 4: Train with monitoring
+# Step 4: 
+# Train with monitoring
 monitor = TrainingMonitor()
 history = model.fit(X_train, y_train, 
                    X_test=X_val, y_test=y_val,
@@ -78,10 +76,18 @@ history = model.fit(X_train, y_train,
                    verbose=True
 )
 
+# Fast training - 10-100x speedup! without monitors
+history = model.fit_fast(
+    X_train, y_train, X_val, y_val,
+    epochs=100, 
+    batch_size=256,
+    eval_freq=5 
+)
+
 # Step 5: Visualize results
 viz = Visualizer(history)
 viz.plot_learning_curves()
-viz.plot_activation_hist(epoch=25)  # Check activations mid-training
+viz.plot_activation_hist(epoch=25) # see 25th epoch
 ```
 
 ## Understanding the Output

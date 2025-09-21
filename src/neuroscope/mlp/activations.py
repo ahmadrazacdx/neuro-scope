@@ -37,7 +37,8 @@ class ActivationFunctions:
 
     @staticmethod
     def sigmoid_derivative(x):
-        return ActivationFunctions.sigmoid(x) * (1 - ActivationFunctions.sigmoid(x))
+        sig = ActivationFunctions.sigmoid(x)
+        return sig * (1 - sig)
 
     @staticmethod
     def softmax(z):  # Z = (N, C)
@@ -51,7 +52,8 @@ class ActivationFunctions:
 
     @staticmethod
     def tanh_derivative(z):
-        return 1 - np.tanh(z) ** 2
+        tanh_z = np.tanh(z)
+        return 1 - tanh_z * tanh_z
 
     @staticmethod
     def relu(x):
@@ -76,7 +78,7 @@ class ActivationFunctions:
 
     @staticmethod
     def relu_derivative(x):
-        return (x > 0).astype(float)
+        return (x > 0).astype(np.float64)
 
     @staticmethod
     def leaky_relu(x, negative_slope=0.01):
@@ -102,7 +104,7 @@ class ActivationFunctions:
 
     @staticmethod
     def leaky_relu_derivative(x, negative_slope=0.01):
-        grad = np.ones_like(x)
+        grad = np.ones_like(x, dtype=np.float64)
         grad[x < 0] = negative_slope
         return grad
 

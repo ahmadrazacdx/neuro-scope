@@ -11,7 +11,7 @@ from matplotlib.animation import PillowWriter
 
 class Visualizer:
     """
-    Publication-quality visualization tool for neural network training analysis.
+    High quality visualization tool for neural network training analysis.
 
     Provides comprehensive plotting capabilities for analyzing training dynamics,
     network behavior, and diagnostic information. Creates professional-grade

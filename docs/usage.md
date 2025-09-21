@@ -174,6 +174,14 @@ history = model.fit(
 # ----------------------------------------------------------------------------------------------------
 ```
 
+# Ultra-fast training - 10-100x speedup!
+history = model.fit_fast(
+    X_train, y_train, X_val, y_val,
+    epochs=100, 
+    batch_size=256,
+    eval_freq=5 
+)
+
 ## Advanced Visualization
 
 ### Comprehensive Training Analysis

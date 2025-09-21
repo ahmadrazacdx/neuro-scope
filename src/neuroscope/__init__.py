@@ -23,7 +23,10 @@ Example:
     >>> analyzer = PreTrainingAnalyzer(model)
     >>> analyzer.analyze(X_train, y_train)
     >>>
-    >>> # Train with monitoring
+    >>> # Ultra-fast training for production
+    >>> history = model.fit_fast(X_train, y_train, X_val, y_val, epochs=100, batch_size=256)
+    >>>
+    >>> # Or train with full diagnostics for research
     >>> monitor = TrainingMonitor()
     >>> history = model.fit(X_train, y_train, monitor=monitor, epochs=100)
     >>>

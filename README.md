@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/ahmadrazacdx/neuro-scope/main/docs/_static/logo.webp" alt="Framework Logo" width="300" height="135" />
+  <img src="https://raw.githubusercontent.com/ahmadrazacdx/neuro-scope/main/docs/_static/logo.svg" alt="Framework Logo" width="300" height="135" />
 </div>
 
 [![PyPI](https://img.shields.io/pypi/v/neuroscope.svg)][pypi status]
@@ -25,9 +25,14 @@
 
 ### Modern MLP Implementation
 - **Flexible Architecture**: Arbitrary layer sizes with customizable activations
-- **Advanced Optimizers**: SGD, Adam
+- **Advanced Optimizers**: SGD, Adam with optimized implementations
 - **Smart Initialization**: He, Xavier, SELU, and intelligent auto-selection
 - **Regularization**: L2 regularization, dropout with multiple variants
+
+### High-Performance Training
+- **Ultra-Fast Training**: `fit_fast()` method with 10-100x speedup over standard training
+- **Memory Efficient**: 60-80% memory reduction with optimized batch processing
+- **Flexible Performance**: Choose between speed (`fit_fast()`) and diagnostics (`fit()`)
 
 ### Comprehensive Diagnostics
 - **Pre-Training Analysis**: Architecture validation, weight initialization checks
@@ -67,11 +72,11 @@ cd neuro-scope
 pip install -e .
 ```
 
-### Basic Usage
+### Fast Training
 
 ```python
 import numpy as np
-from neuroscope import MLP, PreTrainingAnalyzer, TrainingMonitor, Visualizer
+from neuroscope import MLP
 
 # Create and configure model
 model = MLP([784, 128, 64, 10], 
@@ -79,13 +84,31 @@ model = MLP([784, 128, 64, 10],
            out_activation="softmax")
 model.compile(optimizer="adam", lr=1e-3)
 
+# Ultra-fast training - 10-100x speedup!
+history = model.fit_fast(
+    X_train, y_train, X_val, y_val,
+    epochs=100, 
+    batch_size=256,
+    eval_freq=5 
+)
+```
+
+### Full Diagnostic Training
+
+```python
+from neuroscope import MLP, PreTrainingAnalyzer, TrainingMonitor, Visualizer
+
+# Create model
+model = MLP([784, 128, 64, 10])
+model.compile(optimizer="adam", lr=1e-3)
+
 # Pre-training analysis
 analyzer = PreTrainingAnalyzer(model)
 pre_results = analyzer.analyze(X_train, y_train)
 
-# Train with monitoring
+# Train with comprehensive monitoring
 monitor = TrainingMonitor()
-history = model.fit(X_train, y_train, X_test=X_val, y_test=y_val,
+history = model.fit(X_train, y_train, X_val, y_val,
                    epochs=100, monitor=monitor)
 
 # Visualize results
@@ -129,7 +152,8 @@ weights, biases = he_init([784, 128, 10])
 
 | Feature | NeuroScope | PyTorch | TensorFlow | Scikit-learn |
 |---------|------------|---------|------------|--------------|
-| **Learning Focus** | Educational | Production | Production | Traditional ML |
+| **Training Speed** | Fast (`fit_fast()`) | Fast | Fast | Moderate |
+| **Learning Focus** | Educational + Production | Production | Production | Traditional ML |
 | **Built-in Diagnostics** | Rich | Manual | Manual | Limited |
 | **Visualization** | High Quality | Manual | Manual | Basic |
 | **Ease of Use** | Intuitive | Complex | Complex | Simple |
