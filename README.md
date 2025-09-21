@@ -198,11 +198,11 @@ We extend our sincere gratitude to the following individuals and works that have
 
 ### Foundational Inspirations
 
-- **Geoffrey Hinton** - The _Godfather of Deep Learning_ whose groundbreaking work on neural networks, backpropagation, and deep learning architectures laid the foundation for modern AI. His decades of research have made frameworks like NeuroScope possible.
+- **Geoffrey Hinton** - The _Godfather of Deep Learning_ whose groundbreaking work on neural networks, backpropagation, and deep learning architectures laid the foundation for modern AI. 
 
-- **Andrej Karpathy** ([@karpathy](https://github.com/karpathy)) - For his pioneering work on granular mastery and educational transparency in deep learning. His philosophy of "building neural networks from scratch" has been instrumental in shaping NeuroScope's educational approach and commitment to algorithmic transparency.
+- **Andrej Karpathy** ([@karpathy](https://github.com/karpathy)) - His philosophy of "building neural networks from scratch" and granular mastery has been instrumental in shaping NeuroScope's educational approach and commitment to algorithmic transparency.
   
-- **Jeremy Howard** ([@jph00](https://github.com/jph00)) - For his his innovative approach to making complex machine learning concepts accessible. His work has inspired NeuroScope's philosophy of combining educational clarity with production-grade performance and simplicity of use.
+- **Jeremy Howard** ([@jph00](https://github.com/jph00)) - His work has inspired NeuroScope's philosophy of combining educational clarity, literature adherance, compliance with best practices and ease of use.
   
 - **Deep Learning (MIT Press, 2016)** ([Goodfellow et al.](https://www.deeplearningbook.org/)) . This seminal work provided the theoretical foundation and mathematical rigor that underlies NeuroScope's diagnostic capabilities and research-validated implementations.
 
