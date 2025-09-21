@@ -1,15 +1,14 @@
-# NeuroScope
-![Framework Logo](https://raw.githubusercontent.com/ahmadrazacdx/neuro-scope/main/docs/_static/logo.png)
+<div align="center">
+  <img src="https://raw.githubusercontent.com/ahmadrazacdx/neuro-scope/main/docs/_static/logo.png" alt="Framework Logo" width="300" height="135" />
+</div>
 
 [![PyPI](https://img.shields.io/pypi/v/neuroscope.svg)][pypi status]
 [![Status](https://img.shields.io/pypi/status/neuroscope.svg)][pypi status]
 [![Python Version](https://img.shields.io/pypi/pyversions/neuroscope)][pypi status]
 [![License](https://img.shields.io/pypi/l/neuroscope)][license]
-
 [![Documentation](https://img.shields.io/badge/docs-github--pages-blue)][read the docs]
 [![Tests](https://github.com/ahmadrazacdx/neuro-scope/workflows/Tests/badge.svg)][tests]
 [![Codecov](https://codecov.io/gh/ahmadrazacdx/neuro-scope/branch/main/graph/badge.svg)][codecov]
-
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
 
