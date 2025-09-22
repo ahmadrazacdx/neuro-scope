@@ -230,7 +230,6 @@ class TestPostTrainingEvaluator:
                     if np.isfinite(result1[key]) and np.isfinite(result2[key]):
                         assert abs(result1[key] - result2[key]) < 1e-10
 
-        # Very tolerant timing metric validation - just check they exist and are reasonable
         for key in timing_metrics:
             if key in result1:
                 assert isinstance(
