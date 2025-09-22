@@ -410,8 +410,8 @@ class MLP:
         self,
         X_train,
         y_train,
-        X_test=None,
-        y_test=None,
+        X_val=None,
+        y_val=None,
         epochs=10,
         batch_size=None,
         verbose=True,
@@ -434,8 +434,8 @@ class MLP:
         Args:
             X_train (NDArray[np.float64]): Training input data of shape (N, input_dim).
             y_train (NDArray[np.float64]): Training targets of shape (N,) or (N, output_dim).
-            X_test (NDArray[np.float64], optional): Validation input data. Defaults to None.
-            y_test (NDArray[np.float64], optional): Validation targets. Defaults to None.
+            X_val (NDArray[np.float64], optional): Validation input data. Defaults to None.
+            y_val (NDArray[np.float64], optional): Validation targets. Defaults to None.
             epochs (int, optional): Number of training epochs. Defaults to 10.
             batch_size (int, optional): Mini-batch size. If None, uses full batch. Defaults to None.
             verbose (bool, optional): Whether to print training progress. Defaults to True.
@@ -481,20 +481,16 @@ class MLP:
         X_train = Utils.validate_array_input(X_train, "X_train", min_dims=2, max_dims=2)
         y_train = Utils.validate_array_input(y_train, "y_train", min_dims=1, max_dims=2)
 
-        if X_test is not None:
-            X_test = Utils.validate_array_input(
-                X_test, "X_test", min_dims=2, max_dims=2
-            )
-            y_test = Utils.validate_array_input(
-                y_test, "y_test", min_dims=1, max_dims=2
-            )
+        if X_val is not None:
+            X_val = Utils.validate_array_input(X_val, "X_val", min_dims=2, max_dims=2)
+            y_val = Utils.validate_array_input(y_val, "y_val", min_dims=1, max_dims=2)
 
         # Set defaults
         if batch_size is None:
             batch_size = X_train.shape[0]
 
         # Training history
-        history = {"train_loss": [], "train_acc": [], "test_loss": [], "test_acc": []}
+        history = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": []}
 
         # Representative batch data for distribution plots (captured from middle epoch, middle batch)
         activations_ = None
@@ -532,7 +528,7 @@ class MLP:
             f"layer_{i}": [] for i in range(num_layers)
         }
 
-        best_test_loss = np.inf
+        best_val_loss = np.inf
         patience_counter = 0
         current_lr = self.lr
 
@@ -811,16 +807,16 @@ class MLP:
 
             # Evaluate
             train_loss, train_acc = self.evaluate(X_train, y_train, metric=metric)
-            if X_test is not None:
-                test_loss, test_acc = self.evaluate(X_test, y_test, metric=metric)
+            if X_val is not None:
+                val_loss, val_acc = self.evaluate(X_val, y_val, metric=metric)
             else:
-                test_loss, test_acc = None, None
+                val_loss, val_acc = None, None
 
             # Store history
             history["train_loss"].append(train_loss)
             history["train_acc"].append(train_acc)
-            history["test_loss"].append(test_loss)
-            history["test_acc"].append(test_acc)
+            history["val_loss"].append(val_loss)
+            history["val_acc"].append(val_acc)
 
             # Real-time monitoring
             if monitor and epoch % monitor_freq == 0:
@@ -837,7 +833,7 @@ class MLP:
                     monitor_results = monitor.monitor_step(
                         epoch=epoch,
                         train_loss=train_loss,
-                        val_loss=test_loss,
+                        val_loss=val_loss,
                         activations=monitor_activations,
                         gradients=monitor_gradients,
                         weights=self.weights,
@@ -855,10 +851,10 @@ class MLP:
             if verbose and (epoch % log_every == 0 or epoch == 1 or epoch == epochs):
                 metric_name = self._get_metric_display_name(metric)
                 lr_info = f", lr: {current_lr:.6f}" if lr_decay else ""
-                if X_test is not None:
+                if X_val is not None:
                     print(
                         f"Epoch {epoch:3d}  Train loss: {train_loss:.6f}, Train {metric_name}: {train_acc:.4f} "
-                        f"Val loss: {test_loss:.7f}, Val {metric_name}: {test_acc:.5f}{lr_info}"
+                        f"Val loss: {val_loss:.7f}, Val {metric_name}: {val_acc:.5f}{lr_info}"
                     )
                 else:
                     print(
@@ -866,9 +862,9 @@ class MLP:
                     )
 
             # Early stopping
-            if X_test is not None and early_stopping_patience is not None:
-                if test_loss < best_test_loss - 1e-12:
-                    best_test_loss = test_loss
+            if X_val is not None and early_stopping_patience is not None:
+                if val_loss < best_val_loss - 1e-12:
+                    best_val_loss = val_loss
                     patience_counter = 0
                 else:
                     patience_counter += 1
@@ -892,6 +888,9 @@ class MLP:
             "gradient_norms_over_epochs": gradient_norms_over_epochs,
             "weight_update_ratios_over_epochs": weight_update_ratios_over_epochs,
             "epoch_distributions": epoch_distribution_data,
+            "method": "fit",
+            "metric": metric,
+            "metric_display_name": self._get_metric_display_name(metric),
         }
         return results
 
@@ -899,8 +898,8 @@ class MLP:
         self,
         X_train,
         y_train,
-        X_test=None,
-        y_test=None,
+        X_val=None,
+        y_val=None,
         epochs=10,
         batch_size=None,
         verbose=True,
@@ -913,7 +912,7 @@ class MLP:
         eval_freq=5,
     ):
         """
-        High-performance training method optimized for production use.
+        High-performance training method optimized for fast training.
 
         Ultra-fast training loop that eliminates statistics collection overhead
         and monitoring bottlenecks. Provides 10-100x speedup over standard fit()
@@ -932,8 +931,8 @@ class MLP:
         Args:
             X_train (NDArray[np.float64]): Training input data of shape (N, input_dim).
             y_train (NDArray[np.float64]): Training targets of shape (N,) or (N, output_dim).
-            X_test (NDArray[np.float64], optional): Validation input data. Defaults to None.
-            y_test (NDArray[np.float64], optional): Validation targets. Defaults to None.
+            X_val (NDArray[np.float64], optional): Validation input data. Defaults to None.
+            y_val (NDArray[np.float64], optional): Validation targets. Defaults to None.
             epochs (int, optional): Number of training epochs. Defaults to 10.
             batch_size (int, optional): Mini-batch size. If None, uses full batch. Defaults to None.
             verbose (bool, optional): Whether to print training progress. Defaults to True.
@@ -983,12 +982,12 @@ class MLP:
             y_train, "y_train", min_dims=1, max_dims=2, fast_mode=True
         )
 
-        if X_test is not None:
-            X_test = Utils.validate_array_input(
-                X_test, "X_test", min_dims=2, max_dims=2, fast_mode=True
+        if X_val is not None:
+            X_val = Utils.validate_array_input(
+                X_val, "X_val", min_dims=2, max_dims=2, fast_mode=True
             )
-            y_test = Utils.validate_array_input(
-                y_test, "y_test", min_dims=1, max_dims=2, fast_mode=True
+            y_val = Utils.validate_array_input(
+                y_val, "y_val", min_dims=1, max_dims=2, fast_mode=True
             )
 
         # Set defaults
@@ -996,9 +995,15 @@ class MLP:
             batch_size = X_train.shape[0]
 
         # Streamlined training history (no heavy statistics)
-        history = {"train_loss": [], "train_acc": [], "test_loss": [], "test_acc": []}
+        history = {
+            "train_loss": [],
+            "train_acc": [],
+            "val_loss": [],
+            "val_acc": [],
+            "epochs": [],
+        }
 
-        best_test_loss = np.inf
+        best_val_loss = np.inf
         patience_counter = 0
         current_lr = self.lr
 
@@ -1078,20 +1083,21 @@ class MLP:
 
             # OPTIMIZED EVALUATION - Only when needed
             if epoch % eval_freq == 0 or epoch == epochs:
+                history["epochs"].append(epoch)
                 # Evaluate training performance
                 train_loss, train_acc = self.evaluate(X_train, y_train, metric=metric)
                 history["train_loss"].append(train_loss)
                 history["train_acc"].append(train_acc)
 
                 # Evaluate validation performance
-                if X_test is not None and y_test is not None:
-                    test_loss, test_acc = self.evaluate(X_test, y_test, metric=metric)
-                    history["test_loss"].append(test_loss)
-                    history["test_acc"].append(test_acc)
+                if X_val is not None and y_val is not None:
+                    val_loss, val_acc = self.evaluate(X_val, y_val, metric=metric)
+                    history["val_loss"].append(val_loss)
+                    history["val_acc"].append(val_acc)
 
                     # Early stopping check
-                    if test_loss < best_test_loss:
-                        best_test_loss = test_loss
+                    if val_loss < best_val_loss:
+                        best_val_loss = val_loss
                         patience_counter = 0
                     else:
                         patience_counter += 1
@@ -1101,13 +1107,13 @@ class MLP:
                             print(f"Early stopping at epoch {epoch}")
                         break
                 else:
-                    history["test_loss"].append(None)
-                    history["test_acc"].append(None)
+                    history["val_loss"].append(None)
+                    history["val_acc"].append(None)
             else:
                 history["train_loss"].append(None)
                 history["train_acc"].append(None)
-                history["test_loss"].append(None)
-                history["test_acc"].append(None)
+                history["val_loss"].append(None)
+                history["val_acc"].append(None)
 
             # Verbose logging
             if verbose and epoch % log_every == 0:
@@ -1115,8 +1121,8 @@ class MLP:
                     log_msg = f"Epoch {epoch:3d}- Loss: {history['train_loss'][-1]:.6f}"
                     if history["train_acc"][-1] is not None:
                         log_msg += f" - Train {self._get_metric_display_name(metric)}: {history['train_acc'][-1]:.4f}"
-                    if X_test is not None and history["test_acc"][-1] is not None:
-                        log_msg += f" - Val {self._get_metric_display_name(metric)}: {history['test_acc'][-1]:.4f}"
+                    if X_val is not None and history["val_acc"][-1] is not None:
+                        log_msg += f" - Val {self._get_metric_display_name(metric)}: {history['val_acc'][-1]:.4f}"
                     print(log_msg)
 
         return {
@@ -1124,13 +1130,18 @@ class MLP:
             "biases": [b.copy() for b in self.biases],
             "history": history,
             "final_lr": current_lr,
+            "method": "fit_fast",
+            "metric": metric,
+            "metric_display_name": self._get_metric_display_name(metric),
         }
 
     def fit_batch(self, X_batch, y_batch, epochs=10, verbose=True, metric="smart"):
-        """Train on a single batch for specified epochs. Uses 2-8 samples of given batch.
-        The range (2-8) samples is based on PyTorch implementation and literature such as
-        Karpathy's blog post (A Recipe for Training Neural Networks), Universal Approximation Theorem (Hornik et al., 1989),
-        Empirical Risk Minimization (Vapnik, 1998) and others.
+        """
+        Train on a single batch for specified epochs. Uses 2-8 samples of given batch.
+        Note:
+            The range (2-8) samples is based on PyTorch implementation and literature such as
+            blog of Karpathy (A Recipe for Training Neural Networks), Universal Approximation Theorem (Hornik et al., 1989),
+            Empirical Risk Minimization (Vapnik, 1998) and others.
         """
         if not self.compiled:
             raise ValueError(
@@ -1152,7 +1163,7 @@ class MLP:
             else X_batch.shape[0]
         )
         X_batch = X_batch[:n]
-        y_batch = y_batch[:n].reshape(-1, 1) if y_batch.ndim == 1 else y_batch[:n]
+        y_batch = y_batch[:n]
 
         if verbose:
             initial_loss, initial_acc = self.evaluate(X_batch, y_batch)

@@ -47,19 +47,19 @@ y_val = np.random.randint(0, 10, (200, 10))
 
 # Step 1: Create and configure the model
 model = MLP(
-    layer_dims=[784, 128, 64, 10],           # Input -> Hidden -> Hidden -> Output
+    layer_dims=[784, 128, 64, 10],           # Input -> Hidden -> Hidden ->Output
     hidden_activation="relu",                 # ReLU for hidden layers
     out_activation="softmax",                 # Softmax for classification
     init_method="he",                        # He initialization for ReLU
-    dropout_rate=0.2                         # 20% dropout for regularization
+    dropout_rate=0.2                         # 20% dropout fo regularization
 )
 
 # Step 2: Compile the model
 model.compile(
     optimizer="adam",                        # Adam optimizer
     lr=1e-3,                                # Learning rate
-    loss="cce",                             # Categorical crossentropy
-    metric="accuracy"                     # Track accuracy
+    reg="l2",                               # L2 regularization (use "l2" or None)
+    lamda=1e-3                              # Regularization strength
 )
 
 # Step 3: Pre-training analysis (optional but recommended)
@@ -70,7 +70,7 @@ analyzer.analyze(X_train, y_train)
 # Train with monitoring
 monitor = TrainingMonitor()
 history = model.fit(X_train, y_train, 
-                   X_test=X_val, y_test=y_val,
+                   X_val=X_val, y_val=y_val,
                    epochs=100, 
                    monitor=monitor,
                    verbose=True
@@ -78,31 +78,113 @@ history = model.fit(X_train, y_train,
 
 # Fast training - 10-100x speedup! without monitors
 history = model.fit_fast(
-    X_train, y_train, X_val, y_val,
+    X_train, y_train, 
+    X_val=X_val, y_val=y_val,
     epochs=100, 
     batch_size=256,
-    eval_freq=5 
+    eval_freq=5                        
 )
 
-# Step 5: Visualize results
+# Step 5: Post-training evaluation
+evaluator = PostTrainingEvaluator(model)
+analyzer.evaluate(X_train, y_train)
+
+# Step 6: Visualize results
 viz = Visualizer(history)
 viz.plot_learning_curves()
-viz.plot_activation_hist(epoch=25) # see 25th epoch
+viz.plot_activation_hist()
 ```
 
 ## Understanding the Output
 
-### Training Progress
+### Compilation Summary
 ```
-Epoch 1/50: loss=2.3456, accuracy=0.1234, val_loss=2.4567, val_accuracy=0.1345
-Epoch 2/50: loss=2.1234, accuracy=0.2345, val_loss=2.2345, val_accuracy=0.2456
-...
+===============================================================
+                    MLP ARCHITECTURE SUMMARY
+===============================================================
+                    MLP ARCHITECTURE SUMMARY
+===============================================================
+Layer        Type               Output Shape    Params    
+---------------------------------------------------------------
+Layer 1      Input → Hidden     (128,)          100480    
+Layer 2      Hidden → Hidden    (64,)           8256      
+Layer 3      Hidden → Output    (10,)           650       
+---------------------------------------------------------------
+TOTAL                                           109386    
+===============================================================
+Hidden Activation                               relu
+Output Activation                               softmax
+Optimizer                                       Adam
+Learning Rate                                   0.001
+Dropout                                         20.0% (normal)
+L2 Regularization                               λ = 0.001
+===============================================================
+```
+### Pre-training Analysis Results
+```
+==========================================================================================
+                         NEUROSCOPE PRE-TRAINING ANALYSIS
+==========================================================================================
+DIAGNOSTIC TOOL             STATUS       RESULT         NOTE                                      
+------------------------------------------------------------------------------------------
+Initial Loss Check          PASS         0.8107         Perfect loss init                         
+Initialization Validation   PASS         3 layers       Good weight init                          
+Layer Capacity Analysis     PASS         861 params     No bottlenecks                            
+Architecture Sanity Check   PASS         0I/0W          Architecture is fine                      
+Capacity vs Data Ratio      PASS         861 params     Excellent model size                      
+Convergence Feasibility     EXCELLENT    100.0%         Excellent convergence setup               
+------------------------------------------------------------------------------------------
+OVERALL STATUS: ALL SYSTEMS READY
+TESTS PASSED: 6/6
+==========================================================================================
 ```
 
-### Pre-training Analysis Results
-- **Initial Loss**: Should be close to theoretical baseline (e.g., ~2.30 for 10-class classification)
-- **Weight Init Quality**: "Good", "Acceptable", or "Poor" based on distribution analysis
-- **Architecture Warnings**: Potential issues with layer sizes or activation choices
+### Training Progress
+```
+Epoch   1  Train loss: 0.652691, Train Accuracy: 0.6125 Val loss: 0.6239471, Val Accuracy: 0.64000
+Epoch   2  Train loss: 0.555231, Train Accuracy: 0.7325 Val loss: 0.5320609, Val Accuracy: 0.73000
+Epoch   3  Train loss: 0.483989, Train Accuracy: 0.8100 Val loss: 0.4652307, Val Accuracy: 0.80250
+Epoch   4  Train loss: 0.423608, Train Accuracy: 0.8400 Val loss: 0.4062951, Val Accuracy: 0.84500
+Epoch   5  Train loss: 0.377493, Train Accuracy: 0.8581 Val loss: 0.3613807, Val Accuracy: 0.86500
+```
+### Training with Monitors
+```
+Epoch   1  Train loss: 0.652691, Train Accuracy: 0.6125 Val loss: 0.6239471, Val Accuracy: 0.64000
+Epoch   2  Train loss: 0.555231, Train Accuracy: 0.7325 Val loss: 0.5320609, Val Accuracy: 0.73000
+Epoch   3  Train loss: 0.483989, Train Accuracy: 0.8100 Val loss: 0.4652307, Val Accuracy: 0.80250
+Epoch   4  Train loss: 0.423608, Train Accuracy: 0.8400 Val loss: 0.4062951, Val Accuracy: 0.84500
+----------------------------------------------------------------------------------------------------
+SNR: 🟡 (0.70),     | Dead Neurons: 🟢 (0.00%)  | VGP:      🟢  | EGP:     🟢  | Weight Health: 🟢
+WUR: 🟢 (1.30e-03)  | Saturation:   🟢 (0.00)   | Progress: 🟢  | Plateau: 🟢  | Overfitting:   🟡
+----------------------------------------------------------------------------------------------------
+```
+### Post Training Evaluation
+```
+================================================================================
+                  NEUROSCOPE POST-TRAINING EVALUATION
+================================================================================
+EVALUATION      STATUS       SCORE        NOTE                                         
+--------------------------------------------------------------------------------
+Robustness      EXCELLENT    0.993        Highly robust to noise                       
+Performance     EXCELLENT    0.907        High accuracy and fast inference             
+Stability       EXCELLENT    0.800        Highly stable predictions                    
+--------------------------------------------------------------------------------
+OVERALL STATUS: EVALUATION COMPLETE
+EVALUATIONS PASSED: 3/3
+================================================================================
+                     CLASSIFICATION METRICS
+================================================================================
+METRIC               STATUS       SCORE        NOTE                                    
+--------------------------------------------------------------------------------
+Accuracy             PASS         0.9075       Good performance                        
+Precision            PASS         0.9084       Good performance                        
+Recall               PASS         0.9075       Good performance                        
+F1-Score             PASS         0.9075       Good performance                        
+--------------------------------------------------------------------------------
+METRICS STATUS: METRICS EVALUATION COMPLETE
+METRICS PASSED: 4/4
+================================================================================
+```
 
 ## Common Patterns
 
@@ -119,14 +201,26 @@ model.compile(optimizer="adam", lr=1e-3)
 y_binary = np.random.randint(0, 2, (1000, 1))
 history = model.fit(X_train, y_binary, epochs=30)
 ```
+### 3. Multi Class Classification
 
-### 2. Regression
+```python
+# Binary classification setup
+model = MLP([784, 64, 32, 10], 
+           hidden_activation="relu", 
+           out_activation="softmax")
+model.compile(optimizer="adam", lr=1e-3)
+
+# For binary targets (0/1)
+y_binary = np.random.randint(0, 2, (1000, 1))
+history = model.fit(X_train, y_binary, epochs=30)
+```
+### 3. Regression
 
 ```python
 # Regression setup
 model = MLP([784, 128, 64, 1], 
            hidden_activation="relu", 
-           out_activation=None)  # No output activation for regression
+           out_activation=None)  # No output activation (linear) for regression
 model.compile(optimizer="adam", lr=1e-3)
 
 # For continuous targets
@@ -142,13 +236,11 @@ from neuroscope import mse, accuracy_binary, relu, he_init
 # Use functions directly without classes
 predictions = model.predict(X_test)
 loss = mse(y_true, predictions)
-accuracy = accuracy_binary(y_true, predictions > 0.5)
+accuracy = accuracy_binary(y_true, predictions, thresh=0.5)
 
 # Initialize weights manually
 weights, biases = he_init([784, 128, 10])
 ```
-
-## Hyperparameter Tuning
 
 ### Regularization Options
 
@@ -156,10 +248,16 @@ weights, biases = he_init([784, 128, 10])
 # L2 regularization
 model.compile(optimizer="adam", lr=1e-3, reg="l2", lamda=1e-4)
 
-# Dropout (configured during model creation)
+# Dropout (Inverted-default)
 model = MLP([784, 128, 10], 
            hidden_activation="relu",
-           dropout_rate=0.3)      # 30% dropout
+           dropout_rate=0.3)      # 30% normal dropout
+
+# Dropout (alpha- if hidden_activation is Selu)
+model = MLP([784, 128, 10], 
+           hidden_activation="relu",
+           dropout_type='alpha'
+           dropout_rate=0.3)      # 30% alpha dropout
 
 # Gradient clipping
 model.compile(optimizer="adam", lr=1e-3, gradient_clip=5.0)
@@ -184,7 +282,7 @@ model.compile(optimizer="sgd", lr=1e-2)
 ```python
 # Real-time monitoring
 monitor = TrainingMonitor(history_size=50)
-history = model.fit(X_train, y_train, X_test=X_val, y_test=y_val, 
+history = model.fit(X_train, y_train, X_val=X_val, y_val=y_val, 
                    monitor=monitor, epochs=100)
 
 # TrainingMonitor provides real-time emoji-based status during training:
@@ -215,8 +313,6 @@ print(f"Performance: {performance['accuracy']:.3f}")
 print(f"Stability: {stability['overall_stability']:.3f}")
 ```
 
-## Visualization Gallery
-
 ### Learning Curves
 
 ```python
@@ -227,6 +323,13 @@ viz.plot_learning_curves()
 
 # Advanced learning curves with confidence intervals
 viz.plot_learning_curves(figsize=(9, 4), ci=True, markers=True)
+
+# The plot titles and labels automatically sync with your training metric:
+# - metric="accuracy" → shows "Accuracy" 
+# - metric="r2" → shows "R²"
+# - metric="f1" → shows "F1"
+# - metric="precision" → shows "Precision"
+# - And more...
 ```
 
 ### Network Internals
@@ -238,7 +341,7 @@ viz.plot_activation_hist(epoch=25, kde=True)
 # Gradient flow analysis
 viz.plot_gradient_hist(epoch=25, last_layer=False)
 
-# Weight evolution
+# Weight histogram at epoch=25 (default last)
 viz.plot_weight_hist(epoch=25)
 ```
 
@@ -261,16 +364,6 @@ viz.plot_training_animation(bg="dark", save_path="training_animation.gif")
 | **Overfitting** | Training accuracy >> validation accuracy | Dropout, L1/L2 regularization, more data, early stopping |
 | **Underfitting** | Both accuracies low | Larger network, lower regularization, higher learning rate |
 
-### Debug Mode
-
-```python
-# Enable detailed logging
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
-# Verbose training
-history = model.fit(X_train, y_train, epochs=10, verbose=True)
-```
 
 ## Next Steps
 
@@ -286,7 +379,6 @@ history = model.fit(X_train, y_train, epochs=10, verbose=True)
 - **Monitor Early**: Use pre-training analysis to catch issues before training
 - **Visualize Often**: Regular visualization helps understand training dynamics
 - **Experiment Systematically**: Change one hyperparameter at a time
-- **Save Your Work**: Store model weights and training history for important experiments
 
 ---
 

@@ -19,9 +19,15 @@ model = MLP(
     out_activation="softmax",
     init_method="smart",           # Auto-selects best initialization
     dropout_rate=0.3,
-    dropout_type="alpha",          # Alpha dropout for SELU networks
-    l1_reg=1e-5,
-    l2_reg=1e-4
+    dropout_type="normal",         # default (alpha)for SELU networks
+)
+
+model.compile(
+    optimizer='adam',
+    lr=0.001,
+    reg=None,                      # l2 for reg to work
+    lamda=0.01,                    # regularization impact
+    gradient_clip=None             # gradient clip norm
 )
 ```
 
@@ -108,18 +114,9 @@ model = MLP(
 from neuroscope.diagnostics import PreTrainingAnalyzer
 
 analyzer = PreTrainingAnalyzer(model)
+# prints a beautiful summary report
+analyzer.analyze(X_train, y_train)
 
-# Comprehensive analysis
-results = analyzer.analyze(X_train, y_train)
-
-# Individual analyses
-initial_loss = analyzer.analyze_initial_loss(X_train, y_train)
-weight_quality = analyzer.analyze_weight_init()
-architecture_check = analyzer.analyze_architecture_sanity()
-
-print(f"Initial loss: {initial_loss['initial_loss']:.4f} (expected: {initial_loss['expected_loss']:.4f})")
-print(f"Weight initialization: {weight_quality['status']}")
-print(f"Architecture status: {architecture_check['status']}")
 ```
 
 ### Post-training Evaluation
@@ -155,14 +152,15 @@ evaluator.evaluate(X_test, y_test)
 from neuroscope.diagnostics import TrainingMonitor
 
 # Configure monitoring
-monitor = TrainingMonitor(history_size=50)
+monitor = TrainingMonitor()
 
 # Train with monitoring
 history = model.fit(
     X_train, y_train,
-    X_test=X_val, y_test=y_val,
+    X_val=X_val, y_val=y_val,
     epochs=100,
     monitor=monitor,
+    monitor_freq=1,
     early_stopping_patience=10
 )
 
@@ -172,7 +170,7 @@ history = model.fit(
 # SNR: 🟡 (0.70),     | Dead Neurons: 🟢 (0.00%)  | VGP:      🟢  | EGP:     🟢  | Weight Health: 🟢
 # WUR: 🟢 (1.30e-03)  | Saturation:   🟢 (0.00)   | Progress: 🟢  | Plateau: 🟢  | Overfitting:   🟡
 # ----------------------------------------------------------------------------------------------------
-```
+
 
 # Ultra-fast training - 10-100x speedup!
 history = model.fit_fast(
@@ -181,6 +179,9 @@ history = model.fit_fast(
     batch_size=256,
     eval_freq=5 
 )
+
+```
+
 
 ## Advanced Visualization
 
@@ -198,6 +199,12 @@ viz.plot_learning_curves(
     markers=True,                 # Show epoch markers
     save_path="learning_curves.png"
 )
+
+# Dynamic metric labeling examples:
+# For R² regression: Shows "R²" instead of "Accuracy"
+# For F1 classification: Shows "F1" instead of "Accuracy" 
+# For precision: Shows "Precision" instead of "Accuracy"
+# The system automatically detects your training metric and updates all labels
 
 # Network internals evolution over epochs
 viz.plot_activation_stats(
@@ -223,6 +230,20 @@ viz.plot_weight_hist(epoch=25, figsize=(9, 4), kde=True)
 # Gradient norms and weight update ratios
 viz.plot_gradient_norms(figsize=(12, 4), reference_lines=True)
 viz.plot_update_ratios(figsize=(12, 4), reference_lines=True)
+```
+
+### Training Animation with Dynamic Labels
+
+```python
+# Create animated training visualization with correct metric labels
+viz.plot_training_animation(bg="dark", save_path="training_animation.gif")
+
+# The animation automatically shows:
+# - "Accuracy Evolution" for accuracy metrics
+# - "R² Evolution" for R² regression
+# - "F1 Evolution" for F1 score
+# - "Precision Evolution" for precision
+# - And updates all bar chart labels accordingly
 ```
 
 ## Best Practices
@@ -270,16 +291,6 @@ small_data_model.compile(optimizer="adam", lr=1e-3, reg="l2", lamda=1e-3)
 | **Overfitting** | Training accuracy >> validation accuracy | Dropout, L1/L2 regularization, more data |
 | **Underfitting** | Both accuracies low | Larger network, lower regularization, higher learning rate |
 
-### Debug Mode
-
-```python
-# Enable detailed logging
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
-# Verbose training
-history = model.fit(X_train, y_train, epochs=10, verbose=True)
-```
 
 ## Diagnosis Book
 
@@ -494,7 +505,7 @@ model.compile(optimizer="adam", lr=1e-3, reg="l2", lamda=1e-3)
 model = MLP([784, 128, 10], dropout_rate=0.3)
 
 # Early stopping
-history = model.fit(X_train, y_train, X_test=X_val, y_test=y_val,
+history = model.fit(X_train, y_train, X_val=X_val, y_val=y_val,
                    early_stopping_patience=10)
 
 # Reduce model complexity
@@ -524,9 +535,8 @@ model = MLP([784, 64, 10])  # Smaller hidden layers
 ```python
 # Check and fix weight initialization
 analyzer = PreTrainingAnalyzer(model)
-init_results = analyzer.analyze_weight_init()
-if init_results['status'] == 'FAIL':
-    model = MLP([784, 128, 10], init_method="smart")
+analyzer.analyze()
+model = MLP([784, 128, 10], init_method="smart")
 
 # Verify output activation
 # For binary classification:
@@ -539,7 +549,7 @@ model = MLP([784, 128, 1], out_activation=None)
 
 **NeuroScope Tools:**
 - `PreTrainingAnalyzer`: Comprehensive pre-training validation
-- `PreTrainingAnalyzer.analyze_initial_loss()`: Loss expectation analysis
+- `PreTrainingAnalyzer.analyze()`:  Pre training analysis
 
 ---
 

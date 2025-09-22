@@ -23,6 +23,7 @@ from neuroscope import (
     MLP,
     PreTrainingAnalyzer,
     TrainingMonitor,
+    Visualizer,
     accuracy_binary,
     f1_score,
     precision,
@@ -179,19 +180,21 @@ def main():
     monitor = TrainingMonitor(
         check_dead_neurons=True,
         check_gradients=True,
-        dead_neuron_threshold=0.05,  # Lower threshold for binary classification
+        dead_neuron_threshold=0.05,  # Train the model with precision metric for imbalanced data
     )
-
+    print("\n🚀 Training the neural network...")
     history = model.fit(
         X_train,
         y_train,
-        validation_data=(X_val, y_val),
+        X_val=X_val,
+        y_val=y_val,
         epochs=150,
         batch_size=32,
         monitor=monitor,
         verbose=True,
         early_stopping=True,
         patience=15,
+        metric="precision",  # Precision metric - plots will show "Precision" labels
     )
 
     print(f"Training completed in {len(history['history']['loss'])} epochs")
@@ -244,7 +247,25 @@ def main():
     auc_score = calculate_auc(fpr, tpr)
     print(f"\nROC AUC Score: {auc_score:.4f}")
 
-    # Step 6: Advanced visualization
+    # Step 6: Visualize with Dynamic Precision Labels
+    print("\n📊 Step 6: Visualization with Dynamic Precision Labels")
+    print("-" * 50)
+
+    viz = Visualizer(history)
+
+    # Learning curves - automatically shows "Precision" labels
+    print("Creating learning curves with automatic Precision labels...")
+    viz.plot_learning_curves(figsize=(10, 5), ci=True, markers=True)
+
+    # Training animation - shows "Precision Evolution"
+    print("Creating training animation with Precision labels...")
+    viz.plot_training_animation(bg="dark")
+
+    print(
+        "✨ All plots automatically show 'Precision' labels based on your training metric!"
+    )
+
+    # Step 7: Advanced visualization
     print("\n📊 Step 6: Binary Classification Visualization")
     print("-" * 45)
 

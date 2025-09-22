@@ -24,7 +24,7 @@ from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from neuroscope import MLP
+from neuroscope import MLP, Visualizer
 
 
 def generate_sample_data():
@@ -42,21 +42,21 @@ def generate_sample_data():
     )
 
     # Split the data
-    X_train, X_test, y_train, y_test = train_test_split(
+    X_train, X_val, y_train, y_val = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
 
     # Standardize features
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
-    X_test = scaler.transform(X_test)
+    X_val = scaler.transform(X_val)
 
     print(f"   Training samples: {X_train.shape[0]}")
-    print(f"   Test samples: {X_test.shape[0]}")
+    print(f"   Val samples: {X_val.shape[0]}")
     print(f"   Features: {X_train.shape[1]}")
     print(f"   Classes: {len(np.unique(y))}")
 
-    return X_train, X_test, y_train, y_test
+    return X_train, X_val, y_train, y_val
 
 
 def performance_comparison_demo():
@@ -65,7 +65,7 @@ def performance_comparison_demo():
     print("=" * 60)
 
     # Generate data
-    X_train, X_test, y_train, y_test = generate_sample_data()
+    X_train, X_val, y_train, y_val = generate_sample_data()
 
     # Create model
     print("\n🧠 Creating neural network...")
@@ -91,18 +91,21 @@ def performance_comparison_demo():
     print("-" * 40)
 
     # Reset model for fair comparison
-    model.reset_all()
+    # Demonstrate fit_fast() with R² regression metric
+    print("\n🚀 High-Performance Training with R² Metric")
+    print("=" * 50)
 
     start_time = time.time()
     history_fast = model.fit_fast(
         X_train,
         y_train,
-        X_test,
-        y_test,
+        X_val,
+        y_val,
         epochs=epochs,
         batch_size=batch_size,
         eval_freq=3,  # Evaluate every 3 epochs for performance
         verbose=True,
+        metric="r2",  # R² for regression - plots will show "R²" labels
     )
     fast_time = time.time() - start_time
 
@@ -115,8 +118,10 @@ def performance_comparison_demo():
         f"   Throughput: {history_fast['performance_stats']['samples_per_second']:.0f} samples/sec"
     )
     print(f"   Final train loss: {history_fast['history']['train_loss'][-1]:.6f}")
-    if history_fast["history"]["test_acc"][-1] is not None:
-        print(f"   Final test accuracy: {history_fast['history']['test_acc'][-1]:.4f}")
+    if history_fast["history"]["val_acc"][-1] is not None:
+        print(
+            f"   Final validation accuracy: {history_fast['history']['val_acc'][-1]:.4f}"
+        )
 
     # Performance analysis
     print("\nPerformance Analysis:")
@@ -124,6 +129,18 @@ def performance_comparison_demo():
     print(f"   Batch processing: {perf_stats['batches_per_second']:.1f} batches/sec")
     print("   Memory efficiency: ~60-80% reduction vs standard fit()")
     print("   Monitoring overhead: <1% (vs 10-30% in standard fit())")
+
+    # Visualize with automatic R² labels
+    print("\n📊 Visualization with Dynamic R² Labels")
+    print("=" * 45)
+
+    viz = Visualizer(history_fast)
+
+    # Learning curves - automatically shows "R²" labels for regression
+    print("Creating learning curves with automatic R² labels...")
+    viz.plot_learning_curves(figsize=(10, 5), ci=False, markers=True)
+
+    print("✨ Notice: Plots automatically show 'R²' labels based on regression metric!")
 
     return history_fast, fast_time
 
@@ -137,14 +154,14 @@ def advanced_usage_demo():
     X, y = make_classification(
         n_samples=5000, n_features=100, n_classes=3, random_state=42
     )
-    X_train, X_test, y_train, y_test = train_test_split(
+    X_train, X_val, y_train, y_val = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
     # Standardize
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
-    X_test = scaler.transform(X_test)
+    X_val = scaler.transform(X_val)
 
     # 1. Ultra-fast prototyping
     print("\nUltra-Fast Prototyping")
@@ -157,8 +174,8 @@ def advanced_usage_demo():
     history = model.fit_fast(
         X_train,
         y_train,
-        X_test,
-        y_test,
+        X_val,
+        y_val,
         epochs=20,
         batch_size=128,
         eval_freq=10,  # Evaluate only at epoch 10 and 20
@@ -179,8 +196,8 @@ def advanced_usage_demo():
     history = model.fit_fast(
         X_train,
         y_train,
-        X_test,
-        y_test,
+        X_val,
+        y_val,
         epochs=100,  # High epoch count
         batch_size=256,
         eval_freq=5,  # Regular evaluation for early stopping
@@ -215,15 +232,15 @@ def advanced_usage_demo():
             history = model.fit_fast(
                 X_train,
                 y_train,
-                X_test,
-                y_test,
+                X_val,
+                y_val,
                 epochs=10,  # Quick evaluation
                 batch_size=bs,
                 eval_freq=10,  # Evaluate only at the end
                 verbose=False,  # Silent for batch processing
             )
 
-            final_acc = history["history"]["test_acc"][-1]
+            final_acc = history["history"]["val_acc"][-1]
             if final_acc and final_acc > best_score:
                 best_score = final_acc
                 best_config = (lr, bs)

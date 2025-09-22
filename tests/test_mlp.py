@@ -392,10 +392,10 @@ class TestMLP:
         assert "history" in results
         history = results["history"]
         assert "train_loss" in history
-        assert "test_loss" in history  # fit_fast uses "test_loss" not "val_loss"
+        assert "val_loss" in history  # fit_fast uses "val_loss"
         assert "train_acc" in history
-        assert "test_acc" in history
-        assert len(history["train_loss"]) == len(history["test_loss"])
+        assert "val_acc" in history
+        assert len(history["train_loss"]) == len(history["val_loss"])
 
     def test_classification_training(self, classification_data):
         """Test training on classification task."""

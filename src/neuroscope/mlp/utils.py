@@ -3,8 +3,6 @@ Utilities Module
 Helper functions for training, validation, and data processing.
 """
 
-import warnings
-
 import numpy as np
 
 
@@ -159,7 +157,7 @@ class Utils:
             try:
                 arr = np.asarray(arr)
                 if not fast_mode:  # Only warn in non-fast mode
-                    warnings.warn(f"{name} converted to numpy array")
+                    print(f"{name} converted to numpy array")
             except Exception as e:
                 raise TypeError(f"{name} must be convertible to numpy array: {e}")
 
@@ -204,10 +202,10 @@ class Utils:
     @staticmethod
     def check_numerical_stability(arrays, context="computation", fast_mode=False):
         """
-        Optimized numerical stability check with fast mode option.
+        Simple numerical stability check with user-friendly warnings.
 
-        Performs efficient stability checks with optional detailed analysis.
-        Fast mode only checks for critical NaN/inf issues for performance.
+        Provides clear, actionable warnings for common training issues.
+        Fast mode only checks for critical problems for performance.
 
         Args:
             arrays: List of arrays to check for numerical issues.
@@ -215,13 +213,12 @@ class Utils:
             fast_mode (bool, optional): Skip detailed checks for speed. Defaults to False.
 
         Returns:
-            list: List of detected issues (empty if no issues found).
+            list: List of simple, actionable issue descriptions.
 
         Example:
-            >>> # Full check for research/debugging
             >>> issues = Utils.check_numerical_stability(activations, "forward_pass")
-            >>> # Fast check for production training
-            >>> issues = Utils.check_numerical_stability(activations, "forward_pass", fast_mode=True)
+            >>> if issues:
+            ...     print(f"⚠️ Training Issue: {issues[0]}")
         """
         issues = []
 
@@ -229,37 +226,53 @@ class Utils:
             if arr is None:
                 continue
 
-            # Critical checks (always performed) - optimized with any() for early exit
+            # Check for NaN values (model has broken)
             if np.any(np.isnan(arr)):
                 if fast_mode:
-                    # In fast mode, just return immediately on first critical issue
-                    return [f"Critical: NaN detected in {context}"]
+                    return [
+                        "Model has broken (NaN values). Try lower learning rate or check your data."
+                    ]
                 else:
-                    nan_count = np.sum(np.isnan(arr))
                     issues.append(
-                        f"Array {i} in {context}: {nan_count} NaN values detected"
+                        "Model has broken (NaN values). Try lower learning rate or check your data."
                     )
+                    break  # No point checking further
 
+            # Check for infinite values (gradients exploded)
             if np.any(np.isinf(arr)):
                 if fast_mode:
-                    return [f"Critical: Inf detected in {context}"]
+                    return [
+                        "Gradients exploded (Inf values). Use lower learning rate or normalize your data."
+                    ]
                 else:
-                    inf_count = np.sum(np.isinf(arr))
                     issues.append(
-                        f"Array {i} in {context}: {inf_count} infinite values detected"
+                        "Gradients exploded (Inf values). Use lower learning rate or normalize your data."
                     )
+                    break  # No point checking further
 
-            # Detailed checks only in non-fast mode
+            # Check for very large values (heading toward explosion)
             if not fast_mode:
                 max_val = np.max(np.abs(arr))
-                if max_val > 1e10:
+                if max_val > 1e8:
+                    if context == "gradients":
+                        issues.append(
+                            "Gradients are getting very large. Consider lowering learning rate or normalizing data."
+                        )
+                    elif context == "forward_pass" or context == "output_activations":
+                        issues.append(
+                            "Network outputs are getting very large. Check if your data is normalized (e.g., pixels should be 0-1, not 0-255)."
+                        )
+                    else:
+                        issues.append(
+                            f"Values in {context} are getting very large. This may cause training instability."
+                        )
+                    break  # One clear warning is enough
+
+                # Check for vanishing gradients
+                if context == "gradients" and max_val < 1e-8:
                     issues.append(
-                        f"Array {i} in {context}: very large values detected (max: {max_val:.2e})"
+                        "Gradients are very small (vanishing). Try higher learning rate or different activation functions."
                     )
-                # Check for very small gradients
-                if context == "gradients" and max_val < 1e-10:
-                    issues.append(
-                        f"Array {i} in {context}: very small gradients detected (max: {max_val:.2e})"
-                    )
+                    break
 
         return issues

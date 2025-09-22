@@ -3,8 +3,6 @@ Core Neural Network Operations
 Internal forward and backward propagation implementations.
 """
 
-import warnings
-
 import numpy as np
 
 from .activations import ActivationFunctions
@@ -195,7 +193,7 @@ class _BackwardPass:
         # Check numerical stability of outputs
         stability_issues = Utils.check_numerical_stability([AL], "output_activations")
         if stability_issues:
-            warnings.warn(f"Numerical issues in output: {stability_issues[0]}")
+            print(f"⚠️ {stability_issues[0]}")
 
         if out_activation is None:
             dZ = (AL - y_true) / N
@@ -240,6 +238,6 @@ class _BackwardPass:
         # Check gradient numerical stability
         gradient_issues = Utils.check_numerical_stability(dW + db, "gradients")
         if gradient_issues:
-            warnings.warn(f"Gradient numerical issues: {gradient_issues[0]}")
+            print(f"Gradient numerical issues: {gradient_issues[0]}")
 
         return dW, db

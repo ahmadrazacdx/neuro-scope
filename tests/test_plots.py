@@ -27,16 +27,26 @@ class TestVisualizer:
     def sample_history(self):
         """Create sample training history."""
         return {
+            "method": "fit",  # Not fit_fast, so goes to else branch
             "history": {
                 "train_loss": [1.0, 0.8, 0.6, 0.4, 0.3],
                 "train_acc": [0.5, 0.6, 0.7, 0.8, 0.85],
                 "test_loss": [1.1, 0.9, 0.7, 0.5, 0.4],
-                "test_acc": [0.45, 0.55, 0.65, 0.75, 0.8],
+                "val_acc": [0.45, 0.55, 0.65, 0.75, 0.8],
+                "epochs": [1, 2, 3, 4, 5],
             },
-            "activations": [],
-            "gradients": [],
             "weights": [],
             "biases": [],
+            "activations": {},
+            "gradients": {},
+            "weight_stats_over_epochs": {},
+            "activation_stats_over_epochs": {},
+            "gradient_stats_over_epochs": {},
+            "epoch_distributions": {},
+            "gradient_norms_over_epochs": {},
+            "weight_update_ratios_over_epochs": {},
+            "metric": "accuracy",
+            "metric_display_name": "Accuracy",
         }
 
     @pytest.fixture

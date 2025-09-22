@@ -38,6 +38,7 @@ Research-backed explanations of all diagnostic issues with mathematical foundati
 
 Complete API documentation with detailed function and class references.
 :::
+
 ::::
 
 ::::{grid} 2
@@ -47,7 +48,7 @@ Complete API documentation with detailed function and class references.
 :link: https://github.com/ahmadrazacdx/neuro-scope/tree/main/examples
 :link-type: url
 
-Jupyter notebooks and Python scripts demonstrating real-world applications.
+Jupyter notebooks demonstrating real-world applications.
 :::
 
 :::{grid-item-card} GitHub Repository
@@ -62,8 +63,8 @@ Source code, issues, and contributions on GitHub.
 
 ### Modern MLP Implementation
 - **Flexible Architecture**: Arbitrary layer sizes with customizable activations
-- **Advanced Optimizers**: Adam, SGD with momentum, RMSprop, and adaptive learning rates
-- **Smart Initialization**: He, Xavier, SELU, and intelligent auto-selection
+- **Advanced Optimizers**: SGD, Adam
+- **Smart Initialization**: He, Xavier, Random (Guassian) , Selu, and intelligent auto-selection
 - **Regularization**: L2 regularization, dropout with multiple variants
 
 ### Comprehensive Diagnostics
@@ -73,7 +74,7 @@ Source code, issues, and contributions on GitHub.
 - **Research-Validated Metrics**: Based on established deep learning principles
 
 ### High Quality Visualization
-- **Training Dynamics**: Learning curves, loss landscapes, convergence analysis
+- **Training Dynamics**: Learning curves
 - **Network Internals**: Activation distributions, gradient flows, weight evolution
 - **Diagnostic Plots**: Health indicators, training stability metrics
 - **Interactive Animations**: Training progress visualization
@@ -84,10 +85,10 @@ Source code, issues, and contributions on GitHub.
 2. **Quickstart Guide** → Learn the basics with your first neural network
 3. **Build First Model** → Create and train a simple classifier
 4. **Add Diagnostics** → Use pre-training analysis and monitoring
-5. **Visualize Results** → Create publication-quality plots
+5. **Visualize Results** → Create high quality plots
 6. **Advanced Usage** → Explore customization and optimization
 7. **API Reference** → Deep dive into all available functions
-8. **Examples Gallery** → Study real-world applications
+8. **Examples Gallery** → Study demo applications
 9. **Contribute** → Help improve the framework
 
 ## Quick Example
@@ -104,14 +105,18 @@ model.compile(optimizer="adam", lr=1e-3)
 
 # Pre-training analysis
 analyzer = PreTrainingAnalyzer(model)
-pre_results = analyzer.analyze(X_train, y_train)
+analyzer.analyze(X_train, y_train)
 
-# Train with monitoring
+# Train with real time monitoring
 monitor = TrainingMonitor()
 history = model.fit(X_train, y_train, 
                    X_test=X_val, y_test=y_val,
                    epochs=100, 
                    monitor=monitor)
+
+# Post-training evaluation
+evaluator = PostTrainingEvaluator(model)
+analyzer.evaluate(X_train, y_train)
 
 # Visualize results
 viz = Visualizer(history)
@@ -155,6 +160,7 @@ quickstart
 usage
 technical_deep_dive
 reference
+visualization_gallery
 contributing
 Code of Conduct <codeofconduct>
 License <license>

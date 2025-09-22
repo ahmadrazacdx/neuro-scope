@@ -136,21 +136,19 @@ def main():
     print("\nStep 4: Training Model")
     print("-" * 25)
 
-    monitor = TrainingMonitor(
-        check_dead_neurons=True, check_gradients=True, gradient_clip_threshold=5.0
-    )
-
-    print("Starting training...")
+    monitor = TrainingMonitor()
+    print("\n🚀 Training the neural network...")
     history = model.fit(
         X_train,
         y_train,
-        X_test=X_val,
-        y_test=y_val,
+        X_val=X_val,
+        y_val=y_val,
         epochs=100,
         batch_size=32,
         monitor=monitor,
         verbose=True,
         early_stopping_patience=10,
+        metric="f1",
     )
 
     print(f"\nTraining completed in {len(history['history']['loss'])} epochs")
@@ -190,11 +188,27 @@ def main():
     print(f"  Test loss: {test_loss:.4f}")
     print(f"  Test accuracy: {test_accuracy:.4f}")
 
+    # Step 5: Visualize Results with Dynamic Metric Labels
+    print("\nStep 5: Visualization with Dynamic Labels")
+    print("-" * 40)
+
+    viz = Visualizer(history)
+
+    # Learning curves - automatically shows "F1" labels instead of "Accuracy"
+    print("📊 Creating learning curves with automatic F1 labels...")
+    viz.plot_learning_curves(figsize=(9, 4), ci=True, markers=True)
+
+    # Training animation - shows "F1 Evolution" instead of "Accuracy Evolution"
+    print("🎬 Creating training animation with F1 labels...")
+    viz.plot_training_animation(bg="light")
+
+    print(
+        "✨ Notice: All plots automatically show 'F1' labels based on your training metric!"
+    )
+
     # Step 6: Visualization
     print("\nStep 6: Visualization")
     print("-" * 23)
-
-    viz = Visualizer(history)
 
     # Create a figure with multiple subplots
     fig, axes = plt.subplots(2, 2, figsize=(12, 10))

@@ -52,17 +52,29 @@ class Visualizer:
                 training statistics, network states, and diagnostic information.
         """
         self.hist = hist
-        self.history = hist["history"]
-        self.weights = hist.get("weights", None)
-        self.biases = hist.get("biases", None)
-        self.activations = hist["activations"]
-        self.gradients = hist["gradients"]
-        self.weight_stats_over_epochs = hist.get("weight_stats_over_epochs", {})
-        self.activation_stats_over_epochs = hist.get("activation_stats_over_epochs", {})
-        self.gradient_stats_over_epochs = hist.get("gradient_stats_over_epochs", {})
-        self.epoch_distributions = hist.get("epoch_distributions", {})
-        self.gradient_norms = hist.get("gradient_norms_over_epochs", {})
-        self.weight_update_ratios = hist.get("weight_update_ratios_over_epochs", {})
+        if hist.get("method") == "fit_fast":
+            self.history = hist["history"]
+            self.weights = hist.get("weights", None)
+            self.biases = hist.get("biases", None)
+            self.metric = hist.get("metric", "accuracy")
+        else:
+            self.history = hist["history"]
+            self.weights = hist.get("weights", None)
+            self.biases = hist.get("biases", None)
+            self.activations = hist.get("activations", {})
+            self.gradients = hist.get("gradients", {})
+            self.weight_stats_over_epochs = hist.get("weight_stats_over_epochs", {})
+            self.activation_stats_over_epochs = hist.get(
+                "activation_stats_over_epochs", {}
+            )
+            self.gradient_stats_over_epochs = hist.get("gradient_stats_over_epochs", {})
+            self.epoch_distributions = hist.get("epoch_distributions", {})
+            self.gradient_norms = hist.get("gradient_norms_over_epochs", {})
+            self.weight_update_ratios = hist.get("weight_update_ratios_over_epochs", {})
+            self.metric = hist.get("metric", "accuracy")
+            self.metric_display_name = hist.get("metric_display_name", "Accuracy")
+
+        self.epochs_ = hist.get("epochs", None)
         self._setup_style()
         self._setup_colors()
 
@@ -152,7 +164,10 @@ class Visualizer:
             >>> viz.plot_learning_curves(figsize=(10, 5), ci=True, save_path='curves.png')
         """
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
-        epochs = np.arange(len(self.history["train_loss"])) + 1
+        if self.epochs_:
+            epochs = self.epochs_
+        else:
+            epochs = np.arange(len(self.history["train_loss"])) + 1
         marker_settings = {
             "train": (
                 {"marker": "o", "markersize": 3, "markevery": 2}
@@ -205,7 +220,7 @@ class Visualizer:
         )
         ax2.plot(
             epochs,
-            self.history["test_acc"],
+            self.history["val_acc"],
             label="Validation",
             linewidth=1.2,
             color="#ff7f0e",
@@ -216,13 +231,15 @@ class Visualizer:
                 ax2, epochs, self.history["train_acc"], "#1f77b4"
             )
             self._add_confidence_intervals(
-                ax2, epochs, self.history["test_acc"], "#ff7f0e"
+                ax2, epochs, self.history["val_acc"], "#ff7f0e"
             )
 
-        ax2.set_title("Accuracy", fontsize=11, fontweight="normal")
+        ax2.set_title(self.metric_display_name, fontsize=11, fontweight="normal")
         ax2.set_xlabel("Epoch")
         if metric is not None:
             ax2.set_ylabel(str(metric).title())
+        else:
+            ax2.set_ylabel(self.metric_display_name)
 
         ax2.legend(fontsize=9, loc="lower right")
         ax2.grid(True, alpha=0.3, linewidth=0.5)
@@ -922,11 +939,11 @@ class Visualizer:
 
         for ax in axes:
             style_axis(ax)
-        train_loss, test_loss = self.history.get("train_loss", []), self.history.get(
-            "test_loss", []
+        train_loss, val_loss = self.history.get("train_loss", []), self.history.get(
+            "val_loss", []
         )
-        train_acc, test_acc = self.history.get("train_acc", []), self.history.get(
-            "test_acc", []
+        train_acc, val_acc = self.history.get("train_acc", []), self.history.get(
+            "val_acc", []
         )
 
         def animate(frame):
@@ -952,30 +969,30 @@ class Visualizer:
                 )
             else:
                 train_losses_current = []
-            if len(test_loss) >= current_epoch:
-                test_losses_current = test_loss[:current_epoch]
+            if len(val_loss) >= current_epoch:
+                val_losses_current = val_loss[:current_epoch]
                 axes[0].plot(
                     epochs_range,
-                    test_losses_current,
+                    val_losses_current,
                     color=colors["secondary"],
                     linewidth=2.5,
                     label="Val Loss",
                     alpha=0.9,
                 )
             else:
-                test_losses_current = []
+                val_losses_current = []
             # Generalization gap visualization
-            if train_losses_current and test_losses_current:
-                min_length = min(len(train_losses_current), len(test_losses_current))
+            if train_losses_current and val_losses_current:
+                min_length = min(len(train_losses_current), len(val_losses_current))
                 epochs_common = epochs_range[:min_length]
                 train_common = train_losses_current[:min_length]
-                test_common = test_losses_current[:min_length]
+                val_common = val_losses_current[:min_length]
 
                 axes[0].fill_between(
                     epochs_common,
                     train_common,
-                    test_common,
-                    where=np.array(test_common) > np.array(train_common),
+                    val_common,
+                    where=np.array(val_common) > np.array(train_common),
                     color=colors["secondary_accent"],
                     alpha=0.4,
                     interpolate=True,
@@ -984,8 +1001,8 @@ class Visualizer:
                 axes[0].fill_between(
                     epochs_common,
                     train_common,
-                    test_common,
-                    where=np.array(test_common) <= np.array(train_common),
+                    val_common,
+                    where=np.array(val_common) <= np.array(train_common),
                     color=colors["primary_accent"],
                     alpha=0.3,
                     interpolate=True,
@@ -995,9 +1012,9 @@ class Visualizer:
             axes[0].set_ylabel("Loss", color=colors["text"])
             axes[0].grid(True, alpha=0.3, color=colors["grid"])
             style_legend(axes[0].legend(loc="upper right"))
-            # 2. Accuracy Evolution
+            # 2. Metric Evolution
             axes[1].set_title(
-                "Accuracy Evolution",
+                f"{self.metric_display_name} Evolution",
                 color=colors["text"],
                 fontweight="bold",
                 fontsize=16,
@@ -1008,26 +1025,31 @@ class Visualizer:
                     train_acc[:current_epoch],
                     color=colors["primary"],
                     linewidth=2,
-                    label="Train Acc",
+                    label=f"Train {self.metric_display_name}",
                 )
-            if len(test_acc) >= current_epoch:
+            if len(val_acc) >= current_epoch:
                 axes[1].plot(
                     epochs_range,
-                    test_acc[:current_epoch],
+                    val_acc[:current_epoch],
                     color=colors["secondary"],
                     linewidth=2,
-                    label="Val Acc",
+                    label=f"Val {self.metric_display_name}",
                 )
             axes[1].set_xlabel("Epoch", color=colors["text"])
-            axes[1].set_ylabel("Accuracy", color=colors["text"])
+            axes[1].set_ylabel(self.metric_display_name, color=colors["text"])
             axes[1].grid(True, alpha=0.3, color=colors["grid"])
             style_legend(axes[1].legend())
             # 3. Current Metrics Bar Chart
             axes[2].set_title(
                 "Current Metrics", color=colors["text"], fontweight="bold", fontsize=16
             )
-            metrics = ["Train Loss", "Val Loss", "Train Acc", "Val Acc"]
-            data_sources = [train_loss, test_loss, train_acc, test_acc]
+            metrics = [
+                "Train Loss",
+                "Val Loss",
+                f"Train {self.metric_display_name}",
+                f"Val {self.metric_display_name}",
+            ]
+            data_sources = [train_loss, val_loss, train_acc, val_acc]
             values = [
                 data[current_epoch - 1] if len(data) >= current_epoch else 0
                 for data in data_sources

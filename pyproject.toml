@@ -66,6 +66,7 @@ sphinx-copybutton = "^0.5.2"
 sphinx-design = "^0.6.1"
 sphinxext-opengraph = "^0.13.0"
 nox = "^2025.5.1"
+pytest-cov = "^7.0.0"
 
 [tool.poetry.scripts]
 neuroscope = "neuroscope.__main__:main"
@@ -85,7 +86,7 @@ omit = [
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 45
+fail_under = 55
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
