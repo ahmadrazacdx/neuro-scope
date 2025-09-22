@@ -231,6 +231,11 @@ class TestPostTrainingEvaluator:
                         assert abs(result1[key] - result2[key]) < 1e-10
 
         # Check timing-based metrics with appropriate tolerance
+        # macOS has more variable timing due to system scheduling differences
+        import platform
+
+        timing_tolerance = 3.0 if platform.system() == "Darwin" else 2.0
+
         for key in timing_metrics:
             if key in result1 and key in result2:
                 if isinstance(result1[key], (int, float)) and isinstance(
@@ -241,8 +246,8 @@ class TestPostTrainingEvaluator:
                             result1[key], result2[key]
                         )
                         assert (
-                            ratio < 2.0
-                        ), f"Timing metric {key} varies too much: {result1[key]} vs {result2[key]}"
+                            ratio < timing_tolerance
+                        ), f"Timing metric {key} varies too much: {result1[key]} vs {result2[key]} (ratio: {ratio:.2f}, tolerance: {timing_tolerance})"
 
     def test_multiclass_classification_evaluation(self):
         """Test evaluation with multiclass classification."""

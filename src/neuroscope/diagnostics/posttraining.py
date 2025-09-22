@@ -110,9 +110,19 @@ class PostTrainingEvaluator:
     def evaluate_performance(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Evaluate model performance metrics."""
         try:
-            start_time = time.time()
-            predictions = self.model.predict(X)
-            prediction_time = time.time() - start_time
+            # Warm up the model with a small prediction to stabilize timing
+            if X.shape[0] > 1:
+                _ = self.model.predict(X[:1])
+
+            # Take multiple timing measurements for more stable results
+            times = []
+            for _ in range(3):
+                start_time = time.time()
+                predictions = self.model.predict(X)
+                times.append(time.time() - start_time)
+
+            # Use median time for more robust measurement
+            prediction_time = sorted(times)[1]  # median of 3 measurements
 
             loss, primary_accuracy = self.model.evaluate(X, y)
             samples_per_second = (
