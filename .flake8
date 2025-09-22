@@ -19,7 +19,8 @@ ignore =
     W291, W293
     # RST201: Block quote ends without a blank line
     RST201,
-    # RST203: Definition list ends without a blank line  
+    # RST203: Definition list ends without a blank line
+    RST203  
     RST203,
     # RST301: Unexpected indentation
     RST301,
