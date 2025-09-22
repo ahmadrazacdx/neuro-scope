@@ -14,10 +14,10 @@ Usage:
 Examples:
     # Check version
     python -m neuroscope --version
-    
+
     # Validate installation
     python -m neuroscope --validate
-    
+
     # Get help
     python -m neuroscope --help
 """
