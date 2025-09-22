@@ -125,9 +125,10 @@ class PostTrainingEvaluator:
             prediction_time = sorted(times)[1]  # median of 3 measurements
 
             loss, primary_accuracy = self.model.evaluate(X, y)
-            samples_per_second = (
-                X.shape[0] / prediction_time if prediction_time > 0 else float("inf")
-            )
+            # Ensure minimum time to avoid division by zero and unrealistic values
+            min_time = 1e-6  # 1 microsecond minimum
+            prediction_time = max(prediction_time, min_time)
+            samples_per_second = X.shape[0] / prediction_time
             total_params = sum(
                 w.size + b.size for w, b in zip(self.model.weights, self.model.biases)
             )
