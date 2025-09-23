@@ -190,7 +190,7 @@ class Visualizer:
         )
         ax1.plot(
             epochs,
-            self.history["test_loss"],
+            self.history["val_loss"],
             label="Validation",
             linewidth=1.2,
             color="#ff7f0e",
@@ -201,7 +201,7 @@ class Visualizer:
                 ax1, epochs, self.history["train_loss"], "#1f77b4"
             )
             self._add_confidence_intervals(
-                ax1, epochs, self.history["test_loss"], "#ff7f0e"
+                ax1, epochs, self.history["val_loss"], "#ff7f0e"
             )
 
         ax1.set_title("Loss", fontsize=11, fontweight="normal")
