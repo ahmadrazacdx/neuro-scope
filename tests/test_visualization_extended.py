@@ -24,7 +24,7 @@ class TestVisualizationExtended:
             "history": {
                 "train_loss": [1.0, 0.8, 0.6, 0.4, 0.3],
                 "train_acc": [0.5, 0.6, 0.7, 0.8, 0.85],
-                "test_loss": [1.1, 0.9, 0.7, 0.5, 0.4],
+                "val_loss": [1.1, 0.9, 0.7, 0.5, 0.4],
                 "val_acc": [0.45, 0.55, 0.65, 0.75, 0.8],
                 "epochs": [1, 2, 3, 4, 5],
             },
@@ -126,7 +126,7 @@ class TestVisualizationExtended:
             "history": {
                 "train_loss": [1.0, 0.8, 0.6, 0.4, 0.3],
                 "train_acc": [0.5, 0.6, 0.7, 0.8, 0.85],
-                "test_loss": [1.1, 0.9, 0.7, 0.5, 0.4],
+                "val_loss": [1.1, 0.9, 0.7, 0.5, 0.4],
                 "val_acc": [0.45, 0.55, 0.65, 0.75, 0.8],
             },
             "metric": "accuracy",
@@ -274,7 +274,7 @@ class TestVisualizationExtended:
         """Test plotting with empty epoch distributions."""
         history = {
             "method": "fit",
-            "history": {"train_loss": [1.0, 0.8], "test_loss": [1.1, 0.9]},
+            "history": {"train_loss": [1.0, 0.8], "val_loss": [1.1, 0.9]},
             "epoch_distributions": {},
             "metric": "accuracy",
             "metric_display_name": "Accuracy",
@@ -291,7 +291,7 @@ class TestVisualizationExtended:
         """Test handling of missing data in various plots."""
         minimal_history = {
             "method": "fit",
-            "history": {"train_loss": [1.0, 0.8], "test_loss": [1.1, 0.9]},
+            "history": {"train_loss": [1.0, 0.8], "val_loss": [1.1, 0.9]},
             "metric": "accuracy",
         }
 
@@ -316,7 +316,7 @@ class TestVisualizationExtended:
         short_history = comprehensive_history.copy()
         short_history["history"] = {
             "train_loss": [1.0, 0.8],
-            "test_loss": [1.1, 0.9],
+            "val_loss": [1.1, 0.9],
             "train_acc": [0.5, 0.6],
             "val_acc": [0.45, 0.55],
         }
@@ -344,7 +344,7 @@ class TestVisualizationExtended:
         # Test with simple format (no mean/std structure)
         simple_stats_history = {
             "method": "fit",
-            "history": {"train_loss": [1.0, 0.8], "test_loss": [1.1, 0.9]},
+            "history": {"train_loss": [1.0, 0.8], "val_loss": [1.1, 0.9]},
             "weight_stats_over_epochs": {
                 "layer_0": [0.1, 0.12],  # Simple list instead of dict
                 "layer_1": [0.05, 0.06],
