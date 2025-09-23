@@ -167,57 +167,54 @@ class PostTrainingEvaluator:
     ) -> Dict[str, float]:
         """Evaluate all available metrics from the metrics module."""
         try:
+            from neuroscope.mlp.metrics import Metrics
+        except ImportError:
             try:
-                from mlp.metrics import Metrics
-            except ImportError:
-                import os
-                import sys
+                from ..mlp.metrics import Metrics
+            except ImportError as e:
+                return {"error": f"Failed to import metrics: {str(e)}"}
 
-                sys.path.insert(
-                    0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                )
-                from mlp.metrics import Metrics
-        except ImportError as e:
-            return {"error": f"Failed to import metrics: {str(e)}"}
+        # Determine task type
+        is_multiclass = predictions.shape[1] > 1
+        is_binary = predictions.shape[1] == 1 and len(np.unique(y)) <= 10
+        is_regression = not (is_multiclass or is_binary)
 
         metrics_results = {}
         try:
-            is_classification = predictions.shape[1] > 1 or len(np.unique(y)) <= 10
-            is_binary = predictions.shape[1] == 1 and is_classification
-            metrics_results.update(
-                {
-                    "mse": Metrics.mse(y, predictions),
-                    "rmse": Metrics.rmse(y, predictions),
-                    "mae": Metrics.mae(y, predictions),
-                }
-            )
+            # Regression metrics (for regression and binary classification only)
+            if is_regression or is_binary:
+                metrics_results.update(
+                    {
+                        "mse": Metrics.mse(y, predictions),
+                        "rmse": Metrics.rmse(y, predictions),
+                        "mae": Metrics.mae(y, predictions),
+                    }
+                )
 
-            if is_classification:
-                if is_binary:
-                    metrics_results.update(
-                        {
-                            "accuracy_binary": Metrics.accuracy_binary(y, predictions),
-                            "precision": Metrics.precision(y, predictions),
-                            "recall": Metrics.recall(y, predictions),
-                            "f1_score": Metrics.f1_score(y, predictions),
-                        }
-                    )
-                else:
-                    metrics_results.update(
-                        {
-                            "accuracy_multiclass": Metrics.accuracy_multiclass(
-                                y, predictions
-                            ),
-                            "precision": Metrics.precision(
-                                y, predictions, average="macro"
-                            ),
-                            "recall": Metrics.recall(y, predictions, average="macro"),
-                            "f1_score": Metrics.f1_score(
-                                y, predictions, average="macro"
-                            ),
-                        }
-                    )
-            else:
+            # Classification metrics
+            if is_binary:
+                metrics_results.update(
+                    {
+                        "accuracy_binary": Metrics.accuracy_binary(y, predictions),
+                        "precision": Metrics.precision(y, predictions),
+                        "recall": Metrics.recall(y, predictions),
+                        "f1_score": Metrics.f1_score(y, predictions),
+                    }
+                )
+            elif is_multiclass:
+                metrics_results.update(
+                    {
+                        "accuracy_multiclass": Metrics.accuracy_multiclass(
+                            y, predictions
+                        ),
+                        "precision": Metrics.precision(y, predictions, average="macro"),
+                        "recall": Metrics.recall(y, predictions, average="macro"),
+                        "f1_score": Metrics.f1_score(y, predictions, average="macro"),
+                    }
+                )
+
+            # Regression-specific metrics
+            if is_regression:
                 metrics_results["r2_score"] = Metrics.r2_score(y, predictions)
 
         except Exception as e:
