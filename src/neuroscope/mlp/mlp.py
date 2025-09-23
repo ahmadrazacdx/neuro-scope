@@ -413,7 +413,7 @@ class MLP:
         X_val=None,
         y_val=None,
         epochs=10,
-        batch_size=None,
+        batch_size=32,
         verbose=True,
         log_every=1,
         early_stopping_patience=50,
@@ -469,6 +469,18 @@ class MLP:
             ...                     early_stopping_patience=10)
             >>> print(f"Final training loss: {history['history']['train_loss'][-1]:.4f}")
         """
+        if not isinstance(log_every, int) or log_every < 1:
+            raise ValueError("log_every must be an integer >= 1")
+        if not isinstance(monitor_freq, int) or monitor_freq < 1:
+            raise ValueError("monitor_freq must be an integer >= 1")
+        if not isinstance(numerical_check_freq, int) or numerical_check_freq < 1:
+            raise ValueError("numerical_check_freq must be an integer >= 1")
+        if not isinstance(early_stopping_patience, int) or early_stopping_patience < 1:
+            raise ValueError("early_stopping_patience must be an integer >= 1")
+        if not isinstance(epochs, int) or epochs < 1:
+            raise ValueError("epochs must be an integer >= 1")
+        if not isinstance(batch_size, int) or batch_size < 1:
+            raise ValueError("batch_size must be an integer >= 1")
 
         if reset_before_training:
             self.reset_all()
@@ -901,7 +913,7 @@ class MLP:
         X_val=None,
         y_val=None,
         epochs=10,
-        batch_size=None,
+        batch_size=32,
         verbose=True,
         log_every=1,
         early_stopping_patience=50,
@@ -966,7 +978,18 @@ class MLP:
             For research and debugging with full diagnostics, use the standard fit() method.
             This method prioritizes speed over detailed monitoring capabilities.
         """
-
+        if not isinstance(log_every, int) or log_every < 1:
+            raise ValueError("log_every must be an integer >= 1")
+        if not isinstance(numerical_check_freq, int) or numerical_check_freq < 1:
+            raise ValueError("numerical_check_freq must be an integer >= 1")
+        if not isinstance(early_stopping_patience, int) or early_stopping_patience < 1:
+            raise ValueError("early_stopping_patience must be an integer >= 1")
+        if not isinstance(epochs, int) or epochs < 1:
+            raise ValueError("epochs must be an integer >= 1")
+        if not isinstance(batch_size, int) or batch_size < 1:
+            raise ValueError("batch_size must be an integer >= 1")
+        if not isinstance(eval_freq, int) or eval_freq < 1:
+            raise ValueError("eval_freq must be an integer >= 1")
         if reset_before_training:
             self.reset_all()
         if not self.compiled:
@@ -998,11 +1021,11 @@ class MLP:
         history = {
             "train_loss": [],
             "train_acc": [],
-            "val_loss": [],
-            "val_acc": [],
             "epochs": [],
         }
-
+        if X_val is not None and y_val is not None:
+            history["val_loss"] = []
+            history["val_acc"] = []
         best_val_loss = np.inf
         patience_counter = 0
         current_lr = self.lr
@@ -1014,6 +1037,7 @@ class MLP:
                 current_lr = self.lr * (lr_decay ** (epoch - 1))
 
             numerical_issues = 0
+            is_eval = ((epoch - 1) % eval_freq == 0) or (epoch == epochs)
 
             # OPTIMIZED TRAINING LOOP - No statistics collection overhead
             for batch_idx, (Xb, yb) in enumerate(
@@ -1081,21 +1105,18 @@ class MLP:
                     warnings.warn(f"Error in batch {batch_idx}: {str(e)}")
                     continue
 
-            # OPTIMIZED EVALUATION - Only when needed
-            if epoch % eval_freq == 0 or epoch == epochs:
+            # OPTIMIZED EVALUATION
+            if is_eval:
                 history["epochs"].append(epoch)
-                # Evaluate training performance
                 train_loss, train_acc = self.evaluate(X_train, y_train, metric=metric)
                 history["train_loss"].append(train_loss)
                 history["train_acc"].append(train_acc)
 
-                # Evaluate validation performance
                 if X_val is not None and y_val is not None:
                     val_loss, val_acc = self.evaluate(X_val, y_val, metric=metric)
                     history["val_loss"].append(val_loss)
                     history["val_acc"].append(val_acc)
 
-                    # Early stopping check
                     if val_loss < best_val_loss:
                         best_val_loss = val_loss
                         patience_counter = 0
@@ -1106,24 +1127,14 @@ class MLP:
                         if verbose:
                             print(f"Early stopping at epoch {epoch}")
                         break
-                else:
-                    history["val_loss"].append(None)
-                    history["val_acc"].append(None)
-            else:
-                history["train_loss"].append(None)
-                history["train_acc"].append(None)
-                history["val_loss"].append(None)
-                history["val_acc"].append(None)
 
             # Verbose logging
-            if verbose and epoch % log_every == 0:
-                if epoch % eval_freq == 0 or epoch == epochs:
-                    log_msg = f"Epoch {epoch:3d}- Loss: {history['train_loss'][-1]:.6f}"
-                    if history["train_acc"][-1] is not None:
-                        log_msg += f" - Train {self._get_metric_display_name(metric)}: {history['train_acc'][-1]:.4f}"
-                    if X_val is not None and history["val_acc"][-1] is not None:
-                        log_msg += f" - Val {self._get_metric_display_name(metric)}: {history['val_acc'][-1]:.4f}"
-                    print(log_msg)
+            if verbose and epoch % log_every == 0 and is_eval:
+                log_msg = f"Epoch {epoch:3d}- Loss: {history['train_loss'][-1]:.6f}"
+                log_msg += f" - Train {self._get_metric_display_name(metric)}: {history['train_acc'][-1]:.4f}"
+                if X_val is not None and history.get("val_acc"):
+                    log_msg += f" - Val {self._get_metric_display_name(metric)}: {history['val_acc'][-1]:.4f}"
+                print(log_msg)
 
         return {
             "weights": [w.copy() for w in self.weights],

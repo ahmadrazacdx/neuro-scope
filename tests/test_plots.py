@@ -13,6 +13,66 @@ from neuroscope import MLP
 from neuroscope.viz.plots import Visualizer
 
 
+@pytest.fixture
+def sample_fit_fast_history():
+    """Create sample fit_fast training history with exact structure."""
+    return {
+        "method": "fit_fast",
+        "history": {
+            "train_loss": [0.8, 0.6, 0.4, 0.3],
+            "train_acc": [0.6, 0.7, 0.8, 0.85],
+            "val_loss": [0.9, 0.7, 0.5, 0.4],
+            "val_acc": [0.55, 0.65, 0.75, 0.8],
+            "epochs": [1, 3, 5, 7],  # fit_fast uses eval_freq
+        },
+        "weights": [np.random.randn(5, 3), np.random.randn(3, 1)],
+        "biases": [np.random.randn(3), np.random.randn(1)],
+        "final_lr": 0.001,
+        "metric": "smart",
+        "metric_display_name": "Accuracy",
+    }
+
+
+@pytest.fixture
+def real_fit_fast_history():
+    """Create real fit_fast history from actual training."""
+    np.random.seed(42)
+    X = np.random.randn(50, 5)
+    y = np.random.randint(0, 2, 50).reshape(-1, 1)
+
+    model = MLP([5, 3, 1], out_activation="sigmoid")
+    model.compile(optimizer="adam", lr=0.01)
+
+    return model.fit_fast(X, y, epochs=4, eval_freq=2, verbose=False)
+
+
+@pytest.fixture
+def sample_history():
+    """Create sample training history."""
+    return {
+        "method": "fit",  # Not fit_fast, so goes to else branch
+        "history": {
+            "train_loss": [1.0, 0.8, 0.6, 0.4, 0.3],
+            "train_acc": [0.5, 0.6, 0.7, 0.8, 0.85],
+            "val_loss": [1.1, 0.9, 0.7, 0.5, 0.4],
+            "val_acc": [0.45, 0.55, 0.65, 0.75, 0.8],
+            "epochs": [1, 2, 3, 4, 5],
+        },
+        "weights": [],
+        "biases": [],
+        "activations": {},
+        "gradients": {},
+        "weight_stats_over_epochs": {},
+        "activation_stats_over_epochs": {},
+        "gradient_stats_over_epochs": {},
+        "epoch_distributions": {},
+        "gradient_norms_over_epochs": {},
+        "weight_update_ratios_over_epochs": {},
+        "metric": "accuracy",
+        "metric_display_name": "Accuracy",
+    }
+
+
 class TestVisualizer:
     """Test visualization functionality."""
 
@@ -22,32 +82,6 @@ class TestVisualizer:
         model = MLP([5, 8, 1])
         model.compile(optimizer="adam", lr=0.001)
         return model
-
-    @pytest.fixture
-    def sample_history(self):
-        """Create sample training history."""
-        return {
-            "method": "fit",  # Not fit_fast, so goes to else branch
-            "history": {
-                "train_loss": [1.0, 0.8, 0.6, 0.4, 0.3],
-                "train_acc": [0.5, 0.6, 0.7, 0.8, 0.85],
-                "val_loss": [1.1, 0.9, 0.7, 0.5, 0.4],
-                "val_acc": [0.45, 0.55, 0.65, 0.75, 0.8],
-                "epochs": [1, 2, 3, 4, 5],
-            },
-            "weights": [],
-            "biases": [],
-            "activations": {},
-            "gradients": {},
-            "weight_stats_over_epochs": {},
-            "activation_stats_over_epochs": {},
-            "gradient_stats_over_epochs": {},
-            "epoch_distributions": {},
-            "gradient_norms_over_epochs": {},
-            "weight_update_ratios_over_epochs": {},
-            "metric": "accuracy",
-            "metric_display_name": "Accuracy",
-        }
 
     @pytest.fixture
     def trained_model_with_history(self):
@@ -310,4 +344,240 @@ class TestVisualizer:
         # Basic plot should always work
         result = viz.plot_learning_curves()
         assert result is None
+        plt.close("all")
+
+
+class TestPlotCurvesFast:
+    """Test plot_curves_fast functionality specifically."""
+
+    def test_plot_curves_fast_basic(self, sample_fit_fast_history):
+        """Test basic plot_curves_fast functionality."""
+        viz = Visualizer(sample_fit_fast_history)
+
+        # Should create plot without errors
+        result = viz.plot_curves_fast()
+        assert result is None
+        plt.close("all")
+
+    def test_plot_curves_fast_with_real_data(self, real_fit_fast_history):
+        """Test plot_curves_fast with real training data."""
+        viz = Visualizer(real_fit_fast_history)
+
+        # Should work with real fit_fast results
+        result = viz.plot_curves_fast()
+        assert result is None
+        plt.close("all")
+
+    def test_plot_curves_fast_parameters(self, sample_fit_fast_history):
+        """Test plot_curves_fast with different parameters."""
+        viz = Visualizer(sample_fit_fast_history)
+
+        # Test with different figure sizes
+        result = viz.plot_curves_fast(figsize=(12, 6))
+        assert result is None
+        plt.close("all")
+
+        # Test without markers
+        result = viz.plot_curves_fast(markers=False)
+        assert result is None
+        plt.close("all")
+
+        # Test with both parameters
+        result = viz.plot_curves_fast(figsize=(8, 4), markers=True)
+        assert result is None
+        plt.close("all")
+
+    def test_plot_curves_fast_validation_data(self, sample_fit_fast_history):
+        """Test plot_curves_fast with validation data."""
+        viz = Visualizer(sample_fit_fast_history)
+
+        # Should handle both training and validation curves
+        result = viz.plot_curves_fast()
+        assert result is None
+        plt.close("all")
+
+    def test_plot_curves_fast_no_validation(self):
+        """Test plot_curves_fast without validation data."""
+        history_no_val = {
+            "method": "fit_fast",
+            "history": {
+                "train_loss": [0.8, 0.6, 0.4, 0.3],
+                "train_acc": [0.6, 0.7, 0.8, 0.85],
+                "epochs": [1, 3, 5, 7],
+            },
+            "weights": [np.random.randn(5, 3)],
+            "biases": [np.random.randn(3)],
+            "metric": "smart",
+            "metric_display_name": "Accuracy",
+        }
+
+        viz = Visualizer(history_no_val)
+        result = viz.plot_curves_fast()
+        assert result is None
+        plt.close("all")
+
+    def test_plot_curves_fast_wrong_method_error(self, sample_history):
+        """Test that plot_curves_fast shows error for non-fit_fast results."""
+        viz = Visualizer(sample_history)  # This has method="fit"
+
+        # Should print error message and return
+        result = viz.plot_curves_fast()
+        assert result is None  # Function returns None after printing error
+        plt.close("all")
+
+    def test_plot_curves_fast_minimal_data(self):
+        """Test plot_curves_fast with minimal data points."""
+        minimal_history = {
+            "method": "fit_fast",
+            "history": {
+                "train_loss": [0.8, 0.4],
+                "train_acc": [0.6, 0.8],
+                "epochs": [1, 5],
+            },
+            "weights": [np.random.randn(2, 1)],
+            "biases": [np.random.randn(1)],
+            "metric": "smart",
+            "metric_display_name": "Accuracy",
+        }
+
+        viz = Visualizer(minimal_history)
+        result = viz.plot_curves_fast()
+        assert result is None
+        plt.close("all")
+
+    def test_plot_curves_fast_different_metrics(self):
+        """Test plot_curves_fast with different metric types."""
+        metrics_to_test = [
+            ("smart", "Accuracy"),
+            ("mse", "MSE"),
+            ("rmse", "RMSE"),
+            ("accuracy", "Accuracy"),
+        ]
+
+        for metric, display_name in metrics_to_test:
+            history = {
+                "method": "fit_fast",
+                "history": {
+                    "train_loss": [0.8, 0.6, 0.4],
+                    "train_acc": [0.6, 0.7, 0.8],
+                    "epochs": [1, 3, 5],
+                },
+                "weights": [np.random.randn(3, 1)],
+                "biases": [np.random.randn(1)],
+                "metric": metric,
+                "metric_display_name": display_name,
+            }
+
+            viz = Visualizer(history)
+            result = viz.plot_curves_fast()
+            assert result is None
+            plt.close("all")
+
+    def test_plot_curves_fast_memory_management(self, sample_fit_fast_history):
+        """Test memory management with multiple plot_curves_fast calls."""
+        viz = Visualizer(sample_fit_fast_history)
+
+        # Create multiple plots to test memory management
+        for i in range(5):
+            result = viz.plot_curves_fast()
+            assert result is None
+            plt.close("all")
+
+    def test_plot_curves_fast_data_integrity(self, real_fit_fast_history):
+        """Test that plot_curves_fast doesn't modify the original data."""
+        viz = Visualizer(real_fit_fast_history)
+
+        # Store original data
+        original_train_loss = real_fit_fast_history["history"]["train_loss"].copy()
+        original_epochs = real_fit_fast_history["history"]["epochs"].copy()
+
+        # Create plot
+        result = viz.plot_curves_fast()
+        assert result is None
+
+        # Verify data wasn't modified
+        assert real_fit_fast_history["history"]["train_loss"] == original_train_loss
+        assert real_fit_fast_history["history"]["epochs"] == original_epochs
+
+        plt.close("all")
+
+    def test_plot_curves_fast_edge_cases(self):
+        """Test plot_curves_fast with edge cases."""
+        # Single epoch
+        single_epoch = {
+            "method": "fit_fast",
+            "history": {
+                "train_loss": [0.5],
+                "train_acc": [0.7],
+                "epochs": [1],
+            },
+            "weights": [np.random.randn(2, 1)],
+            "biases": [np.random.randn(1)],
+            "metric": "smart",
+            "metric_display_name": "Accuracy",
+        }
+
+        viz = Visualizer(single_epoch)
+        result = viz.plot_curves_fast()
+        assert result is None
+        plt.close("all")
+
+        # Very high loss values
+        high_loss = {
+            "method": "fit_fast",
+            "history": {
+                "train_loss": [100.0, 50.0, 10.0],
+                "train_acc": [0.1, 0.3, 0.6],
+                "epochs": [1, 3, 5],
+            },
+            "weights": [np.random.randn(2, 1)],
+            "biases": [np.random.randn(1)],
+            "metric": "smart",
+            "metric_display_name": "Accuracy",
+        }
+
+        viz = Visualizer(high_loss)
+        result = viz.plot_curves_fast()
+        assert result is None
+        plt.close("all")
+
+    def test_plot_curves_fast_vs_regular_plot_disabled(self, sample_history):
+        """Test that regular plotting functions are disabled for fit_fast."""
+        # First test with fit_fast data - other functions should be disabled
+        fit_fast_history = {
+            "method": "fit_fast",
+            "history": {
+                "train_loss": [0.8, 0.6, 0.4],
+                "train_acc": [0.6, 0.7, 0.8],
+                "epochs": [1, 3, 5],
+            },
+            "weights": [np.random.randn(3, 1)],
+            "biases": [np.random.randn(1)],
+            "metric": "smart",
+            "metric_display_name": "Accuracy",
+        }
+
+        viz_fast = Visualizer(fit_fast_history)
+
+        # plot_curves_fast should work
+        result = viz_fast.plot_curves_fast()
+        assert result is None
+        plt.close("all")
+
+        # Regular plot_learning_curves should be disabled (prints message and returns)
+        result = viz_fast.plot_learning_curves()
+        assert result is None  # Returns None after printing error
+        plt.close("all")
+
+        # Now test with regular fit data - all functions should work
+        viz_regular = Visualizer(sample_history)
+
+        # Regular plot_learning_curves should work
+        result = viz_regular.plot_learning_curves()
+        assert result is None
+        plt.close("all")
+
+        # plot_curves_fast should be disabled for regular fit
+        result = viz_regular.plot_curves_fast()
+        assert result is None  # Returns None after printing error
         plt.close("all")

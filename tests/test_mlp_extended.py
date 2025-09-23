@@ -114,7 +114,7 @@ class TestMLPExtended:
         y = np.random.randint(0, 2, (10, 2))
 
         # Batch size larger than data
-        history = model.fit_fast(X, y, epochs=3, batch_size=20, verbose=0)
+        history = model.fit_fast(X, y, epochs=3, batch_size=20, eval_freq=1, verbose=0)
 
         assert isinstance(history, dict)
         assert len(history["history"]["train_loss"]) == 3

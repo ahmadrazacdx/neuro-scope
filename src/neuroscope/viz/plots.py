@@ -52,11 +52,13 @@ class Visualizer:
                 training statistics, network states, and diagnostic information.
         """
         self.hist = hist
-        if hist.get("method") == "fit_fast":
+        self.method = self.hist.get("method")
+        if self.method == "fit_fast":
             self.history = hist["history"]
             self.weights = hist.get("weights", None)
             self.biases = hist.get("biases", None)
             self.metric = hist.get("metric", "accuracy")
+            self.metric_display_name = hist.get("metric_display_name", "Accuracy")
         else:
             self.history = hist["history"]
             self.weights = hist.get("weights", None)
@@ -146,16 +148,18 @@ class Visualizer:
         self, figsize=(9, 4), ci=False, markers=True, save_path=None, metric="accuracy"
     ):
         """
-        Plot training and validation learning curves.
+        Plot training and validation learning curves for regular fit() results.
 
-        Creates publication-quality subplot showing loss and metric evolution
+        Creates highest quality subplot showing loss and metric evolution
         during training. Automatically detects available data and applies
         consistent styling with optional confidence intervals.
+
+        Note: For fit_fast() results, use plot_curves_fast() instead.
 
         Args:
             figsize (tuple[int, int], optional): Figure dimensions (width, height). Defaults to (9, 4).
             ci (bool, optional): Whether to add confidence intervals using moving window statistics.
-                Defaults to False.
+                Only available for regular fit() results. Defaults to False.
             markers (bool, optional): Whether to show markers on line plots. Defaults to True.
             save_path (str, optional): Path to save the figure. Defaults to None.
             metric (str, optional): Name of the metric for y-axis label. Defaults to 'accuracy'.
@@ -163,6 +167,9 @@ class Visualizer:
         Example:
             >>> viz.plot_learning_curves(figsize=(10, 5), ci=True, save_path='curves.png')
         """
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
         if self.epochs_:
             epochs = self.epochs_
@@ -266,7 +273,84 @@ class Visualizer:
             std_val = np.std(window_data)
             ci_upper.append(mean_val + 1.96 * std_val / np.sqrt(len(window_data)))
             ci_lower.append(mean_val - 1.96 * std_val / np.sqrt(len(window_data)))
-        ax.fill_between(x, ci_lower, ci_upper, color=color, alpha=alpha)
+        x_clean = [i for i, val in enumerate(x) if not np.isnan(val)]
+        ax.fill_between(x_clean, ci_lower, ci_upper, color=color, alpha=alpha)
+
+    def plot_curves_fast(self, figsize=(10, 4), markers=True, save_path=None):
+        """
+        Plot learning curves for fit_fast() results.
+
+        Args:
+            figsize (tuple, optional): Figure size. Defaults to (10, 4).
+            markers (bool, optional): Show actual data points. Defaults to True.
+            save_path (str, optional): Save path. Defaults to None.
+        """
+        if self.method != "fit_fast":
+            print("Use plot_learning_curves() for regular fit() results.")
+            return
+
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
+
+        # Get clean data from fit_fast (no None values)
+        epochs = self.history["epochs"]
+        train_loss = self.history["train_loss"]
+        train_acc = self.history["train_acc"]
+        val_loss = self.history.get("val_loss", [])
+        val_acc = self.history.get("val_acc", [])
+
+        # Plot settings
+        line_kw = {"linewidth": 1.2}
+        marker_kw = {"marker": "o", "markersize": 3} if markers else {"marker": None}
+
+        # Plot Loss
+        ax1.plot(
+            epochs,
+            train_loss,
+            label="Training",
+            color="#1f77b4",
+            **line_kw,
+            **marker_kw,
+        )
+        if val_loss:
+            ax1.plot(
+                epochs,
+                val_loss,
+                label="Validation",
+                color="#ff7f0e",
+                **line_kw,
+                **marker_kw,
+            )
+        ax1.set_title("Loss", fontsize=11, fontweight="normal")
+        ax1.set_xlabel("Epoch")
+        ax1.set_ylabel("Loss")
+        ax1.legend(fontsize=9, loc="upper right")
+        ax1.grid(True, alpha=0.3, linewidth=0.5)
+        ax1.tick_params(labelsize=9)
+
+        # Plot Accuracy
+        ax2.plot(
+            epochs, train_acc, label="Training", color="#1f77b4", **line_kw, **marker_kw
+        )
+        if val_acc:
+            ax2.plot(
+                epochs,
+                val_acc,
+                label="Validation",
+                color="#ff7f0e",
+                **line_kw,
+                **marker_kw,
+            )
+        ax2.set_title(self.metric_display_name, fontsize=11, fontweight="normal")
+        ax2.set_xlabel("Epoch")
+        ax2.set_ylabel(self.metric_display_name)
+        ax2.legend(fontsize=9, loc="lower right")
+        ax2.grid(True, alpha=0.3, linewidth=0.5)
+        ax2.tick_params(labelsize=9)
+
+        plt.tight_layout(pad=2.0)
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches="tight", facecolor="white")
+        plt.show()
 
     def plot_activation_hist(
         self, epoch=None, figsize=(9, 4), kde=False, last_layer=False, save_path=None
@@ -288,6 +372,9 @@ class Visualizer:
         Example:
             >>> viz.plot_activation_hist(epoch=50, kde=True, save_path='activations.png')
         """
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
         return self._plot_epoch_distribution(
             "activations",
             "Activation Distributions (Epoch-Agg)",
@@ -324,6 +411,9 @@ class Visualizer:
         Example:
             >>> viz.plot_gradient_hist(epoch=25, kde=True, save_path='gradients.png')
         """
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
         return self._plot_epoch_distribution(
             "gradients",
             "Gradient Distributions (Epoch-Agg)",
@@ -348,6 +438,10 @@ class Visualizer:
             last_layer: Whether to include output layer (default: False, hidden layers only)
             save_path: Path to save figure
         """
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
+
         return self._plot_epoch_distribution(
             "weights",
             "Weight Distributions (Epoch-Agg)",
@@ -474,6 +568,9 @@ class Visualizer:
             figsize: Figure size tuple
             save_path: Path to save figure
         """
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
         fig, ax = self._configure_plot(
             "Activation Statistics Over Epochs", "Epoch", "Mean Activation", figsize
         )
@@ -573,6 +670,9 @@ class Visualizer:
         self, figsize=(12, 4), save_path=None, reference_lines=False
     ):
         """Plot gradient statistics over time with both mean and std."""
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
         fig, ax = self._configure_plot(
             "Gradient Statistics Over Epochs", "Epoch", "Mean |Gradient|", figsize
         )
@@ -668,6 +768,9 @@ class Visualizer:
 
     def plot_weight_stats(self, figsize=(12, 4), save_path=None, reference_lines=False):
         """Plot weight statistics over time with both mean and std."""
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
         fig, ax = self._configure_plot(
             "Weight Statistics Over Epochs", "Epoch", "Mean |Weight|", figsize
         )
@@ -771,6 +874,9 @@ class Visualizer:
             figsize: Figure size tuple
             save_path: Path to save figure
         """
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
         fig, ax = self._configure_plot(
             "Weight Update Ratios Over Epochs", "Epoch", "Update Ratio", figsize
         )
@@ -832,6 +938,9 @@ class Visualizer:
         reference_lines=False,
     ):
         """Plot gradient norms per layer over epochs."""
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
         fig, ax = self._configure_plot(
             "Gradient Norms Over Epochs", "Epoch", "Gradient Norm", figsize
         )
@@ -895,6 +1004,9 @@ class Visualizer:
         Returns:
             Path to saved GIF file
         """
+        if self.method == "fit_fast":
+            print("The function is only accessible to .fit() method.")
+            return
         epochs = len(self.history.get("train_loss", []))
         if epochs == 0:
             print("No training data found - cannot create animation")
