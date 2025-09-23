@@ -357,11 +357,13 @@
 <span class="sd">                training statistics, network states, and diagnostic information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hist</span> <span class="o">=</span> <span class="n">hist</span>
-        <span class="k">if</span> <span class="n">hist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">hist</span><span class="p">[</span><span class="s2">&quot;history&quot;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weights&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">biases</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;biases&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metric&quot;</span><span class="p">,</span> <span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metric_display_name</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metric_display_name&quot;</span><span class="p">,</span> <span class="s2">&quot;Accuracy&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">hist</span><span class="p">[</span><span class="s2">&quot;history&quot;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weights&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -454,16 +456,18 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">ci</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plot training and validation learning curves.</span>
+<span class="sd">        Plot training and validation learning curves for regular fit() results.</span>
 
-<span class="sd">        Creates publication-quality subplot showing loss and metric evolution</span>
+<span class="sd">        Creates highest quality subplot showing loss and metric evolution</span>
 <span class="sd">        during training. Automatically detects available data and applies</span>
 <span class="sd">        consistent styling with optional confidence intervals.</span>
+
+<span class="sd">        Note: For fit_fast() results, use plot_curves_fast() instead.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            figsize (tuple[int, int], optional): Figure dimensions (width, height). Defaults to (9, 4).</span>
 <span class="sd">            ci (bool, optional): Whether to add confidence intervals using moving window statistics.</span>
-<span class="sd">                Defaults to False.</span>
+<span class="sd">                Only available for regular fit() results. Defaults to False.</span>
 <span class="sd">            markers (bool, optional): Whether to show markers on line plots. Defaults to True.</span>
 <span class="sd">            save_path (str, optional): Path to save the figure. Defaults to None.</span>
 <span class="sd">            metric (str, optional): Name of the metric for y-axis label. Defaults to &#39;accuracy&#39;.</span>
@@ -471,6 +475,9 @@
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; viz.plot_learning_curves(figsize=(10, 5), ci=True, save_path=&#39;curves.png&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">epochs_</span><span class="p">:</span>
             <span class="n">epochs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epochs_</span>
@@ -575,7 +582,87 @@
             <span class="n">std_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">window_data</span><span class="p">)</span>
             <span class="n">ci_upper</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_val</span> <span class="o">+</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">std_val</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">window_data</span><span class="p">)))</span>
             <span class="n">ci_lower</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_val</span> <span class="o">-</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">std_val</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">window_data</span><span class="p">)))</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ci_lower</span><span class="p">,</span> <span class="n">ci_upper</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">x_clean</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">val</span><span class="p">)]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x_clean</span><span class="p">,</span> <span class="n">ci_lower</span><span class="p">,</span> <span class="n">ci_upper</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Visualizer.plot_curves_fast">
+<a class="viewcode-back" href="../../../reference.html#neuroscope.Visualizer.plot_curves_fast">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_curves_fast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">markers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot learning curves for fit_fast() results.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            figsize (tuple, optional): Figure size. Defaults to (10, 4).</span>
+<span class="sd">            markers (bool, optional): Show actual data points. Defaults to True.</span>
+<span class="sd">            save_path (str, optional): Save path. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Use plot_learning_curves() for regular fit() results.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+
+        <span class="c1"># Get clean data from fit_fast (no None values)</span>
+        <span class="n">epochs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;epochs&quot;</span><span class="p">]</span>
+        <span class="n">train_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;train_loss&quot;</span><span class="p">]</span>
+        <span class="n">train_acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;train_acc&quot;</span><span class="p">]</span>
+        <span class="n">val_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;val_loss&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">val_acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;val_acc&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="c1"># Plot settings</span>
+        <span class="n">line_kw</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;linewidth&quot;</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">}</span>
+        <span class="n">marker_kw</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;markersize&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span> <span class="k">if</span> <span class="n">markers</span> <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+        <span class="c1"># Plot Loss</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">epochs</span><span class="p">,</span>
+            <span class="n">train_loss</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Training&quot;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">line_kw</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">marker_kw</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">val_loss</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">epochs</span><span class="p">,</span>
+                <span class="n">val_loss</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Validation&quot;</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#ff7f0e&quot;</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">line_kw</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">marker_kw</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Epoch&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+        <span class="c1"># Plot Accuracy</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">epochs</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Training&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#1f77b4&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">line_kw</span><span class="p">,</span> <span class="o">**</span><span class="n">marker_kw</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">val_acc</span><span class="p">:</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">epochs</span><span class="p">,</span>
+                <span class="n">val_acc</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Validation&quot;</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#ff7f0e&quot;</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">line_kw</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">marker_kw</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric_display_name</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Epoch&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric_display_name</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">save_path</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="Visualizer.plot_activation_hist">
 <a class="viewcode-back" href="../../../reference.html#neuroscope.Visualizer.plot_activation_hist">[docs]</a>
@@ -599,6 +686,9 @@
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; viz.plot_activation_hist(epoch=50, kde=True, save_path=&#39;activations.png&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plot_epoch_distribution</span><span class="p">(</span>
             <span class="s2">&quot;activations&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Activation Distributions (Epoch-Agg)&quot;</span><span class="p">,</span>
@@ -638,6 +728,9 @@
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; viz.plot_gradient_hist(epoch=25, kde=True, save_path=&#39;gradients.png&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plot_epoch_distribution</span><span class="p">(</span>
             <span class="s2">&quot;gradients&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Gradient Distributions (Epoch-Agg)&quot;</span><span class="p">,</span>
@@ -665,6 +758,10 @@
 <span class="sd">            last_layer: Whether to include output layer (default: False, hidden layers only)</span>
 <span class="sd">            save_path: Path to save figure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plot_epoch_distribution</span><span class="p">(</span>
             <span class="s2">&quot;weights&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Weight Distributions (Epoch-Agg)&quot;</span><span class="p">,</span>
@@ -794,6 +891,9 @@
 <span class="sd">            figsize: Figure size tuple</span>
 <span class="sd">            save_path: Path to save figure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configure_plot</span><span class="p">(</span>
             <span class="s2">&quot;Activation Statistics Over Epochs&quot;</span><span class="p">,</span> <span class="s2">&quot;Epoch&quot;</span><span class="p">,</span> <span class="s2">&quot;Mean Activation&quot;</span><span class="p">,</span> <span class="n">figsize</span>
         <span class="p">)</span>
@@ -896,6 +996,9 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reference_lines</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot gradient statistics over time with both mean and std.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configure_plot</span><span class="p">(</span>
             <span class="s2">&quot;Gradient Statistics Over Epochs&quot;</span><span class="p">,</span> <span class="s2">&quot;Epoch&quot;</span><span class="p">,</span> <span class="s2">&quot;Mean |Gradient|&quot;</span><span class="p">,</span> <span class="n">figsize</span>
         <span class="p">)</span>
@@ -994,6 +1097,9 @@
 <a class="viewcode-back" href="../../../reference.html#neuroscope.Visualizer.plot_weight_stats">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_weight_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reference_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot weight statistics over time with both mean and std.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configure_plot</span><span class="p">(</span>
             <span class="s2">&quot;Weight Statistics Over Epochs&quot;</span><span class="p">,</span> <span class="s2">&quot;Epoch&quot;</span><span class="p">,</span> <span class="s2">&quot;Mean |Weight|&quot;</span><span class="p">,</span> <span class="n">figsize</span>
         <span class="p">)</span>
@@ -1100,6 +1206,9 @@
 <span class="sd">            figsize: Figure size tuple</span>
 <span class="sd">            save_path: Path to save figure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configure_plot</span><span class="p">(</span>
             <span class="s2">&quot;Weight Update Ratios Over Epochs&quot;</span><span class="p">,</span> <span class="s2">&quot;Epoch&quot;</span><span class="p">,</span> <span class="s2">&quot;Update Ratio&quot;</span><span class="p">,</span> <span class="n">figsize</span>
         <span class="p">)</span>
@@ -1164,6 +1273,9 @@
         <span class="n">reference_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot gradient norms per layer over epochs.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configure_plot</span><span class="p">(</span>
             <span class="s2">&quot;Gradient Norms Over Epochs&quot;</span><span class="p">,</span> <span class="s2">&quot;Epoch&quot;</span><span class="p">,</span> <span class="s2">&quot;Gradient Norm&quot;</span><span class="p">,</span> <span class="n">figsize</span>
         <span class="p">)</span>
@@ -1230,6 +1342,9 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Path to saved GIF file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fit_fast&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The function is only accessible to .fit() method.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="n">epochs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="p">[]))</span>
         <span class="k">if</span> <span class="n">epochs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No training data found - cannot create animation&quot;</span><span class="p">)</span>
