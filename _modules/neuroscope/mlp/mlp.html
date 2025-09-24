@@ -870,6 +870,8 @@
         <span class="n">patience_counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">current_lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span>
 
+        <span class="n">_BackwardPass</span><span class="o">.</span><span class="n">reset_warning_throttling</span><span class="p">()</span>
+
         <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">epochs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="c1"># Learning rate decay</span>
             <span class="k">if</span> <span class="n">lr_decay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1359,6 +1361,8 @@
         <span class="n">patience_counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">current_lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span>
 
+        <span class="n">_BackwardPass</span><span class="o">.</span><span class="n">reset_warning_throttling</span><span class="p">()</span>
+
         <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">epochs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
 
             <span class="c1"># Learning rate decay</span>
@@ -1512,6 +1516,9 @@
             <span class="n">initial_loss</span><span class="p">,</span> <span class="n">initial_acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">X_batch</span><span class="p">,</span> <span class="n">y_batch</span><span class="p">)</span>
             <span class="n">metric_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_metric_display_name</span><span class="p">(</span><span class="s2">&quot;smart&quot;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initial: Loss=</span><span class="si">{</span><span class="n">initial_loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">initial_acc</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Reset warning throttling for new training session</span>
+        <span class="n">_BackwardPass</span><span class="o">.</span><span class="n">reset_warning_throttling</span><span class="p">()</span>
 
         <span class="c1"># Training loop</span>
         <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>

@@ -538,7 +538,7 @@
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; issues = Utils.check_numerical_stability(activations, &quot;forward_pass&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; if issues:</span>
-<span class="sd">            ...     print(f&quot;⚠️ Training Issue: {issues[0]}&quot;)</span>
+<span class="sd">            ...     print(f&quot;Training Issue: {issues[0]}&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -546,7 +546,6 @@
             <span class="k">if</span> <span class="n">arr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="c1"># Check for NaN values (model has broken)</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="n">fast_mode</span><span class="p">:</span>
                     <span class="k">return</span> <span class="p">[</span>
@@ -556,9 +555,7 @@
                     <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                         <span class="s2">&quot;Model has broken (NaN values). Try lower learning rate or check your data.&quot;</span>
                     <span class="p">)</span>
-                    <span class="k">break</span>  <span class="c1"># No point checking further</span>
-
-            <span class="c1"># Check for infinite values (gradients exploded)</span>
+                    <span class="k">break</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">arr</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="n">fast_mode</span><span class="p">:</span>
                     <span class="k">return</span> <span class="p">[</span>
@@ -568,9 +565,8 @@
                     <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                         <span class="s2">&quot;Gradients exploded (Inf values). Use lower learning rate or normalize your data.&quot;</span>
                     <span class="p">)</span>
-                    <span class="k">break</span>  <span class="c1"># No point checking further</span>
+                    <span class="k">break</span>
 
-            <span class="c1"># Check for very large values (heading toward explosion)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">fast_mode</span><span class="p">:</span>
                 <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">max_val</span> <span class="o">&gt;</span> <span class="mf">1e8</span><span class="p">:</span>
@@ -586,14 +582,10 @@
                         <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                             <span class="sa">f</span><span class="s2">&quot;Values in </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2"> are getting very large. This may cause training instability.&quot;</span>
                         <span class="p">)</span>
-                    <span class="k">break</span>  <span class="c1"># One clear warning is enough</span>
-
-                <span class="c1"># Check for vanishing gradients</span>
-                <span class="k">if</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;gradients&quot;</span> <span class="ow">and</span> <span class="n">max_val</span> <span class="o">&lt;</span> <span class="mf">1e-8</span><span class="p">:</span>
-                    <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="s2">&quot;Gradients are very small (vanishing). Try higher learning rate or different activation functions.&quot;</span>
-                    <span class="p">)</span>
                     <span class="k">break</span>
+
+                <span class="c1"># Note: Vanishing gradients are often normal in deep networks</span>
+                <span class="c1"># Training monitors (loss tracking) will catch real issues</span>
 
         <span class="k">return</span> <span class="n">issues</span></div>
 </div>

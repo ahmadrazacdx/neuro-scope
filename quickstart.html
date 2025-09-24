@@ -655,9 +655,12 @@ WUR: 🟢 (1.30e-03)  | Saturation:   🟢 (0.00)   | Progress: 🟢  | Plateau:
 <span class="c1"># Basic learning curves</span>
 <span class="n">viz</span><span class="o">.</span><span class="n">plot_learning_curves</span><span class="p">()</span>
 
-<span class="c1"># Advanced learning curves with confidence intervals</span>
+<span class="c1"># Advanced learning curves with confidence intervals </span>
+<span class="c1"># Only availabe for use with fit()</span>
 <span class="n">viz</span><span class="o">.</span><span class="n">plot_learning_curves</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">ci</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+<span class="c1"># for fit_fast()</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">plot_curves_fast</span><span class="p">()</span>
 <span class="c1"># The plot titles and labels automatically sync with your training metric:</span>
 <span class="c1"># - metric=&quot;accuracy&quot; → shows &quot;Accuracy&quot; </span>
 <span class="c1"># - metric=&quot;r2&quot; → shows &quot;R²&quot;</span>

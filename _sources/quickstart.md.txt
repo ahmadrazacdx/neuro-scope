@@ -321,9 +321,12 @@ viz = Visualizer(history)
 # Basic learning curves
 viz.plot_learning_curves()
 
-# Advanced learning curves with confidence intervals
+# Advanced learning curves with confidence intervals 
+# Only availabe for use with fit()
 viz.plot_learning_curves(figsize=(9, 4), ci=True, markers=True)
 
+# for fit_fast()
+viz.plot_curves_fast()
 # The plot titles and labels automatically sync with your training metric:
 # - metric="accuracy" → shows "Accuracy" 
 # - metric="r2" → shows "R²"
