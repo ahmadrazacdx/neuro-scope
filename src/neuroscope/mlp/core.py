@@ -3,6 +3,9 @@ Core Neural Network Operations
 Internal forward and backward propagation implementations.
 """
 
+import time
+from collections import defaultdict
+
 import numpy as np
 
 from .activations import ActivationFunctions
@@ -125,6 +128,50 @@ class _BackwardPass:
     internal API and should not be used directly.
     """
 
+    # Class-level warning throttling to prevent spam
+    _warning_counts = defaultdict(int)
+    _last_warning_time = defaultdict(float)
+    _max_warnings_per_type = 3  # Maximum warnings per type per training session
+    _warning_cooldown = 30.0  # Minimum seconds between same warning types
+
+    @classmethod
+    def _print_throttled_warning(cls, warning_type: str, message: str):
+        """
+        Print warning with throttling to prevent spam.
+
+        Args:
+            warning_type: Unique identifier for the warning type
+            message: Warning message to print
+        """
+        current_time = time.time()
+
+        # Check if we've exceeded max warnings for this type
+        if cls._warning_counts[warning_type] >= cls._max_warnings_per_type:
+            return
+
+        # Check if enough time has passed since last warning of this type
+        if (
+            current_time - cls._last_warning_time[warning_type]
+        ) < cls._warning_cooldown:
+            return
+
+        # Print the warning and update counters
+        print(message)
+        cls._warning_counts[warning_type] += 1
+        cls._last_warning_time[warning_type] = current_time
+
+        # If this is the last warning for this type, inform user
+        if cls._warning_counts[warning_type] >= cls._max_warnings_per_type:
+            print(
+                f"(Further '{warning_type}' warnings will be suppressed for this training session)"
+            )
+
+    @classmethod
+    def reset_warning_throttling(cls):
+        """Reset warning counters (useful for new training sessions)."""
+        cls._warning_counts.clear()
+        cls._last_warning_time.clear()
+
     @staticmethod
     def backward_mlp(
         y_true,
@@ -190,10 +237,10 @@ class _BackwardPass:
         db = [np.zeros_like(b) for b in biases]
         AL = activations[-1]  # Y_pred : Activation of last layer (N, out_dim)
 
-        # Check numerical stability of outputs
-        stability_issues = Utils.check_numerical_stability([AL], "output_activations")
-        if stability_issues:
-            print(f"⚠️ {stability_issues[0]}")
+        if np.any(np.isnan(AL)) or np.any(np.isinf(AL)):
+            raise RuntimeError(
+                "Model outputs contain NaN or Inf values. Training failed - check your data and learning rate."
+            )
 
         if out_activation is None:
             dZ = (AL - y_true) / N
@@ -234,10 +281,5 @@ class _BackwardPass:
                     dZ = dA_prev * ActivationFunctions.selu_derivative(Z_prev)
                 else:
                     raise ValueError("Unknown hidden_activation: " + hidden_activation)
-
-        # Check gradient numerical stability
-        gradient_issues = Utils.check_numerical_stability(dW + db, "gradients")
-        if gradient_issues:
-            print(f"Gradient numerical issues: {gradient_issues[0]}")
 
         return dW, db

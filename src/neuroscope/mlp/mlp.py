@@ -544,6 +544,8 @@ class MLP:
         patience_counter = 0
         current_lr = self.lr
 
+        _BackwardPass.reset_warning_throttling()
+
         for epoch in range(1, epochs + 1):
             # Learning rate decay
             if lr_decay is not None:
@@ -1030,6 +1032,8 @@ class MLP:
         patience_counter = 0
         current_lr = self.lr
 
+        _BackwardPass.reset_warning_throttling()
+
         for epoch in range(1, epochs + 1):
 
             # Learning rate decay
@@ -1180,6 +1184,9 @@ class MLP:
             initial_loss, initial_acc = self.evaluate(X_batch, y_batch)
             metric_name = self._get_metric_display_name("smart")
             print(f"Initial: Loss={initial_loss:.4f}, {metric_name}={initial_acc:.2%}")
+
+        # Reset warning throttling for new training session
+        _BackwardPass.reset_warning_throttling()
 
         # Training loop
         for epoch in range(epochs):

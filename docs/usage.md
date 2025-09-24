@@ -292,7 +292,7 @@ small_data_model.compile(optimizer="adam", lr=1e-3, reg="l2", lamda=1e-3)
 | **Underfitting** | Both accuracies low | Larger network, lower regularization, higher learning rate |
 
 
-## Diagnosis Book
+## Recipe Book
 
 ### Quick Problem Solver
 

@@ -474,11 +474,6 @@ class TestMLPExtended:
         issues = Utils.check_numerical_stability(large_arrays, context="gradients")
         assert len(issues) > 0
 
-        # Very small gradients (vanishing)
-        small_arrays = [np.array([[1e-10, 2e-10], [3e-10, 4e-10]])]
-        issues = Utils.check_numerical_stability(small_arrays, context="gradients")
-        assert len(issues) > 0
-
     def test_utils_numerical_stability_fast_mode(self):
         """Test numerical stability checking in fast mode."""
         # NaN in fast mode

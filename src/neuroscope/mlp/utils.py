@@ -218,7 +218,7 @@ class Utils:
         Example:
             >>> issues = Utils.check_numerical_stability(activations, "forward_pass")
             >>> if issues:
-            ...     print(f"⚠️ Training Issue: {issues[0]}")
+            ...     print(f"Training Issue: {issues[0]}")
         """
         issues = []
 
@@ -226,7 +226,6 @@ class Utils:
             if arr is None:
                 continue
 
-            # Check for NaN values (model has broken)
             if np.any(np.isnan(arr)):
                 if fast_mode:
                     return [
@@ -236,9 +235,7 @@ class Utils:
                     issues.append(
                         "Model has broken (NaN values). Try lower learning rate or check your data."
                     )
-                    break  # No point checking further
-
-            # Check for infinite values (gradients exploded)
+                    break
             if np.any(np.isinf(arr)):
                 if fast_mode:
                     return [
@@ -248,9 +245,8 @@ class Utils:
                     issues.append(
                         "Gradients exploded (Inf values). Use lower learning rate or normalize your data."
                     )
-                    break  # No point checking further
+                    break
 
-            # Check for very large values (heading toward explosion)
             if not fast_mode:
                 max_val = np.max(np.abs(arr))
                 if max_val > 1e8:
@@ -266,13 +262,9 @@ class Utils:
                         issues.append(
                             f"Values in {context} are getting very large. This may cause training instability."
                         )
-                    break  # One clear warning is enough
-
-                # Check for vanishing gradients
-                if context == "gradients" and max_val < 1e-8:
-                    issues.append(
-                        "Gradients are very small (vanishing). Try higher learning rate or different activation functions."
-                    )
                     break
+
+                # Note: Vanishing gradients are often normal in deep networks
+                # Training monitors (loss tracking) will catch real issues
 
         return issues
