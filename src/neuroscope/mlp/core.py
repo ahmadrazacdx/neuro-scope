@@ -128,11 +128,10 @@ class _BackwardPass:
     internal API and should not be used directly.
     """
 
-    # Class-level warning throttling to prevent spam
     _warning_counts = Counter()
     _last_warning_time = defaultdict(float)
-    _max_warnings_per_type = 3  # Maximum warnings per type per training session
-    _warning_cooldown = 30.0  # Minimum seconds between same warning types
+    _max_warnings_per_type = 3
+    _warning_cooldown = 30.0
 
     @classmethod
     def _print_throttled_warning(cls, warning_type: str, message: str):
