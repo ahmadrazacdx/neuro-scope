@@ -4,7 +4,7 @@ Internal forward and backward propagation implementations.
 """
 
 import time
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 import numpy as np
 
@@ -129,7 +129,7 @@ class _BackwardPass:
     """
 
     # Class-level warning throttling to prevent spam
-    _warning_counts = defaultdict(int)
+    _warning_counts = Counter()
     _last_warning_time = defaultdict(float)
     _max_warnings_per_type = 3  # Maximum warnings per type per training session
     _warning_cooldown = 30.0  # Minimum seconds between same warning types
@@ -163,7 +163,7 @@ class _BackwardPass:
         # If this is the last warning for this type, inform user
         if cls._warning_counts[warning_type] >= cls._max_warnings_per_type:
             print(
-                f"(Further '{warning_type}' warnings will be suppressed for this training session)"
+                f"(Further {warning_type!r} warnings will be suppressed for this training session)"
             )
 
     @classmethod
