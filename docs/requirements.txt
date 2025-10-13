@@ -1,4 +1,4 @@
-sphinx>=7.4.7,<8
+sphinx>=7.4.7,<9
 furo>=2024.8.25
 myst-parser>=4.0.0
 sphinx-autobuild>=2025.8.25
