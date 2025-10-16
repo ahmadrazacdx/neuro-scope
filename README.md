@@ -55,7 +55,7 @@
 ### Developer Experience
 - **Clean API**: Intuitive interface with sensible defaults
 - **Type Safety**: Full type hints and runtime validation
-- **Comprehensive Testing**: 95%+ test coverage with property-based testing
+- **Comprehensive Testing**: 60%+ test coverage with property-based testing
 - **Production Ready**: Extensive documentation, CI/CD, and quality assurance
 
 ## Requirements

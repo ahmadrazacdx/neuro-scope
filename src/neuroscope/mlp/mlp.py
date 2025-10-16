@@ -431,7 +431,7 @@ class MLP:
         epochs=10,
         batch_size=32,
         verbose=True,
-        log_every=1,
+        log_every=5,
         early_stopping_patience=50,
         lr_decay=None,
         numerical_check_freq=100,
