@@ -60,6 +60,15 @@ Complete reference for all NeuroScope modules, classes, and functions.
    :show-inheritance:
 ```
 
+### Optimizers
+
+```{eval-rst}
+.. automodule:: neuroscope.mlp.optimizers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+```
+
 ### Utilities
 
 ```{eval-rst}

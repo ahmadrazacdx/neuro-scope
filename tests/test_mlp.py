@@ -93,7 +93,7 @@ class TestMLP:
         if hasattr(mlp, "compile"):
             mlp.compile(optimizer="adam", lr=0.001)
             assert mlp.compiled is True
-            assert mlp.optimizer == "adam"
+            assert mlp.optimizer.__class__.__name__ == "Adam"
             assert mlp.lr == 0.001
 
     def test_predict_method(self):
@@ -262,17 +262,17 @@ class TestMLP:
         mlp.compile(optimizer="adam", lr=0.001, reg="l2", lamda=0.01)
 
         assert mlp.compiled is True
-        assert mlp.optimizer == "adam"
+        assert mlp.optimizer.__class__.__name__ == "Adam"
         assert mlp.lr == 0.001
         assert mlp.reg == "l2"
         assert mlp.lamda == 0.01
-        assert mlp.adam_state is not None  # Adam state should be initialized
+        # Adam state is initialized on first update, not during compile
 
         # Test compilation with SGD
         mlp2 = MLP(layer_dims=[5, 3, 1])
         mlp2.compile(optimizer="sgd", lr=0.01, gradient_clip=5.0)
 
-        assert mlp2.optimizer == "sgd"
+        assert mlp2.optimizer.__class__.__name__ == "SGD"
         assert mlp2.lr == 0.01
         assert mlp2.gradient_clip == 5.0
 

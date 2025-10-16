@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neuroscope"
-version = "0.1.0"
+version = "0.2.0"
 description = "A microscope for informed training of multi-layer perceptron, diagnosing training issues at granular level and accelerating learning and rapid prototyping."
 authors = ["Ahmad Raza <ahmadrazacdx@gmail.com>"]
 license = "Apache-2.0"
@@ -99,7 +99,7 @@ omit = [
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 55
+fail_under = 60
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",

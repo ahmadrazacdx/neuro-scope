@@ -240,3 +240,45 @@ class TestLossFunctions:
         loss = LossFunctions.bce(y_true, y_pred, eps=eps)
         assert np.isfinite(loss)
         assert loss >= 0
+
+    def test_bce_with_reg_basic(self):
+        """Test Binary Cross Entropy with L2 regularization."""
+        y_true = np.array([0.0, 1.0, 1.0, 0.0])
+        y_pred = np.array([0.1, 0.9, 0.8, 0.2])
+        weights = [np.array([[1.0, 0.5], [0.3, 0.8]])]
+        lamda = 0.01
+
+        loss = LossFunctions.bce_with_reg(y_true, y_pred, weights, lamda)
+
+        # Basic properties
+        assert isinstance(loss, (int, float))
+        assert loss >= 0
+        assert np.isfinite(loss)
+
+        # Should be greater than BCE alone
+        bce_loss = LossFunctions.bce(y_true, y_pred)
+        assert loss > bce_loss
+
+    def test_bce_with_reg_zero_lambda(self):
+        """Test BCE with reg when lambda=0 equals plain BCE."""
+        y_true = np.array([0.0, 1.0, 1.0, 0.0])
+        y_pred = np.array([0.1, 0.9, 0.8, 0.2])
+        weights = [np.array([[1.0, 0.5], [0.3, 0.8]])]
+
+        loss_with_reg = LossFunctions.bce_with_reg(y_true, y_pred, weights, lamda=0.0)
+        loss_plain = LossFunctions.bce(y_true, y_pred)
+
+        assert abs(loss_with_reg - loss_plain) < 1e-10
+
+    def test_bce_with_reg_large_weights(self):
+        """Test BCE with reg with larger weights increases regularization term."""
+        y_true = np.array([0.0, 1.0])
+        y_pred = np.array([0.1, 0.9])
+        weights_small = [np.array([[0.1, 0.1]])]
+        weights_large = [np.array([[10.0, 10.0]])]
+        lamda = 0.1
+
+        loss_small = LossFunctions.bce_with_reg(y_true, y_pred, weights_small, lamda)
+        loss_large = LossFunctions.bce_with_reg(y_true, y_pred, weights_large, lamda)
+
+        assert loss_large > loss_small

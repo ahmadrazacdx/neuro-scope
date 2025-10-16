@@ -25,12 +25,18 @@
 
 ### Modern MLP Implementation
 - **Flexible Architecture**: Arbitrary layer sizes with customizable activations
-- **Advanced Optimizers**: SGD, Adam with optimized implementations
+- **Advanced Optimizers**: 5 production-ready optimizers validated against literature
+  - **SGD**: Classic stochastic gradient descent (Robbins & Monro, 1951)
+  - **SGD+Momentum**: Polyak momentum for accelerated convergence (Polyak, 1964)
+  - **SGD+Nesterov**: Lookahead momentum for superior convergence (Nesterov, 1983)
+  - **RMSprop**: Adaptive learning rates (Hinton, 2012) with optional Nesterov
+  - **Adam**: Default choice with bias-corrected moments (Kingma & Ba, 2014)
 - **Smart Initialization**: He, Xavier, SELU, and intelligent auto-selection
 - **Regularization**: L2 regularization, dropout with multiple variants
+- **Model Persistence**: Complete save/load system with optimizer state preservation
 
 ### High-Performance Training
-- **Ultra-Fast Training**: `fit_fast()` method with 10-100x speedup over standard training
+- **Ultra-Fast Training**: `fit_fast()` method with 10-80x speedup over standard training
 - **Memory Efficient**: 60-80% memory reduction with optimized batch processing
 - **Flexible Performance**: Choose between speed (`fit_fast()`) and diagnostics (`fit()`)
 
@@ -82,6 +88,8 @@ from neuroscope import MLP
 model = MLP([784, 128, 64, 10], 
            hidden_activation="relu", 
            out_activation="softmax")
+
+# Choose your optimizer: "adam", "sgd", "sgdm", "sgdnm", "rmsprop"
 model.compile(optimizer="adam", lr=1e-3)
 
 # Ultra-fast training - 10-100x speedup!
@@ -91,6 +99,13 @@ history = model.fit_fast(
     batch_size=256,
     eval_freq=5 
 )
+
+# Save trained model
+model.save("my_model.ns", save_optimizer=True)
+
+# Load and use later
+loaded_model = MLP.load("my_model.ns", load_optimizer=True)
+predictions = loaded_model.predict(X_test)
 ```
 
 ### Full Diagnostic Training

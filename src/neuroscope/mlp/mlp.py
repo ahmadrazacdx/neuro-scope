@@ -3,7 +3,10 @@ MLP Neural Network
 Main neural network class integrating all framework components.
 """
 
+import pickle
 import warnings
+from datetime import datetime
+from pathlib import Path
 
 import numpy as np
 
@@ -11,6 +14,7 @@ from .core import _BackwardPass, _ForwardPass
 from .initializers import WeightInits
 from .losses import LossFunctions
 from .metrics import Metrics
+from .optimizers import SGD, Adam, RMSprop, SGDMomentum
 from .utils import Utils
 
 
@@ -74,7 +78,6 @@ class MLP:
         self.lamda = None
         self.gradient_clip = None
         self.compiled = False
-        self.adam_state = None
 
     def _initialize_weights(self):
         if self.init_method == "he":
@@ -105,17 +108,35 @@ class MLP:
         return self
 
     def reset_optimizer(self):
-        if self.optimizer == "adam" and self.adam_state is not None:
-            self.adam_state = {
-                "m_weights": [np.zeros_like(W) for W in self.weights],
-                "v_weights": [np.zeros_like(W) for W in self.weights],
-                "m_biases": [np.zeros_like(b) for b in self.biases],
-                "v_biases": [np.zeros_like(b) for b in self.biases],
-                "beta1": 0.9,
-                "beta2": 0.999,
-                "eps": 1e-8,
-                "t": 0,
-            }
+        """Reset optimizer state (e.g., momentum buffers, Adam moments)."""
+        if self.optimizer is not None and hasattr(self.optimizer, "_state"):
+            # Reset optimizer state by reinitializing
+            if isinstance(self.optimizer, SGD):
+                # SGD has no state to reset
+                pass
+            elif isinstance(self.optimizer, SGDMomentum):
+                self.optimizer._state = {
+                    "velocity_w": [],
+                    "velocity_b": [],
+                    "initialized": False,
+                }
+            elif isinstance(self.optimizer, RMSprop):
+                self.optimizer._state = {
+                    "square_avg_weights": [],
+                    "square_avg_biases": [],
+                    "velocity_w": [],
+                    "velocity_b": [],
+                    "initialized": False,
+                }
+            elif isinstance(self.optimizer, Adam):
+                self.optimizer._state = {
+                    "m_weights": [],
+                    "v_weights": [],
+                    "m_biases": [],
+                    "v_biases": [],
+                    "t": 0,
+                    "initialized": False,
+                }
         return self
 
     def reset_all(self):
@@ -133,7 +154,10 @@ class MLP:
         hyperparameters. Must be called before training the model.
 
         Args:
-            optimizer (str, optional): Optimization algorithm ("sgd", "adam"). Defaults to "adam".
+            optimizer (str, optional): Optimization algorithm.
+                Options: "sgd", "sgdm" (SGD with momentum), "sgdnm" (SGD with Nesterov momentum),
+                "rmsprop", "adam".
+                Defaults to "adam".
             lr (float, optional): Learning rate for parameter updates. Defaults to 0.001.
             reg (str, optional): Regularization type ("l2", None). Defaults to None.
             lamda (float, optional): Regularization strength (lambda parameter). Defaults to 0.01.
@@ -144,26 +168,32 @@ class MLP:
 
         Example:
             >>> model.compile(optimizer="adam", lr=1e-3, reg="l2", lamda=0.01)
+            >>> model.compile(optimizer="sgdm", lr=0.01)  # SGD with momentum
+            >>> model.compile(optimizer="sgdnm", lr=0.01)  # SGD with Nesterov momentum
+            >>> model.compile(optimizer="rmsprop", lr=0.001)  # RMSprop
         """
-        self.optimizer = optimizer
+        # Create optimizer instance based on string identifier
+        if optimizer == "sgd":
+            self.optimizer = SGD(learning_rate=lr)
+        elif optimizer == "sgdm":
+            self.optimizer = SGDMomentum(learning_rate=lr, momentum=0.9, nesterov=False)
+        elif optimizer == "sgdnm":
+            self.optimizer = SGDMomentum(learning_rate=lr, momentum=0.9, nesterov=True)
+        elif optimizer == "rmsprop":
+            self.optimizer = RMSprop(learning_rate=lr, rho=0.9, eps=1e-8, momentum=0.0)
+        elif optimizer == "adam":
+            self.optimizer = Adam(learning_rate=lr, beta1=0.9, beta2=0.999, eps=1e-8)
+        else:
+            raise ValueError(
+                f"Unknown optimizer: {optimizer}. "
+                f"Choose from: 'sgd', 'sgdm', 'sgdnm', 'rmsprop', 'adam'"
+            )
+
         self.lr = lr
         self.reg = reg
         self.lamda = lamda
         self.gradient_clip = gradient_clip
         self.compiled = True
-
-        # Initialize Adam state if needed
-        if optimizer == "adam":
-            self.adam_state = {
-                "m_weights": [np.zeros_like(W) for W in self.weights],
-                "v_weights": [np.zeros_like(W) for W in self.weights],
-                "m_biases": [np.zeros_like(b) for b in self.biases],
-                "v_biases": [np.zeros_like(b) for b in self.biases],
-                "beta1": 0.9,
-                "beta2": 0.999,
-                "eps": 1e-8,
-                "t": 0,
-            }
 
         # Print model summary
         self._print_summary()
@@ -198,7 +228,7 @@ class MLP:
         print("=" * 63)
         print(f"{'Hidden Activation':<47} {self.hidden_activation}")
         print(f"{'Output Activation':<47} {self.out_activation or 'Linear'}")
-        print(f"{'Optimizer':<47} {self.optimizer.title()}")  # type: ignore
+        print(f"{'Optimizer':<47} {self.optimizer.__class__.__name__}")
         print(f"{'Learning Rate':<47} {self.lr}")
         if self.dropout_rate > 0:
             print(f"{'Dropout':<47} {self.dropout_rate:.1%} ({self.dropout_type})")
@@ -348,35 +378,21 @@ class MLP:
             raise ValueError(f"Unknown metric: {metric}")
         return loss, eval_score
 
-    def _update_parameters_sgd(self, dW, db, lr):
-        for i in range(len(self.weights)):
-            self.weights[i] -= lr * dW[i]
-            self.biases[i] -= lr * db[i]
+    def _update_parameters(self, dW, db, lr):
+        """
+        Update network parameters using the configured optimizer.
 
-    def _update_parameters_adam(self, dW, db, lr):
-        state = self.adam_state
-        state["t"] += 1
-        for i in range(len(self.weights)):
-            # Weight updates
-            state["m_weights"][i] = (
-                state["beta1"] * state["m_weights"][i] + (1 - state["beta1"]) * dW[i]
-            )
-            state["v_weights"][i] = state["beta2"] * state["v_weights"][i] + (
-                1 - state["beta2"]
-            ) * (dW[i] ** 2)
-            m_hat = state["m_weights"][i] / (1 - state["beta1"] ** state["t"])
-            v_hat = state["v_weights"][i] / (1 - state["beta2"] ** state["t"])
-            self.weights[i] -= lr * m_hat / (np.sqrt(v_hat) + state["eps"])
-            # Bias updates
-            state["m_biases"][i] = (
-                state["beta1"] * state["m_biases"][i] + (1 - state["beta1"]) * db[i]
-            )
-            state["v_biases"][i] = state["beta2"] * state["v_biases"][i] + (
-                1 - state["beta2"]
-            ) * (db[i] ** 2)
-            m_hat_b = state["m_biases"][i] / (1 - state["beta1"] ** state["t"])
-            v_hat_b = state["v_biases"][i] / (1 - state["beta2"] ** state["t"])
-            self.biases[i] -= lr * m_hat_b / (np.sqrt(v_hat_b) + state["eps"])
+        Args:
+            dW: Weight gradients
+            db: Bias gradients
+            lr: Current learning rate (may differ from self.lr due to decay)
+        """
+        # Update optimizer learning rate if it has changed (e.g., due to lr_decay)
+        if hasattr(self.optimizer, "learning_rate"):
+            self.optimizer.learning_rate = lr
+
+        # Perform parameter update
+        self.optimizer.update(self.weights, self.biases, dW, db)
 
     def _get_metric_display_name(self, metric):
         """Get the display name for the metric based on task type and metric parameter"""
@@ -684,10 +700,7 @@ class MLP:
                         prev_weights = [W.copy() for W in self.weights]
 
                     prev_weights_ = [W.copy() for W in self.weights]
-                    if self.optimizer == "sgd":
-                        self._update_parameters_sgd(dW, db, current_lr)
-                    elif self.optimizer == "adam":
-                        self._update_parameters_adam(dW, db, current_lr)
+                    self._update_parameters(dW, db, current_lr)
 
                     # Compute weight update ratios (||ΔW|| / ||W||) for each layer
                     for layer_idx in range(num_layers):
@@ -1100,10 +1113,7 @@ class MLP:
                             dW[i] += (self.lamda / m) * self.weights[i]
 
                     # Weight updates
-                    if self.optimizer == "sgd":
-                        self._update_parameters_sgd(dW, db, current_lr)
-                    elif self.optimizer == "adam":
-                        self._update_parameters_adam(dW, db, current_lr)
+                    self._update_parameters(dW, db, current_lr)
 
                 except Exception as e:
                     warnings.warn(f"Error in batch {batch_idx}: {str(e)}")
@@ -1213,10 +1223,7 @@ class MLP:
             )
 
             # Parameter updates using current learning rate
-            if self.optimizer == "adam":
-                self._update_parameters_adam(dW, db, self.lr)
-            else:
-                self._update_parameters_sgd(dW, db, self.lr)
+            self._update_parameters(dW, db, self.lr)
 
         # Evaluation
         final_loss, final_acc = self.evaluate(X_batch, y_batch, metric=metric)
@@ -1228,3 +1235,244 @@ class MLP:
             print(f"{'OVERFITTING SUCCESS!' if success else 'OVERFITTING FAILED!'}")
         self.lr = original_lr
         self.reset_all()
+
+    def save(self, filepath: str, save_optimizer: bool = False, **metadata) -> None:
+        """
+        Save model to disk in NeuroScope format (.ns).
+
+        Saves model architecture, weights, and optionally optimizer state
+        for resuming training. Uses pickle for efficient serialization.
+
+        Args:
+            filepath: Path to save file (will add .ns extension if missing)
+            save_optimizer: If True, saves optimizer state for training resume
+            **metadata: Additional metadata to save (e.g., epoch, accuracy)
+
+        Examples:
+            >>> # Basic save
+            >>> model.save('my_model.ns')
+
+            >>> # Save with metadata
+            >>> model.save('checkpoint.ns', epoch=50, accuracy=0.95)
+
+            >>> # Save without optimizer (inference only)
+            >>> model.save('model.ns', save_optimizer=False)
+        Notes:
+            - File format: Python pickle (protocol 4)
+            - Extension: .ns (NeuroScope)
+            - Compatible with NumPy arrays
+        """
+        # Ensure .ns extension
+        filepath = Path(filepath)
+        if filepath.suffix != ".ns":
+            filepath = filepath.with_suffix(".ns")
+        try:
+            from importlib.metadata import version
+
+            neuroscope_version = version("neuroscope")
+        except Exception:
+            neuroscope_version = "N/A"
+        # Build save dictionary
+        save_dict = {
+            "neuroscope_version": neuroscope_version,
+            "model_config": {
+                "layer_dims": self.layer_dims,
+                "hidden_activation": self.hidden_activation,
+                "out_activation": self.out_activation,
+                "init_method": self.init_method,
+                "init_seed": self.init_seed,
+                "dropout_rate": self.dropout_rate,
+                "dropout_type": self.dropout_type,
+            },
+            "weights": [w.copy() for w in self.weights],
+            "biases": [b.copy() for b in self.biases],
+            "metadata": {"timestamp": datetime.now().isoformat(), **metadata},
+        }
+
+        # Save optimizer configuration and state if requested
+        if save_optimizer and self.compiled:
+            optimizer_state = self.optimizer.state_dict()
+            save_dict["optimizer_state"] = optimizer_state
+
+        # Write to disk
+        with open(filepath, "wb") as f:
+            pickle.dump(save_dict, f, protocol=4)
+
+        print(f"Model saved to: {filepath}")
+        if save_optimizer and self.compiled:
+            print(f"Optimizer: {self.optimizer.__class__.__name__}")
+            if hasattr(self.optimizer, "_state") and self.optimizer._state.get(
+                "initialized", False
+            ):
+                print("Optimizer state included (training resumable)")
+
+    @classmethod
+    def load(cls, filepath: str, load_optimizer: bool = False):
+        """
+        Load model from disk. (.ns format)
+        Args:
+            filepath: Path to saved model file (.ns)
+            load_optimizer: If True, loads optimizer state for training resume
+
+        Returns:
+            tuple: (model, info) where:
+            - model: Loaded MLP instance
+            - info: ModelInfo dict with nice __repr__ for printing
+
+        Examples:
+            >>> # Load and inspect metadata
+            >>> model, info = MLP.load('checkpoint.ns')
+            >>> print(info)  # Shows nice formatted summary
+            >>> predictions = model.predict(X_test)
+
+            >>> # Load for continued training
+            >>> model, info = MLP.load('checkpoint.ns', load_optimizer=True)
+            >>> print(f"Resuming from epoch {info['custom_metadata']['epoch']}")
+            >>> model.fit(X, y, epochs=50)
+
+            >>> # Access metadata programmatically
+            >>> model, info = MLP.load('model.ns')
+            >>> print(f"Architecture: {info['model_config']['layer_dims']}")
+            >>> print(f"Saved at: {info['timestamp']}")
+
+        Raises:
+            FileNotFoundError: If file doesn't exist
+            ValueError: If file format is invalid
+        """
+        filepath = Path(filepath)
+        if not filepath.exists():
+            raise FileNotFoundError(f"Model file not found: {filepath}")
+
+        try:
+            with open(filepath, "rb") as f:
+                save_dict = pickle.load(f)
+        except Exception as e:
+            raise ValueError(f"Failed to load model file: {str(e)}")
+
+        required_keys = ["model_config", "weights", "biases"]
+        if not all(key in save_dict for key in required_keys):
+            raise ValueError(
+                f"Invalid .ns file format. Missing required keys: "
+                f"{set(required_keys) - set(save_dict.keys())}"
+            )
+
+        # Reconstruct model
+        config = save_dict["model_config"]
+        model = cls(
+            layer_dims=config["layer_dims"],
+            hidden_activation=config["hidden_activation"],
+            out_activation=config["out_activation"],
+            init_method=config["init_method"],
+            init_seed=config["init_seed"],
+            dropout_rate=config["dropout_rate"],
+            dropout_type=config["dropout_type"],
+        )
+
+        # Restore weights and biases
+        model.weights = [w.copy() for w in save_dict["weights"]]
+        model.biases = [b.copy() for b in save_dict["biases"]]
+
+        # Restore optimizer state if requested
+        if load_optimizer and "optimizer_state" in save_dict:
+            optimizer_state = save_dict["optimizer_state"]
+            optimizer_type = optimizer_state.get("type", "Adam")
+
+            # Recreate optimizer instance based on saved type
+            if optimizer_type == "SGD":
+                model.optimizer = SGD(learning_rate=optimizer_state["learning_rate"])
+            elif optimizer_type == "SGDMomentum":
+                model.optimizer = SGDMomentum(
+                    learning_rate=optimizer_state["learning_rate"],
+                    momentum=optimizer_state.get("momentum", 0.9),
+                    nesterov=optimizer_state.get("nesterov", False),
+                )
+            elif optimizer_type == "RMSprop":
+                model.optimizer = RMSprop(
+                    learning_rate=optimizer_state["learning_rate"],
+                    rho=optimizer_state.get("rho", 0.9),
+                    eps=optimizer_state.get("eps", 1e-8),
+                    momentum=optimizer_state.get("momentum", 0.0),
+                )
+            elif optimizer_type == "Adam":
+                model.optimizer = Adam(
+                    learning_rate=optimizer_state["learning_rate"],
+                    beta1=optimizer_state.get("beta1", 0.9),
+                    beta2=optimizer_state.get("beta2", 0.999),
+                    eps=optimizer_state.get("eps", 1e-8),
+                )
+            else:
+                raise ValueError(f"Unknown optimizer type: {optimizer_type}")
+
+            # Restore optimizer internal state
+            model.optimizer.load_state_dict(optimizer_state)
+
+            # Set other training configurations
+            model.lr = optimizer_state["learning_rate"]
+            model.compiled = True
+
+            print(f"Optimizer state restored ({optimizer_type})")
+
+        print(f"Model loaded from: {filepath}")
+        arch_str = " → ".join(map(str, config["layer_dims"]))
+        print(f"Architecture: {arch_str}")
+
+        class ModelInfo(dict):
+            def __repr__(self):
+                lines = ["=" * 70, "MODEL METADATA", "=" * 70]
+                lines.append(f"{'File':<25} {self.get('file_path', 'N/A')}")
+                lines.append(f"{'Size':<25} {self.get('file_size_mb', 0):.2f} MB")
+                lines.append(
+                    f"{'NeuroScope Version':<25} {self.get('neuroscope_version', 'unknown')}"
+                )
+                lines.append(f"{'Saved At':<25} {self.get('timestamp', 'unknown')}")
+                lines.append("-" * 70)
+
+                cfg = self.get("model_config", {})
+                lines.append(
+                    f"{'Architecture':<25} {' → '.join(map(str, cfg.get('layer_dims', [])))}"
+                )
+                lines.append(
+                    f"{'Hidden Activation':<25} {cfg.get('hidden_activation', 'N/A')}"
+                )
+                lines.append(
+                    f"{'Output Activation':<25} {cfg.get('out_activation') or 'Linear'}"
+                )
+                lines.append(f"{'Dropout':<25} {cfg.get('dropout_rate', 0):.1%}")
+                lines.append("-" * 70)
+
+                if self.get("has_optimizer_state"):
+                    opt = self.get("optimizer_config", {})
+                    lines.append(f"{'Optimizer':<25} {opt.get('type', 'N/A')}")
+                    lines.append(
+                        f"{'Learning Rate':<25} {opt.get('learning_rate', 'N/A')}"
+                    )
+                else:
+                    lines.append(f"{'Optimizer State':<25} Not saved")
+                lines.append("-" * 70)
+                lines.append("CUSTOM METADATA")
+                lines.append("-" * 70)
+
+                meta = self.get("custom_metadata", {})
+                if meta:
+                    for k, v in meta.items():
+                        if k != "timestamp":  # Don't duplicate timestamp
+                            lines.append(f"{k:<25} {v}")
+                else:
+                    lines.append(f"{'(none)':<25}")
+
+                lines.append("=" * 70)
+                return "\n".join(lines)
+
+        info = ModelInfo(
+            {
+                "neuroscope_version": save_dict.get("neuroscope_version", "unknown"),
+                "timestamp": save_dict.get("metadata", {}).get("timestamp", "unknown"),
+                "model_config": config,
+                "optimizer_config": save_dict.get("optimizer_state"),
+                "has_optimizer_state": "optimizer_state" in save_dict,
+                "custom_metadata": save_dict.get("metadata", {}),
+                "file_path": str(filepath),
+                "file_size_mb": filepath.stat().st_size / (1024 * 1024),
+            }
+        )
+        return model, info

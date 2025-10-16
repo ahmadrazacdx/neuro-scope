@@ -23,6 +23,7 @@ from .metrics import Metrics
 
 # Main classes
 from .mlp import MLP
+from .optimizers import SGD, Adam, RMSprop, SGDMomentum
 from .utils import Utils
 
 # Direct function access - Loss Functions
@@ -76,6 +77,11 @@ __all__ = [
     "ActivationFunctions",
     "WeightInits",
     "Utils",
+    # Optimizers
+    "SGD",
+    "SGDMomentum",
+    "Adam",
+    "RMSprop",
     # Loss functions
     "mse",
     "bce",

@@ -187,7 +187,7 @@ class TestMLPExtended:
         # Test valid compilation
         model.compile(optimizer="adam", lr=0.01)
         assert model.compiled is True
-        assert model.optimizer == "adam"
+        assert model.optimizer.__class__.__name__ == "Adam"
         assert model.lr == 0.01
 
     def test_mlp_fit_error_handling_not_compiled(self):
@@ -505,3 +505,129 @@ class TestMLPExtended:
         for X_batch, y_batch in batches:
             assert y_batch.ndim == 2
             assert y_batch.shape[1] == 1
+
+    def test_fit_invalid_epochs(self):
+        """Test fit with invalid epochs parameter."""
+        model = MLP([4, 8, 2])
+        model.compile(optimizer="adam", lr=0.01)
+
+        X = np.random.randn(50, 4)
+        y = np.random.randint(0, 2, (50, 2))
+
+        # Test with epochs <= 0
+        with pytest.raises(ValueError, match="epochs"):
+            model.fit(X, y, epochs=0)
+
+        with pytest.raises(ValueError, match="epochs"):
+            model.fit(X, y, epochs=-1)
+
+    def test_fit_invalid_batch_size(self):
+        """Test fit with invalid batch_size parameter."""
+        model = MLP([4, 8, 2])
+        model.compile(optimizer="adam", lr=0.01)
+
+        X = np.random.randn(50, 4)
+        y = np.random.randint(0, 2, (50, 2))
+
+        # Test with batch_size <= 0
+        with pytest.raises(ValueError, match="batch_size"):
+            model.fit(X, y, batch_size=0, epochs=1)
+
+        with pytest.raises(ValueError, match="batch_size"):
+            model.fit(X, y, batch_size=-10, epochs=1)
+
+    def test_fit_invalid_log_every(self):
+        """Test fit with invalid log_every parameter."""
+        model = MLP([4, 8, 2])
+        model.compile(optimizer="adam", lr=0.01)
+
+        X = np.random.randn(50, 4)
+        y = np.random.randint(0, 2, (50, 2))
+
+        # Test with log_every <= 0
+        with pytest.raises(ValueError, match="log_every"):
+            model.fit(X, y, log_every=0, epochs=1)
+
+        with pytest.raises(ValueError, match="log_every"):
+            model.fit(X, y, log_every=-5, epochs=1)
+
+    def test_fit_invalid_monitor_freq(self):
+        """Test fit with invalid monitor_freq parameter."""
+        model = MLP([4, 8, 2])
+        model.compile(optimizer="adam", lr=0.01)
+
+        X = np.random.randn(50, 4)
+        y = np.random.randint(0, 2, (50, 2))
+
+        # Test with monitor_freq <= 0
+        with pytest.raises(ValueError, match="monitor_freq"):
+            model.fit(X, y, monitor_freq=0, epochs=1)
+
+        with pytest.raises(ValueError, match="monitor_freq"):
+            model.fit(X, y, monitor_freq=-3, epochs=1)
+
+    def test_fit_invalid_numerical_check_freq(self):
+        """Test fit with invalid numerical_check_freq parameter."""
+        model = MLP([4, 8, 2])
+        model.compile(optimizer="adam", lr=0.01)
+
+        X = np.random.randn(50, 4)
+        y = np.random.randint(0, 2, (50, 2))
+
+        # Test with numerical_check_freq < 0
+        with pytest.raises(ValueError, match="numerical_check_freq"):
+            model.fit(X, y, numerical_check_freq=-1, epochs=1)
+
+    def test_fit_invalid_early_stopping_patience(self):
+        """Test fit with invalid early_stopping_patience parameter."""
+        model = MLP([4, 8, 2])
+        model.compile(optimizer="adam", lr=0.01)
+
+        X = np.random.randn(50, 4)
+        y = np.random.randint(0, 2, (50, 2))
+        X_val = np.random.randn(10, 4)
+        y_val = np.random.randint(0, 2, (10, 2))
+
+        # Test with patience <= 0
+        with pytest.raises(ValueError, match="patience"):
+            model.fit(X, y, X_val, y_val, early_stopping_patience=0, epochs=1)
+
+        with pytest.raises(ValueError, match="patience"):
+            model.fit(X, y, X_val, y_val, early_stopping_patience=-5, epochs=1)
+
+    def test_evaluate_with_different_metrics(self):
+        """Test evaluate method with different metric configurations."""
+        model = MLP(
+            [4, 8, 2], out_activation="softmax"
+        )  # Add softmax for classification
+        model.compile(optimizer="adam", lr=0.01)
+
+        X = np.random.randn(50, 4)
+        y = np.random.randint(0, 2, (50, 2))
+
+        # Train briefly
+        model.fit(X, y, epochs=1, verbose=0)
+
+        # Test with mse metric - returns (loss, metric_score) tuple
+        loss, metric_score = model.evaluate(X, y, metric="mse")
+        assert isinstance(loss, (float, np.floating))
+        assert isinstance(metric_score, (float, np.floating))
+        assert loss >= 0
+        assert metric_score >= 0
+
+        # Test with accuracy metric
+        loss, accuracy = model.evaluate(X, y, metric="accuracy")
+        assert isinstance(loss, (float, np.floating))
+        assert isinstance(accuracy, (float, np.floating))
+        assert 0.0 <= accuracy <= 1.0
+
+        # Test with smart metric (auto-detect)
+        loss, metric_value = model.evaluate(X, y, metric="smart")
+        assert isinstance(loss, (float, np.floating))
+        assert isinstance(metric_value, (float, np.floating))
+
+        # Test with f1 metric
+        loss, f1_value = model.evaluate(X, y, metric="f1")
+        assert isinstance(loss, (float, np.floating))
+        assert isinstance(f1_value, (float, np.floating))
+        assert 0.0 <= f1_value <= 1.0

@@ -261,3 +261,95 @@ class TestMetrics:
 
         acc_multi = Metrics.accuracy_multiclass(y_true_multi, y_pred_multi)
         assert acc_multi == 0.0
+
+    def test_f1_score_zero_support(self):
+        """Test F1 score when total support is zero."""
+        # Edge case where no samples exist for any class
+        y_true = np.array([])
+        y_pred = np.array([]).reshape(0, 3)  # 3 classes but 0 samples
+
+        # With empty arrays, should handle gracefully
+        # We'll test with actual data but zero support scenario
+        y_true = np.array([0, 0, 0])
+        y_pred_probs = np.array([[0.9, 0.05, 0.05], [0.8, 0.1, 0.1], [0.85, 0.1, 0.05]])
+
+        # All predictions are class 0, all true labels are class 0
+        f1 = Metrics.f1_score(y_true, y_pred_probs, average="weighted")
+        assert isinstance(f1, float)
+        assert 0.0 <= f1 <= 1.0
+
+    def test_precision_macro_average(self):
+        """Test precision with macro averaging."""
+        y_true = np.array([0, 1, 2, 0, 1, 2])
+        y_pred = np.array(
+            [
+                [0.9, 0.05, 0.05],  # Correct: 0
+                [0.1, 0.8, 0.1],  # Correct: 1
+                [0.1, 0.1, 0.8],  # Correct: 2
+                [0.9, 0.05, 0.05],  # Correct: 0
+                [0.1, 0.8, 0.1],  # Correct: 1
+                [0.1, 0.1, 0.8],  # Correct: 2
+            ]
+        )
+
+        precision = Metrics.precision(y_true, y_pred, average="macro")
+        assert isinstance(precision, float)
+        assert 0.0 <= precision <= 1.0
+        assert precision == 1.0  # All predictions correct
+
+    def test_precision_no_average(self):
+        """Test precision without averaging (returns per-class)."""
+        y_true = np.array([0, 1, 2, 0, 1])
+        y_pred = np.array(
+            [
+                [0.9, 0.05, 0.05],  # Correct: 0
+                [0.1, 0.8, 0.1],  # Correct: 1
+                [0.1, 0.1, 0.8],  # Correct: 2
+                [0.9, 0.05, 0.05],  # Correct: 0
+                [0.1, 0.8, 0.1],  # Correct: 1
+            ]
+        )
+
+        precision = Metrics.precision(y_true, y_pred, average=None)
+        assert isinstance(precision, np.ndarray)
+        assert precision.shape == (3,)  # 3 classes
+        assert np.all(precision >= 0.0)
+        assert np.all(precision <= 1.0)
+
+    def test_recall_macro_average(self):
+        """Test recall with macro averaging."""
+        y_true = np.array([0, 1, 2, 0, 1, 2])
+        y_pred = np.array(
+            [
+                [0.9, 0.05, 0.05],  # Correct: 0
+                [0.1, 0.8, 0.1],  # Correct: 1
+                [0.1, 0.1, 0.8],  # Correct: 2
+                [0.9, 0.05, 0.05],  # Correct: 0
+                [0.1, 0.8, 0.1],  # Correct: 1
+                [0.1, 0.1, 0.8],  # Correct: 2
+            ]
+        )
+
+        recall = Metrics.recall(y_true, y_pred, average="macro")
+        assert isinstance(recall, float)
+        assert 0.0 <= recall <= 1.0
+        assert recall == 1.0  # All predictions correct
+
+    def test_recall_no_average(self):
+        """Test recall without averaging (returns per-class)."""
+        y_true = np.array([0, 1, 2, 0, 1])
+        y_pred = np.array(
+            [
+                [0.9, 0.05, 0.05],  # Correct: 0
+                [0.1, 0.8, 0.1],  # Correct: 1
+                [0.1, 0.1, 0.8],  # Correct: 2
+                [0.9, 0.05, 0.05],  # Correct: 0
+                [0.1, 0.8, 0.1],  # Correct: 1
+            ]
+        )
+
+        recall = Metrics.recall(y_true, y_pred, average=None)
+        assert isinstance(recall, np.ndarray)
+        assert recall.shape == (3,)  # 3 classes
+        assert np.all(recall >= 0.0)
+        assert np.all(recall <= 1.0)

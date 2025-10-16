@@ -121,3 +121,61 @@ class TestUtils:
                 # but shapes and finite values should match
                 assert np.all(np.isfinite(X_fast)) == np.all(np.isfinite(X_reg))
                 assert np.all(np.isfinite(y_fast)) == np.all(np.isfinite(y_reg))
+
+    def test_check_numerical_stability_large_gradients(self, rng):
+        """Test numerical stability warnings with large gradients."""
+        # Create large gradient values
+        large_grads = [rng.standard_normal((10, 10)) * 1e9]
+
+        # Should return issues for large values in gradients context
+        issues = Utils.check_numerical_stability(
+            large_grads, context="gradients", fast_mode=False
+        )
+        # Should have warnings about large values
+        assert len(issues) > 0
+        assert "large" in issues[0].lower() or "gradients" in issues[0].lower()
+
+    def test_check_numerical_stability_large_outputs(self, rng):
+        """Test numerical stability warnings with large output activations."""
+        # Create large output values
+        large_outputs = [rng.standard_normal((10, 10)) * 1e9]
+
+        issues = Utils.check_numerical_stability(
+            large_outputs, context="output_activations", fast_mode=False
+        )
+        # Should have warnings about large values
+        assert len(issues) > 0
+
+    def test_check_numerical_stability_large_forward_pass(self, rng):
+        """Test numerical stability warnings during forward pass."""
+        # Create large activation values
+        large_activations = [rng.standard_normal((10, 10)) * 1e9]
+
+        issues = Utils.check_numerical_stability(
+            large_activations, context="forward_pass", fast_mode=False
+        )
+        # Should have warnings about large values
+        assert len(issues) > 0
+
+    def test_check_numerical_stability_generic_context(self, rng):
+        """Test numerical stability with generic context message."""
+        # Create large values without specific context
+        large_values = [rng.standard_normal((10, 10)) * 1e9]
+
+        issues = Utils.check_numerical_stability(
+            large_values, context="generic", fast_mode=False
+        )
+        # Should have warnings
+        assert len(issues) > 0
+
+    def test_check_numerical_stability_fast_mode_skips_checks(self, rng):
+        """Test that fast_mode=True skips detailed checks for large values."""
+        # Create large values that would normally trigger warnings
+        large_grads = [rng.standard_normal((10, 10)) * 1e9]
+
+        # Fast mode should not detect large values (only NaN/Inf)
+        issues = Utils.check_numerical_stability(
+            large_grads, context="gradients", fast_mode=True
+        )
+        # Fast mode should skip large value checks
+        assert len(issues) == 0

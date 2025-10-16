@@ -276,3 +276,65 @@ class TestActivationFunctions:
         if hasattr(ActivationFunctions, "relu"):
             relu_result = ActivationFunctions.relu(x)
             assert np.all(np.diff(relu_result) >= 0)
+
+    def test_selu_derivative(self):
+        """Test SELU derivative function."""
+        z = np.array([-2.0, -0.5, 0.0, 0.5, 2.0])
+        activation = ActivationFunctions.selu(z)
+        derivative = ActivationFunctions.selu_derivative(activation)
+
+        assert derivative.shape == z.shape
+        assert np.all(derivative > 0)  # SELU derivative is always positive
+
+    def test_inverted_dropout_training_false(self):
+        """Test inverted dropout when training=False returns input unchanged."""
+        A = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        result = ActivationFunctions.inverted_dropout(A, rate=0.5, training=False)
+
+        np.testing.assert_array_equal(result, A)
+
+    def test_inverted_dropout_rate_zero(self):
+        """Test inverted dropout with rate=0 returns input unchanged."""
+        A = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        result = ActivationFunctions.inverted_dropout(A, rate=0.0, training=True)
+
+        np.testing.assert_array_equal(result, A)
+
+    def test_inverted_dropout_training_true(self):
+        """Test inverted dropout applies dropout during training."""
+        np.random.seed(42)
+        A = np.ones((100, 100)) * 2.0
+        rate = 0.5
+        result = ActivationFunctions.inverted_dropout(A, rate=rate, training=True)
+
+        # Some values should be zeroed out
+        assert np.any(result == 0.0)
+        # Non-zero values should be scaled up
+        non_zero_mask = result != 0.0
+        assert np.all(result[non_zero_mask] > A[non_zero_mask])
+
+    def test_alpha_dropout_not_training(self):
+        """Test alpha dropout when training=False returns input unchanged."""
+        A = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        result = ActivationFunctions.alpha_dropout(A, rate=0.5, training=False)
+
+        np.testing.assert_array_equal(result, A)
+
+    def test_alpha_dropout_rate_zero(self):
+        """Test alpha dropout with rate=0 returns input unchanged."""
+        A = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        result = ActivationFunctions.alpha_dropout(A, rate=0.0, training=True)
+
+        np.testing.assert_array_equal(result, A)
+
+    def test_alpha_dropout_applies_during_training(self):
+        """Test alpha dropout applies transformations during training."""
+        np.random.seed(42)
+        A = np.ones((100, 100))
+        rate = 0.5
+        result = ActivationFunctions.alpha_dropout(A, rate=rate, training=True)
+
+        # Output should differ from input when training
+        assert not np.array_equal(result, A)
+        # Shape should be preserved
+        assert result.shape == A.shape

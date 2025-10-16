@@ -63,8 +63,8 @@ Source code, issues, and contributions on GitHub.
 
 ### Modern MLP Implementation
 - **Flexible Architecture**: Arbitrary layer sizes with customizable activations
-- **Advanced Optimizers**: SGD, Adam
-- **Smart Initialization**: He, Xavier, Random (Guassian) , Selu, and intelligent auto-selection
+- **Advanced Optimizers**: SGD, SGD with Momentum, SGD with Nesterov Momentum, RMSprop, Adam
+- **Smart Initialization**: He, Xavier, Random (Gaussian), SELU, and intelligent auto-selection
 - **Regularization**: L2 regularization, dropout with multiple variants
 
 ### Comprehensive Diagnostics

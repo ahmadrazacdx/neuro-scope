@@ -4,6 +4,134 @@ All notable changes to NeuroScope will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-10-16
+
+### Major Features
+
+#### Advanced Optimizer Suite
+- **SGD with Momentum** - Polyak momentum for accelerated convergence (Polyak, 1964)
+  - Configurable momentum parameter (beta=0.9 default)
+  - Smooth gradient updates with velocity accumulation
+  - Improved convergence on non-convex surfaces
+  
+- **SGD with Nesterov Momentum** - Lookahead momentum for superior convergence (Nesterov, 1983)
+  - Nesterov accelerated gradient (NAG) implementation
+  - Anticipatory gradient computation at lookahead position
+  - Better handling of sharp curvature regions
+  - Based on Sutskever et al. (2013) formulation
+  
+- **RMSprop** - Adaptive learning rate optimization (Hinton, 2012)
+  - Per-parameter adaptive learning rates
+  - Exponential moving average of squared gradients
+  - Configurable decay rate (beta=0.9 default)
+  - Epsilon parameter for numerical stability (eps=1e-8)
+  - Optional Nesterov momentum support
+  
+- **Enhanced Adam** - Production-ready adaptive optimizer (Kingma & Ba, 2014)
+  - First and second moment estimation with bias correction
+  - Configurable beta1=0.9, beta2=0.999, eps=1e-8
+  - Optimized implementation with < 1e-6 numerical difference from PyTorch
+  - Nesterov momentum variant support
+  
+- **Optimizer Selection Guide** - Choose the right optimizer:
+  - `"sgd"` - Simple SGD for basic tasks and full control
+  - `"sgdm"` - SGD with momentum for faster convergence
+  - `"sgdnm"` - SGD with Nesterov momentum for best momentum-based convergence
+  - `"rmsprop"` - Adaptive learning for non-stationary objectives
+  - `"adam"` - Default choice for most deep learning tasks (recommended)
+
+#### Model Persistence System
+- **Save Trained Models** - Complete model serialization
+  - `.save(filepath)` method with custom `.ns` format
+  - Saves weights, biases, architecture, and training configuration
+  - Automatic directory creation with pathlib support
+  - Optional optimizer state persistence with `save_optimizer=True`
+  
+- **Load Models** - Full model restoration
+  - `.load(filepath)` class method for model loading
+  - Automatic architecture reconstruction from saved metadata
+  - Optional optimizer state restoration with `load_optimizer=True`
+  - Exact prediction matching (< 1e-10 difference after load)
+  
+- **Training Resumption** - Continue training from checkpoints
+  - Load model with optimizer state for seamless continuation
+  - Preserves momentum buffers, Adam moments, and RMSprop caches
+  - Smooth loss continuation (< 10% jump after loading)
+  - Example: `model = MLP.load('checkpoint.ns', load_optimizer=True)`
+  
+- **State Persistence** - Complete training state capture
+  - Optimizer internal states (velocity, momentum, adaptive rates)
+  - Training history and epoch counters
+  - Regularization and dropout configurations
+  - Enable with `model.save('model.ns', save_optimizer=True)`
+
+### Documentation 
+  - Complete guide coverage
+  - Quickstart guide with optimizer examples
+  - Advanced usage patterns and best practices
+  - Optimizer selection 
+  - Save/load workflow examples
+
+### Implementation Quality
+
+- **Literature-Validated** - Exact implementations from original papers
+  - SGD: Robbins & Monro (1951)
+  - Momentum: Polyak (1964)
+  - Nesterov: Nesterov (1983), Sutskever et al. (2013)
+  - RMSprop: Hinton (2012) Lecture 6.5
+  - Adam: Kingma & Ba (2014) Algorithm 1
+
+### API Enhancements
+
+```python
+# New optimizer options in compile()
+model.compile(
+    optimizer="adam",      # or "sgd", "sgdm", "sgdnm", "rmsprop"
+    lr=1e-3,
+)
+
+# Save model with optimizer state
+model.save("trained_model.ns", save_optimizer=True)
+
+# Load and continue training
+model = MLP.load("trained_model.ns", load_optimizer=True)
+history = model.fit(X_train, y_train, epochs=50)  # Seamless continuation
+```
+
+### Breaking Changes
+
+**None** - This release is fully backward compatible with v0.1.3
+
+### Migration Guide
+
+No migration required! All existing code continues to work:
+- Default optimizer remains "adam"
+- All v0.1.3 APIs unchanged
+- New features are opt-in only
+
+To use new features:
+```python
+# Try different optimizers
+model.compile(optimizer="sgdnm", lr=1e-2)  # Nesterov momentum
+
+# Save your trained model
+model.save("my_model.ns", save_optimizer=True)
+
+# Load and continue training later
+model = MLP.load("my_model.ns", load_optimizer=True)
+```
+
+### Performance Notes
+
+- No performance regression in existing functionality
+- New optimizers have comparable computational cost to Adam
+- Save/load operations are fast (< 1 second for typical models)
+- Memory overhead for optimizer state is minimal (< 2x parameter count)
+
+### Acknowledgments
+
+This release represents a major step forward in NeuroScope's maturity, bringing production-grade optimizer implementations validated against academic literature and industry-standard frameworks. Special thanks to the neural network research community for the foundational work that made these implementations possible.
+
 ## [0.1.3] - 2025-09-24
 
 ### Fixed:

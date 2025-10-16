@@ -133,9 +133,12 @@ class ActivationFunctions:
         if not training or rate == 0:
             return x
         alpha = 1.6732632423543772848170429916717
-        scale = 1.0507009873554804934193349852946
-        keep_prob = 1 - rate
-        a = ((1 - rate) * (1 + rate * (alpha**2 * scale**2))) ** (-0.5)
-        b = -a * (alpha * scale) * rate
-        mask = np.random.binomial(1, keep_prob, size=x.shape)
-        return a * (x * mask + alpha * scale * (1 - mask)) + b
+        scale = 1.0507009873554804934193349852946  # lambda
+        alpha0 = -scale * alpha
+        q = 1 - rate  # Keep probability
+        a = (q * (1.0 + rate * (alpha0**2))) ** (-0.5)
+        b = -a * (1.0 - q) * alpha0
+        x_float = x.astype(np.float32, copy=False)
+        mask = np.random.binomial(1, q, size=x.shape).astype(np.float32)
+        out = a * (x_float * mask + alpha0 * (1 - mask)) + b
+        return out
