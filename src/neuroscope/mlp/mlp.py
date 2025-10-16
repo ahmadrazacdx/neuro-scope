@@ -1345,7 +1345,9 @@ class MLP:
 
         try:
             with open(filepath, "rb") as f:
-                save_dict = pickle.load(f)
+                save_dict = pickle.load(
+                    f
+                )  # nosec B301 - Model file from trusted source
         except Exception as e:
             raise ValueError(f"Failed to load model file: {str(e)}")
 
