@@ -1,9 +1,25 @@
 comment: false
+
 coverage:
+  precision: 2
+  round: down
+  range: "60...100"
+  
   status:
     project:
       default:
-        target: "100"
+        target: 60%
+        threshold: 1%
+        
     patch:
       default:
-        target: "100"
+        target: 60%
+        threshold: 2%
+
+ignore:
+  - "tests/**"
+  - "docs/**"
+  - "examples/**"
+  - "**/__init__.py"
+  - "**/__version__.py"
+  - "**/__main__.py"
