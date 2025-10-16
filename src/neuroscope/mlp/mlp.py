@@ -1246,7 +1246,7 @@ class MLP:
         Args:
             filepath: Path to save file (will add .ns extension if missing)
             save_optimizer: If True, saves optimizer state for training resume
-            **metadata: Additional metadata to save (e.g., epoch, accuracy)
+            \\**metadata: Additional metadata to save (e.g., epoch, accuracy)
 
         Examples:
             >>> # Basic save
