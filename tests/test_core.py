@@ -3,6 +3,7 @@ Tests for core neural network operations (forward/backward pass).
 """
 
 import numpy as np
+import pytest
 
 from neuroscope.mlp.core import _BackwardPass, _ForwardPass
 
@@ -365,3 +366,85 @@ class TestWarningThrottling:
 
         # Test passes if no exceptions were raised
         assert True
+
+
+class TestForwardPassEdgeCases:
+    """Additional tests to increase coverage for forward pass edge cases."""
+
+    def test_forward_mlp_invalid_output_activation(self):
+        """Test that invalid output activation raises ValueError."""
+        X = np.array([[1.0, 2.0]])
+        weights = [np.array([[1.0], [1.0]])]
+        biases = [np.array([[0.0]])]
+
+        with pytest.raises(ValueError, match="Unknown output activation"):
+            _ForwardPass.forward_mlp(
+                X, weights, biases, out_activation="invalid_activation"
+            )
+
+    def test_forward_mlp_invalid_hidden_activation(self):
+        """Test that invalid hidden activation raises ValueError."""
+        X = np.array([[1.0, 2.0]])
+        weights = [
+            np.array([[1.0, 1.0], [1.0, 1.0]]),  # Hidden layer
+            np.array([[1.0], [1.0]]),  # Output layer
+        ]
+        biases = [np.array([[0.0, 0.0]]), np.array([[0.0]])]
+
+        with pytest.raises(ValueError, match="Unknown activation function"):
+            _ForwardPass.forward_mlp(
+                X, weights, biases, hidden_activation="invalid_activation"
+            )
+
+    def test_forward_mlp_alpha_dropout(self):
+        """Test forward pass with alpha dropout."""
+        np.random.seed(42)
+        X = np.array([[1.0, 2.0], [3.0, 4.0]])
+        weights = [
+            np.array([[1.0, 1.0], [1.0, 1.0]]),  # Hidden layer
+            np.array([[1.0], [1.0]]),  # Output layer
+        ]
+        biases = [np.array([[0.0, 0.0]]), np.array([[0.0]])]
+
+        activations, z_values = _ForwardPass.forward_mlp(
+            X, weights, biases, dropout_rate=0.2, dropout_type="alpha", training=True
+        )
+
+        assert len(activations) == 2
+        assert activations[0].shape == (2, 2)
+        assert activations[1].shape == (2, 1)
+
+    def test_forward_mlp_invalid_dropout_type(self):
+        """Test that invalid dropout type raises ValueError."""
+        X = np.array([[1.0, 2.0]])
+        weights = [
+            np.array([[1.0, 1.0], [1.0, 1.0]]),
+            np.array([[1.0], [1.0]]),
+        ]
+        biases = [np.array([[0.0, 0.0]]), np.array([[0.0]])]
+
+        with pytest.raises(ValueError, match="Unknown dropout type"):
+            _ForwardPass.forward_mlp(
+                X,
+                weights,
+                biases,
+                dropout_rate=0.5,
+                dropout_type="invalid",
+                training=True,
+            )
+
+    def test_forward_mlp_no_activation_hidden(self):
+        """Test forward pass with no activation on hidden layers."""
+        X = np.array([[1.0, 2.0]])
+        weights = [
+            np.array([[1.0, 1.0], [1.0, 1.0]]),
+            np.array([[1.0], [1.0]]),
+        ]
+        biases = [np.array([[0.0, 0.0]]), np.array([[0.0]])]
+
+        activations, z_values = _ForwardPass.forward_mlp(
+            X, weights, biases, hidden_activation=None
+        )
+
+        # With no activation, A should equal Z for hidden layers
+        assert np.allclose(activations[0], z_values[0])
