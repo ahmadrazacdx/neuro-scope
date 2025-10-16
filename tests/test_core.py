@@ -448,3 +448,43 @@ class TestForwardPassEdgeCases:
 
         # With no activation, A should equal Z for hidden layers
         assert np.allclose(activations[0], z_values[0])
+
+    def test_forward_pass_all_activation_types(self):
+        """Test forward pass with all supported activation types."""
+        X = np.array([[1.0, 2.0]])
+        weights = [
+            np.array([[1.0, 1.0], [1.0, 1.0]]),
+            np.array([[1.0], [1.0]]),
+        ]
+        biases = [np.array([[0.0, 0.0]]), np.array([[0.0]])]
+
+        activation_types = ["relu", "sigmoid", "tanh", "leaky_relu", "selu"]
+
+        for activation in activation_types:
+            activations, z_values = _ForwardPass.forward_mlp(
+                X, weights, biases, hidden_activation=activation
+            )
+
+            assert len(activations) == 2
+            assert len(z_values) == 2
+            assert activations[0].shape == (1, 2)
+            assert activations[1].shape == (1, 1)
+
+    def test_forward_mlp_batch_processing(self):
+        """Test forward pass with batch of samples."""
+        X = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])  # 3 samples
+        weights = [
+            np.array([[0.5, 0.5], [0.5, 0.5]]),
+            np.array([[0.5], [0.5]]),
+        ]
+        biases = [np.array([[0.1, 0.1]]), np.array([[0.1]])]
+
+        activations, z_values = _ForwardPass.forward_mlp(
+            X, weights, biases, hidden_activation="relu"
+        )
+
+        # Check that batch dimension is preserved
+        assert activations[0].shape == (3, 2)  # 3 samples, 2 hidden units
+        assert activations[1].shape == (3, 1)  # 3 samples, 1 output
+        assert z_values[0].shape == (3, 2)
+        assert z_values[1].shape == (3, 1)

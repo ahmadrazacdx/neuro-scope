@@ -353,3 +353,54 @@ class TestMetrics:
         assert recall.shape == (3,)  # 3 classes
         assert np.all(recall >= 0.0)
         assert np.all(recall <= 1.0)
+
+    def test_r2_score_perfect_fit(self):
+        """Test R² score with perfect predictions."""
+        y_true = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+        y_pred = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+
+        r2 = Metrics.r2_score(y_true, y_pred)
+        assert r2 == 1.0
+
+    def test_r2_score_zero_variance(self):
+        """Test R² score when true values have zero variance."""
+        y_true = np.array([5.0, 5.0, 5.0, 5.0])
+        y_pred = np.array([5.0, 5.0, 5.0, 5.0])
+
+        # When ss_tot == 0 and ss_res == 0, should return 1.0
+        r2 = Metrics.r2_score(y_true, y_pred)
+        assert r2 == 1.0
+
+        # When ss_tot == 0 but ss_res != 0
+        y_pred_bad = np.array([4.0, 6.0, 5.0, 5.0])
+        r2 = Metrics.r2_score(y_true, y_pred_bad)
+        assert r2 == 0.0
+
+    def test_apply_averaging_weighted_imbalanced(self):
+        """Test weighted averaging with imbalanced class distribution."""
+        # Create imbalanced dataset: many class 0, few class 1
+        y_true = np.array([0, 0, 0, 0, 0, 0, 0, 0, 1, 1])  # 8 class 0, 2 class 1
+        y_pred = np.array(
+            [
+                [0.9, 0.1],  # Correct: 0
+                [0.9, 0.1],  # Correct: 0
+                [0.9, 0.1],  # Correct: 0
+                [0.9, 0.1],  # Correct: 0
+                [0.9, 0.1],  # Correct: 0
+                [0.9, 0.1],  # Correct: 0
+                [0.9, 0.1],  # Correct: 0
+                [0.9, 0.1],  # Correct: 0
+                [0.1, 0.9],  # Correct: 1
+                [0.1, 0.9],  # Correct: 1
+            ]
+        )
+
+        # Weighted average should give more importance to class 0
+        precision_weighted = Metrics.precision(y_true, y_pred, average="weighted")
+        precision_macro = Metrics.precision(y_true, y_pred, average="macro")
+
+        assert isinstance(precision_weighted, float)
+        assert isinstance(precision_macro, float)
+        # Both should be 1.0 since all predictions are correct
+        assert precision_weighted == 1.0
+        assert precision_macro == 1.0

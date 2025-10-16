@@ -179,3 +179,51 @@ class TestUtils:
         )
         # Fast mode should skip large value checks
         assert len(issues) == 0
+
+    def test_validate_array_input_nan_values(self):
+        """Test validate_array_input with NaN values."""
+        import pytest
+
+        arr_with_nan = np.array([1.0, 2.0, np.nan, 4.0])
+        with pytest.raises(ValueError, match="contains NaN values"):
+            Utils.validate_array_input(arr_with_nan, "test_array", fast_mode=False)
+
+    def test_validate_array_input_inf_values(self):
+        """Test validate_array_input with infinite values."""
+        import pytest
+
+        arr_with_inf = np.array([1.0, 2.0, np.inf, 4.0])
+        with pytest.raises(ValueError, match="contains infinite values"):
+            Utils.validate_array_input(arr_with_inf, "test_array", fast_mode=False)
+
+    def test_validate_array_input_conversion_warning(self, capsys):
+        """Test that array conversion prints warning in non-fast mode."""
+        # Pass a list instead of ndarray
+        arr_list = [[1, 2], [3, 4]]
+        result = Utils.validate_array_input(arr_list, "test_list", fast_mode=False)
+
+        # Check it was converted
+        assert isinstance(result, np.ndarray)
+
+        # Check warning was printed
+        captured = capsys.readouterr()
+        assert "test_list converted to numpy array" in captured.out
+
+    def test_gradient_clipping_with_small_norm(self, rng):
+        """Test gradient clipping when norm is already small."""
+        # Create small gradients
+        small_grads = [rng.standard_normal((3, 2)) * 0.01]
+
+        clipped = Utils.gradient_clipping(small_grads, max_norm=5.0)
+
+        # Should not be clipped (returned as-is)
+        assert np.allclose(clipped[0], small_grads[0])
+
+    def test_validate_layer_dims_tuple_input(self):
+        """Test validate_layer_dims with tuple input."""
+        layer_dims = (10, 20, 30, 1)
+        result = Utils.validate_layer_dims(layer_dims, input_dim=10)
+
+        # Should convert to list and validate
+        assert isinstance(result, list)
+        assert result == [10, 20, 30, 1]
