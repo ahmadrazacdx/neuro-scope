@@ -1,7 +1,7 @@
 <!doctype html>
 <html class="no-js" lang="en" data-content_root="./">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:title" content="Quickstart Guide" />
 <meta property="og:type" content="website" />
@@ -14,12 +14,12 @@
 <meta property="og:image:alt" content="Get up and running with NeuroScope in minutes! This guide covers installation, basic usage, and common patterns to help you start building and analyzing neural networks immediately. Installation: P..." />
 <meta name="description" content="Get up and running with NeuroScope in minutes! This guide covers installation, basic usage, and common patterns to help you start building and analyzing neural networks immediately. Installation: P..." />
 <meta name="twitter:card" content="summary_large_image" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Advanced Usage Guide" href="usage.html" /><link rel="prev" title="NeuroScope Documentation" href="index.html" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Advanced Usage Guide" href="usage.html"><link rel="prev" title="NeuroScope Documentation" href="index.html">
 
-    <link rel="shortcut icon" href="_static/favicon.svg"/><!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
-        <title>Quickstart Guide - NeuroScope 0.1.0</title>
+    <link rel="shortcut icon" href="_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+        <title>Quickstart Guide - NeuroScope 0.2.0</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=25af2a20" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -53,8 +53,8 @@
   }
   @media not print {
     body[data-theme="dark"] {
-      --color-code-background: #2b2b2b;
-  --color-code-foreground: #f8f8f2;
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
   --color-foreground: #e2e8f0;
   --color-background: #0f172a;
   --color-background-secondary: #1e293b;
@@ -76,8 +76,8 @@
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
-        --color-code-background: #2b2b2b;
-  --color-code-foreground: #f8f8f2;
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
   --color-foreground: #e2e8f0;
   --color-background: #0f172a;
   --color-background-secondary: #1e293b;
@@ -209,14 +209,10 @@
   </symbol>
 </svg>
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
-</label>
-<label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
-</label>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
 <a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
 
@@ -226,17 +222,15 @@
   <header class="mobile-header">
     <div class="header-left">
       <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">NeuroScope 0.1.0</div></a>
+      <a href="index.html"><div class="brand">NeuroScope 0.2.0</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
           <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
           <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
           <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -244,8 +238,7 @@
         </button>
       </div>
       <label class="toc-overlay-icon toc-header-icon" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
   </header>
@@ -257,7 +250,7 @@
     <img src="_static/favicon.svg" class="sidebar-logo" alt="NeuroScope" />
     <span class="sidebar-brand-text">
       NeuroScope
-      <div class="sidebar-brand-version">0.1.0</div>
+      <div class="sidebar-brand-version">0.2.0</div>
     </span>
   </a>
 </div><form class="sidebar-search-container" method="get" action="search.html" role="search">
@@ -306,8 +299,7 @@
     <span class="visually-hidden">Edit this page</span>
   </a>
 </div><div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
               <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -315,8 +307,7 @@
             </button>
           </div>
           <label class="toc-overlay-icon toc-content-icon" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
@@ -376,13 +367,20 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
     <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.2</span>                         <span class="c1"># 20% dropout fo regularization</span>
 <span class="p">)</span>
 
-<span class="c1"># Step 2: Compile the model</span>
+<span class="c1"># Step 2: Compile the model with optimizer selection</span>
 <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-    <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span>                        <span class="c1"># Adam optimizer</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span>                        <span class="c1"># Choose: &quot;adam&quot;, &quot;sgd&quot;, &quot;sgdm&quot;, &quot;sgdnm&quot;, &quot;rmsprop&quot;</span>
     <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>                                <span class="c1"># Learning rate</span>
     <span class="n">reg</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span>                               <span class="c1"># L2 regularization (use &quot;l2&quot; or None)</span>
     <span class="n">lamda</span><span class="o">=</span><span class="mf">1e-3</span>                              <span class="c1"># Regularization strength</span>
 <span class="p">)</span>
+
+<span class="c1"># Optimizer Quick Reference:</span>
+<span class="c1"># - &quot;adam&quot;   : Best default choice for most tasks (recommended)</span>
+<span class="c1"># - &quot;sgd&quot;    : Simple SGD, good for simple problems</span>
+<span class="c1"># - &quot;sgdm&quot;   : SGD with momentum, faster convergence</span>
+<span class="c1"># - &quot;sgdnm&quot;  : SGD with Nesterov momentum, best momentum variant</span>
+<span class="c1"># - &quot;rmsprop&quot;: Adaptive learning, good for RNNs and non-stationary objectives</span>
 
 <span class="c1"># Step 3: Pre-training analysis (optional but recommended)</span>
 <span class="n">analyzer</span> <span class="o">=</span> <span class="n">PreTrainingAnalyzer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -415,8 +413,121 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <span class="n">viz</span> <span class="o">=</span> <span class="n">Visualizer</span><span class="p">(</span><span class="n">history</span><span class="p">)</span>
 <span class="n">viz</span><span class="o">.</span><span class="n">plot_learning_curves</span><span class="p">()</span>
 <span class="n">viz</span><span class="o">.</span><span class="n">plot_activation_hist</span><span class="p">()</span>
+
+<span class="c1"># Step 7: Save your trained model</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;my_trained_model.ns&quot;</span><span class="p">)</span>              <span class="c1"># Basic save (weights + architecture)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;with_optimizer.ns&quot;</span><span class="p">,</span> <span class="n">save_optimizer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Save with optimizer state</span>
+
+<span class="c1"># Step 8: Load model later</span>
+<span class="n">loaded_model</span> <span class="o">=</span> <span class="n">MLP</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;my_trained_model.ns&quot;</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">loaded_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="c1"># Load with optimizer state to continue training</span>
+<span class="n">model_resume</span> <span class="o">=</span> <span class="n">MLP</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;with_optimizer.ns&quot;</span><span class="p">,</span> <span class="n">load_optimizer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">history_continued</span> <span class="o">=</span> <span class="n">model_resume</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>  <span class="c1"># Seamless continuation</span>
 </pre></div>
 </div>
+</section>
+<section id="saving-and-loading-models">
+<h2>Saving and Loading Models<a class="headerlink" href="#saving-and-loading-models" title="Link to this heading">¶</a></h2>
+<section id="save-trained-models">
+<h3>Save Trained Models<a class="headerlink" href="#save-trained-models" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># After training your model</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Save just weights and architecture (for inference)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;trained_model.ns&quot;</span><span class="p">)</span>
+
+<span class="c1"># Save with optimizer state (for resuming training)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;checkpoint.ns&quot;</span><span class="p">,</span> <span class="n">save_optimizer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="load-models">
+<h3>Load Models<a class="headerlink" href="#load-models" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load for inference</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;trained_model.ns&quot;</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_new</span><span class="p">)</span>
+
+<span class="c1"># Load and continue training</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;checkpoint.ns&quot;</span><span class="p">,</span> <span class="n">load_optimizer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Model is already compiled with saved optimizer!</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>  <span class="c1"># Training continues smoothly</span>
+</pre></div>
+</div>
+</section>
+<section id="benefits-of-optimizer-state-persistence">
+<h3>Benefits of Optimizer State Persistence<a class="headerlink" href="#benefits-of-optimizer-state-persistence" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Seamless Training Continuation</strong>: No loss spike when resuming</p></li>
+<li><p><strong>Preserves Momentum</strong>: Velocity buffers and adaptive rates maintained</p></li>
+<li><p><strong>Exact State Recovery</strong>: Training continues as if never interrupted</p></li>
+<li><p><strong>Example</strong>: Loss at epoch 100: 0.234 → Load → Loss at epoch 101: 0.230 (smooth!)</p></li>
+</ul>
+</section>
+</section>
+<section id="choosing-the-right-optimizer">
+<h2>Choosing the Right Optimizer<a class="headerlink" href="#choosing-the-right-optimizer" title="Link to this heading">¶</a></h2>
+<section id="quick-decision-guide">
+<h3>Quick Decision Guide<a class="headerlink" href="#quick-decision-guide" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># General-purpose deep learning (RECOMMENDED)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+
+<span class="c1"># Faster convergence on smooth objectives</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgdnm&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>  <span class="c1"># Nesterov momentum</span>
+
+<span class="c1"># Adaptive learning for non-stationary problems</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;rmsprop&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+
+<span class="c1"># Simple problems or full control needed</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgd&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+
+<span class="c1"># Faster than SGD, smoother convergence</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgdm&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>  <span class="c1"># Standard momentum</span>
+</pre></div>
+</div>
+</section>
+<section id="optimizer-comparison">
+<h3>Optimizer Comparison<a class="headerlink" href="#optimizer-comparison" title="Link to this heading">¶</a></h3>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Optimizer</p></th>
+<th class="head"><p>Best For</p></th>
+<th class="head"><p>Learning Rate</p></th>
+<th class="head"><p>Convergence Speed</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">adam</span></code></p></td>
+<td><p>Most tasks (default)</p></td>
+<td><p>1e-3 to 1e-4</p></td>
+<td><p>Fast</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sgdnm</span></code></p></td>
+<td><p>Non-convex optimization</p></td>
+<td><p>1e-2 to 1e-3</p></td>
+<td><p>Very Fast</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rmsprop</span></code></p></td>
+<td><p>RNNs, non-stationary</p></td>
+<td><p>1e-3 to 1e-4</p></td>
+<td><p>Fast</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sgdm</span></code></p></td>
+<td><p>General acceleration</p></td>
+<td><p>1e-2 to 1e-3</p></td>
+<td><p>Medium</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sgd</span></code></p></td>
+<td><p>Simple problems</p></td>
+<td><p>1e-2 to 1e-1</p></td>
+<td><p>Slow</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 <section id="understanding-the-output">
 <h2>Understanding the Output<a class="headerlink" href="#understanding-the-output" title="Link to this heading">¶</a></h2>
@@ -605,7 +716,16 @@ WUR: 🟢 (1.30e-03)  | Saturation:   🟢 (0.00)   | Progress: 🟢  | Plateau:
 <span class="c1"># SGD optimizer</span>
 <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgd&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
 
-<span class="c1"># Note: NeuroScope currently supports &quot;adam&quot; and &quot;sgd&quot; optimizers</span>
+<span class="c1"># SGD with Momentum (faster convergence)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgdm&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+
+<span class="c1"># SGD with Nesterov Momentum (even better convergence)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgdnm&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+
+<span class="c1"># RMSprop (great for RNNs and non-stationary objectives)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;rmsprop&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+
+<span class="c1"># Note: NeuroScope supports 5 optimizers: sgd, sgdm, sgdnm, rmsprop, adam</span>
 </pre></div>
 </div>
 </section>
@@ -816,6 +936,17 @@ WUR: 🟢 (1.30e-03)  | Saturation:   🟢 (0.00)   | Progress: 🟢  | Plateau:
 </ul>
 </li>
 <li><a class="reference internal" href="#your-first-neural-network">Your First Neural Network</a></li>
+<li><a class="reference internal" href="#saving-and-loading-models">Saving and Loading Models</a><ul>
+<li><a class="reference internal" href="#save-trained-models">Save Trained Models</a></li>
+<li><a class="reference internal" href="#load-models">Load Models</a></li>
+<li><a class="reference internal" href="#benefits-of-optimizer-state-persistence">Benefits of Optimizer State Persistence</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#choosing-the-right-optimizer">Choosing the Right Optimizer</a><ul>
+<li><a class="reference internal" href="#quick-decision-guide">Quick Decision Guide</a></li>
+<li><a class="reference internal" href="#optimizer-comparison">Optimizer Comparison</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#understanding-the-output">Understanding the Output</a><ul>
 <li><a class="reference internal" href="#compilation-summary">Compilation Summary</a></li>
 <li><a class="reference internal" href="#pre-training-analysis-results">Pre-training Analysis Results</a></li>
@@ -858,7 +989,7 @@ WUR: 🟢 (1.30e-03)  | Saturation:   🟢 (0.00)   | Progress: 🟢  | Plateau:
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=38b66d78"></script>
+</div><script src="_static/documentation_options.js?v=95e61db4"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

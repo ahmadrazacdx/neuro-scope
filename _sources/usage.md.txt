@@ -56,15 +56,34 @@ deep_model = MLP(
 
 ### Optimizer Selection
 
+NeuroScope provides 5 optimizers with different convergence characteristics:
+
 ```python
-# Adam (default) - adaptive learning rate with momentum
+# Adam (default) - adaptive learning rate with momentum and bias correction
+# Best for: Most deep learning tasks, non-stationary objectives
+# Hyperparameters: beta1=0.9, beta2=0.999, eps=1e-8 (built-in)
 model.compile(optimizer="adam", lr=1e-3)
 
-# SGD - stochastic gradient descent
+# SGD - classic stochastic gradient descent
+# Best for: Simple problems, when you want full control
 model.compile(optimizer="sgd", lr=1e-2)
 
-# Note: NeuroScope currently supports "adam" and "sgd" optimizers
-# Adam uses built-in beta1=0.9, beta2=0.999, eps=1e-8 parameters
+# SGD with Momentum - accelerated gradient descent with Polyak momentum
+# Best for: Escaping saddle points, smoother convergence
+# Hyperparameters: beta=0.9 (built-in)
+model.compile(optimizer="sgdm", lr=1e-2)
+
+# SGD with Nesterov Momentum - lookahead momentum for better convergence
+# Best for: Faster convergence than standard momentum
+# Hyperparameters: beta=0.9 (built-in)
+model.compile(optimizer="sgdnm", lr=1e-2)
+
+# RMSprop - adaptive learning rate with moving average of squared gradients
+# Best for: RNNs, non-stationary objectives, mini-batch learning
+# Hyperparameters: beta=0.9, eps=1e-8 (built-in), optional momentum=0.0
+model.compile(optimizer="rmsprop", lr=1e-3)
+
+# All optimizer states are automatically saved with model.save()
 ```
 
 ### Regularization Options

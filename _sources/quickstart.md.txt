@@ -54,13 +54,20 @@ model = MLP(
     dropout_rate=0.2                         # 20% dropout fo regularization
 )
 
-# Step 2: Compile the model
+# Step 2: Compile the model with optimizer selection
 model.compile(
-    optimizer="adam",                        # Adam optimizer
+    optimizer="adam",                        # Choose: "adam", "sgd", "sgdm", "sgdnm", "rmsprop"
     lr=1e-3,                                # Learning rate
     reg="l2",                               # L2 regularization (use "l2" or None)
     lamda=1e-3                              # Regularization strength
 )
+
+# Optimizer Quick Reference:
+# - "adam"   : Best default choice for most tasks (recommended)
+# - "sgd"    : Simple SGD, good for simple problems
+# - "sgdm"   : SGD with momentum, faster convergence
+# - "sgdnm"  : SGD with Nesterov momentum, best momentum variant
+# - "rmsprop": Adaptive learning, good for RNNs and non-stationary objectives
 
 # Step 3: Pre-training analysis (optional but recommended)
 analyzer = PreTrainingAnalyzer(model)
@@ -93,7 +100,85 @@ analyzer.evaluate(X_train, y_train)
 viz = Visualizer(history)
 viz.plot_learning_curves()
 viz.plot_activation_hist()
+
+# Step 7: Save your trained model
+model.save("my_trained_model.ns")              # Basic save (weights + architecture)
+model.save("with_optimizer.ns", save_optimizer=True)  # Save with optimizer state
+
+# Step 8: Load model later
+loaded_model = MLP.load("my_trained_model.ns")
+predictions = loaded_model.predict(X_test)
+
+# Load with optimizer state to continue training
+model_resume = MLP.load("with_optimizer.ns", load_optimizer=True)
+history_continued = model_resume.fit(X_train, y_train, epochs=50)  # Seamless continuation
 ```
+
+## Saving and Loading Models
+
+### Save Trained Models
+
+```python
+# After training your model
+history = model.fit(X_train, y_train, epochs=100)
+
+# Save just weights and architecture (for inference)
+model.save("trained_model.ns")
+
+# Save with optimizer state (for resuming training)
+model.save("checkpoint.ns", save_optimizer=True)
+```
+
+### Load Models
+
+```python
+# Load for inference
+model = MLP.load("trained_model.ns")
+predictions = model.predict(X_new)
+
+# Load and continue training
+model = MLP.load("checkpoint.ns", load_optimizer=True)
+# Model is already compiled with saved optimizer!
+history = model.fit(X_train, y_train, epochs=50)  # Training continues smoothly
+```
+
+### Benefits of Optimizer State Persistence
+
+- **Seamless Training Continuation**: No loss spike when resuming
+- **Preserves Momentum**: Velocity buffers and adaptive rates maintained
+- **Exact State Recovery**: Training continues as if never interrupted
+- **Example**: Loss at epoch 100: 0.234 → Load → Loss at epoch 101: 0.230 (smooth!)
+
+## Choosing the Right Optimizer
+
+### Quick Decision Guide
+
+```python
+# General-purpose deep learning (RECOMMENDED)
+model.compile(optimizer="adam", lr=1e-3)
+
+# Faster convergence on smooth objectives
+model.compile(optimizer="sgdnm", lr=1e-2)  # Nesterov momentum
+
+# Adaptive learning for non-stationary problems
+model.compile(optimizer="rmsprop", lr=1e-3)
+
+# Simple problems or full control needed
+model.compile(optimizer="sgd", lr=1e-2)
+
+# Faster than SGD, smoother convergence
+model.compile(optimizer="sgdm", lr=1e-2)  # Standard momentum
+```
+
+### Optimizer Comparison
+
+| Optimizer | Best For | Learning Rate | Convergence Speed |
+|-----------|----------|---------------|-------------------|
+| `adam` | Most tasks (default) | 1e-3 to 1e-4 | Fast |
+| `sgdnm` | Non-convex optimization | 1e-2 to 1e-3 | Very Fast |
+| `rmsprop` | RNNs, non-stationary | 1e-3 to 1e-4 | Fast |
+| `sgdm` | General acceleration | 1e-2 to 1e-3 | Medium |
+| `sgd` | Simple problems | 1e-2 to 1e-1 | Slow |
 
 ## Understanding the Output
 
@@ -272,7 +357,16 @@ model.compile(optimizer="adam", lr=1e-3)
 # SGD optimizer
 model.compile(optimizer="sgd", lr=1e-2)
 
-# Note: NeuroScope currently supports "adam" and "sgd" optimizers
+# SGD with Momentum (faster convergence)
+model.compile(optimizer="sgdm", lr=1e-2)
+
+# SGD with Nesterov Momentum (even better convergence)
+model.compile(optimizer="sgdnm", lr=1e-2)
+
+# RMSprop (great for RNNs and non-stationary objectives)
+model.compile(optimizer="rmsprop", lr=1e-3)
+
+# Note: NeuroScope supports 5 optimizers: sgd, sgdm, sgdnm, rmsprop, adam
 ```
 
 ## Diagnostic Tools

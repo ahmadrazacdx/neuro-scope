@@ -1,13 +1,13 @@
 <!doctype html>
 <html class="no-js" lang="en" data-content_root="../../../">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
 
-    <link rel="shortcut icon" href="../../../_static/favicon.svg"/><!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
-        <title>neuroscope.mlp.mlp - NeuroScope 0.1.0</title>
+    <link rel="shortcut icon" href="../../../_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+        <title>neuroscope.mlp.mlp - NeuroScope 0.2.0</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=25af2a20" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -41,8 +41,8 @@
   }
   @media not print {
     body[data-theme="dark"] {
-      --color-code-background: #2b2b2b;
-  --color-code-foreground: #f8f8f2;
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
   --color-foreground: #e2e8f0;
   --color-background: #0f172a;
   --color-background-secondary: #1e293b;
@@ -64,8 +64,8 @@
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
-        --color-code-background: #2b2b2b;
-  --color-code-foreground: #f8f8f2;
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
   --color-foreground: #e2e8f0;
   --color-background: #0f172a;
   --color-background-secondary: #1e293b;
@@ -197,14 +197,10 @@
   </symbol>
 </svg>
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
-</label>
-<label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
-</label>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
 <a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
 
@@ -214,17 +210,15 @@
   <header class="mobile-header">
     <div class="header-left">
       <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">NeuroScope 0.1.0</div></a>
+      <a href="../../../index.html"><div class="brand">NeuroScope 0.2.0</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
           <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
           <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
           <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -232,8 +226,7 @@
         </button>
       </div>
       <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
   </header>
@@ -245,7 +238,7 @@
     <img src="../../../_static/favicon.svg" class="sidebar-logo" alt="NeuroScope" />
     <span class="sidebar-brand-text">
       NeuroScope
-      <div class="sidebar-brand-version">0.1.0</div>
+      <div class="sidebar-brand-version">0.2.0</div>
     </span>
   </a>
 </div><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
@@ -284,8 +277,7 @@
         </a>
         <div class="content-icon-container">
           <div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
               <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -293,8 +285,7 @@
             </button>
           </div>
           <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
@@ -304,7 +295,10 @@
 <span class="sd">Main neural network class integrating all framework components.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -312,6 +306,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.initializers</span><span class="w"> </span><span class="kn">import</span> <span class="n">WeightInits</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.losses</span><span class="w"> </span><span class="kn">import</span> <span class="n">LossFunctions</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">Metrics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.optimizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SGD</span><span class="p">,</span> <span class="n">Adam</span><span class="p">,</span> <span class="n">RMSprop</span><span class="p">,</span> <span class="n">SGDMomentum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Utils</span>
 
 
@@ -378,8 +373,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">reg</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lamda</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gradient_clip</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compiled</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">adam_state</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compiled</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -416,17 +410,35 @@
 <div class="viewcode-block" id="MLP.reset_optimizer">
 <a class="viewcode-back" href="../../../reference.html#neuroscope.MLP.reset_optimizer">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;adam&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">adam_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">adam_state</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;m_weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">W</span><span class="p">)</span> <span class="k">for</span> <span class="n">W</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">],</span>
-                <span class="s2">&quot;v_weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">W</span><span class="p">)</span> <span class="k">for</span> <span class="n">W</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">],</span>
-                <span class="s2">&quot;m_biases&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">],</span>
-                <span class="s2">&quot;v_biases&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">],</span>
-                <span class="s2">&quot;beta1&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
-                <span class="s2">&quot;beta2&quot;</span><span class="p">:</span> <span class="mf">0.999</span><span class="p">,</span>
-                <span class="s2">&quot;eps&quot;</span><span class="p">:</span> <span class="mf">1e-8</span><span class="p">,</span>
-                <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset optimizer state (e.g., momentum buffers, Adam moments).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="s2">&quot;_state&quot;</span><span class="p">):</span>
+            <span class="c1"># Reset optimizer state by reinitializing</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">SGD</span><span class="p">):</span>
+                <span class="c1"># SGD has no state to reset</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">SGDMomentum</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;velocity_w&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;velocity_b&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;initialized&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">RMSprop</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;square_avg_weights&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;square_avg_biases&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;velocity_w&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;velocity_b&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;initialized&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">Adam</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;m_weights&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;v_weights&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;m_biases&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;v_biases&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;initialized&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="p">}</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
@@ -450,7 +462,10 @@
 <span class="sd">        hyperparameters. Must be called before training the model.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            optimizer (str, optional): Optimization algorithm (&quot;sgd&quot;, &quot;adam&quot;). Defaults to &quot;adam&quot;.</span>
+<span class="sd">            optimizer (str, optional): Optimization algorithm.</span>
+<span class="sd">                Options: &quot;sgd&quot;, &quot;sgdm&quot; (SGD with momentum), &quot;sgdnm&quot; (SGD with Nesterov momentum),</span>
+<span class="sd">                &quot;rmsprop&quot;, &quot;adam&quot;.</span>
+<span class="sd">                Defaults to &quot;adam&quot;.</span>
 <span class="sd">            lr (float, optional): Learning rate for parameter updates. Defaults to 0.001.</span>
 <span class="sd">            reg (str, optional): Regularization type (&quot;l2&quot;, None). Defaults to None.</span>
 <span class="sd">            lamda (float, optional): Regularization strength (lambda parameter). Defaults to 0.01.</span>
@@ -461,26 +476,32 @@
 
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; model.compile(optimizer=&quot;adam&quot;, lr=1e-3, reg=&quot;l2&quot;, lamda=0.01)</span>
+<span class="sd">            &gt;&gt;&gt; model.compile(optimizer=&quot;sgdm&quot;, lr=0.01)  # SGD with momentum</span>
+<span class="sd">            &gt;&gt;&gt; model.compile(optimizer=&quot;sgdnm&quot;, lr=0.01)  # SGD with Nesterov momentum</span>
+<span class="sd">            &gt;&gt;&gt; model.compile(optimizer=&quot;rmsprop&quot;, lr=0.001)  # RMSprop</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
+        <span class="c1"># Create optimizer instance based on string identifier</span>
+        <span class="k">if</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;sgd&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;sgdm&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SGDMomentum</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">nesterov</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;sgdnm&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SGDMomentum</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">nesterov</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;rmsprop&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">RMSprop</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;adam&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">beta1</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">beta2</span><span class="o">=</span><span class="mf">0.999</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Unknown optimizer: </span><span class="si">{</span><span class="n">optimizer</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Choose from: &#39;sgd&#39;, &#39;sgdm&#39;, &#39;sgdnm&#39;, &#39;rmsprop&#39;, &#39;adam&#39;&quot;</span>
+            <span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reg</span> <span class="o">=</span> <span class="n">reg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lamda</span> <span class="o">=</span> <span class="n">lamda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gradient_clip</span> <span class="o">=</span> <span class="n">gradient_clip</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compiled</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="c1"># Initialize Adam state if needed</span>
-        <span class="k">if</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;adam&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">adam_state</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;m_weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">W</span><span class="p">)</span> <span class="k">for</span> <span class="n">W</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">],</span>
-                <span class="s2">&quot;v_weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">W</span><span class="p">)</span> <span class="k">for</span> <span class="n">W</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">],</span>
-                <span class="s2">&quot;m_biases&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">],</span>
-                <span class="s2">&quot;v_biases&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">],</span>
-                <span class="s2">&quot;beta1&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
-                <span class="s2">&quot;beta2&quot;</span><span class="p">:</span> <span class="mf">0.999</span><span class="p">,</span>
-                <span class="s2">&quot;eps&quot;</span><span class="p">:</span> <span class="mf">1e-8</span><span class="p">,</span>
-                <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="p">}</span>
 
         <span class="c1"># Print model summary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_print_summary</span><span class="p">()</span></div>
@@ -516,7 +537,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">63</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Hidden Activation&#39;</span><span class="si">:</span><span class="s2">&lt;47</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_activation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Output Activation&#39;</span><span class="si">:</span><span class="s2">&lt;47</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_activation</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;Linear&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Optimizer&#39;</span><span class="si">:</span><span class="s2">&lt;47</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Optimizer&#39;</span><span class="si">:</span><span class="s2">&lt;47</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Learning Rate&#39;</span><span class="si">:</span><span class="s2">&lt;47</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_rate</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Dropout&#39;</span><span class="si">:</span><span class="s2">&lt;47</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout_rate</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
@@ -672,35 +693,21 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown metric: </span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">eval_score</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_update_parameters_sgd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">lr</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">dW</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">db</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">lr</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update network parameters using the configured optimizer.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_update_parameters_adam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">lr</span><span class="p">):</span>
-        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adam_state</span>
-        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)):</span>
-            <span class="c1"># Weight updates</span>
-            <span class="n">state</span><span class="p">[</span><span class="s2">&quot;m_weights&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta1&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;m_weights&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta1&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="n">dW</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="p">)</span>
-            <span class="n">state</span><span class="p">[</span><span class="s2">&quot;v_weights&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta2&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;v_weights&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span>
-                <span class="mi">1</span> <span class="o">-</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta2&quot;</span><span class="p">]</span>
-            <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">dW</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">m_hat</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;m_weights&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta1&quot;</span><span class="p">]</span> <span class="o">**</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">])</span>
-            <span class="n">v_hat</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;v_weights&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta2&quot;</span><span class="p">]</span> <span class="o">**</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">m_hat</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v_hat</span><span class="p">)</span> <span class="o">+</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;eps&quot;</span><span class="p">])</span>
-            <span class="c1"># Bias updates</span>
-            <span class="n">state</span><span class="p">[</span><span class="s2">&quot;m_biases&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta1&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;m_biases&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta1&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="n">db</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="p">)</span>
-            <span class="n">state</span><span class="p">[</span><span class="s2">&quot;v_biases&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta2&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;v_biases&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span>
-                <span class="mi">1</span> <span class="o">-</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta2&quot;</span><span class="p">]</span>
-            <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">db</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">m_hat_b</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;m_biases&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta1&quot;</span><span class="p">]</span> <span class="o">**</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">])</span>
-            <span class="n">v_hat_b</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;v_biases&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;beta2&quot;</span><span class="p">]</span> <span class="o">**</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">m_hat_b</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v_hat_b</span><span class="p">)</span> <span class="o">+</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;eps&quot;</span><span class="p">])</span>
+<span class="sd">        Args:</span>
+<span class="sd">            dW: Weight gradients</span>
+<span class="sd">            db: Bias gradients</span>
+<span class="sd">            lr: Current learning rate (may differ from self.lr due to decay)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Update optimizer learning rate if it has changed (e.g., due to lr_decay)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="s2">&quot;learning_rate&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">lr</span>
+
+        <span class="c1"># Perform parameter update</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">,</span> <span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_metric_display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the display name for the metric based on task type and metric parameter&quot;&quot;&quot;</span>
@@ -741,7 +748,7 @@
         <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">log_every</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">log_every</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">early_stopping_patience</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
         <span class="n">lr_decay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">numerical_check_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
@@ -1010,10 +1017,7 @@
                         <span class="n">prev_weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">W</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">W</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">]</span>
 
                     <span class="n">prev_weights_</span> <span class="o">=</span> <span class="p">[</span><span class="n">W</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">W</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;sgd&quot;</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_update_parameters_sgd</span><span class="p">(</span><span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">current_lr</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;adam&quot;</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_update_parameters_adam</span><span class="p">(</span><span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">current_lr</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_update_parameters</span><span class="p">(</span><span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">current_lr</span><span class="p">)</span>
 
                     <span class="c1"># Compute weight update ratios (||ΔW|| / ||W||) for each layer</span>
                     <span class="k">for</span> <span class="n">layer_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span><span class="p">):</span>
@@ -1429,10 +1433,7 @@
                             <span class="n">dW</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamda</span> <span class="o">/</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
                     <span class="c1"># Weight updates</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;sgd&quot;</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_update_parameters_sgd</span><span class="p">(</span><span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">current_lr</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;adam&quot;</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_update_parameters_adam</span><span class="p">(</span><span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">current_lr</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_update_parameters</span><span class="p">(</span><span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">current_lr</span><span class="p">)</span>
 
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in batch </span><span class="si">{</span><span class="n">batch_idx</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1545,10 +1546,7 @@
             <span class="p">)</span>
 
             <span class="c1"># Parameter updates using current learning rate</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;adam&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_update_parameters_adam</span><span class="p">(</span><span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_update_parameters_sgd</span><span class="p">(</span><span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_parameters</span><span class="p">(</span><span class="n">dW</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
 
         <span class="c1"># Evaluation</span>
         <span class="n">final_loss</span><span class="p">,</span> <span class="n">final_acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">X_batch</span><span class="p">,</span> <span class="n">y_batch</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
@@ -1560,6 +1558,255 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;OVERFITTING SUCCESS!&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">success</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;OVERFITTING FAILED!&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">original_lr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset_all</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MLP.save">
+<a class="viewcode-back" href="../../../reference.html#neuroscope.MLP.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">save_optimizer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save model to disk in NeuroScope format (.ns).</span>
+
+<span class="sd">        Saves model architecture, weights, and optionally optimizer state</span>
+<span class="sd">        for resuming training. Uses pickle for efficient serialization.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: Path to save file (will add .ns extension if missing)</span>
+<span class="sd">            save_optimizer: If True, saves optimizer state for training resume</span>
+<span class="sd">            \\**metadata: Additional metadata to save (e.g., epoch, accuracy)</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; # Basic save</span>
+<span class="sd">            &gt;&gt;&gt; model.save(&#39;my_model.ns&#39;)</span>
+
+<span class="sd">            &gt;&gt;&gt; # Save with metadata</span>
+<span class="sd">            &gt;&gt;&gt; model.save(&#39;checkpoint.ns&#39;, epoch=50, accuracy=0.95)</span>
+
+<span class="sd">            &gt;&gt;&gt; # Save without optimizer (inference only)</span>
+<span class="sd">            &gt;&gt;&gt; model.save(&#39;model.ns&#39;, save_optimizer=False)</span>
+<span class="sd">        Notes:</span>
+<span class="sd">            - File format: Python pickle (protocol 4)</span>
+<span class="sd">            - Extension: .ns (NeuroScope)</span>
+<span class="sd">            - Compatible with NumPy arrays</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure .ns extension</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filepath</span><span class="o">.</span><span class="n">suffix</span> <span class="o">!=</span> <span class="s2">&quot;.ns&quot;</span><span class="p">:</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ns&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
+
+            <span class="n">neuroscope_version</span> <span class="o">=</span> <span class="n">version</span><span class="p">(</span><span class="s2">&quot;neuroscope&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">neuroscope_version</span> <span class="o">=</span> <span class="s2">&quot;N/A&quot;</span>
+        <span class="c1"># Build save dictionary</span>
+        <span class="n">save_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;neuroscope_version&quot;</span><span class="p">:</span> <span class="n">neuroscope_version</span><span class="p">,</span>
+            <span class="s2">&quot;model_config&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;layer_dims&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dims</span><span class="p">,</span>
+                <span class="s2">&quot;hidden_activation&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_activation</span><span class="p">,</span>
+                <span class="s2">&quot;out_activation&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_activation</span><span class="p">,</span>
+                <span class="s2">&quot;init_method&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_method</span><span class="p">,</span>
+                <span class="s2">&quot;init_seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_seed</span><span class="p">,</span>
+                <span class="s2">&quot;dropout_rate&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_rate</span><span class="p">,</span>
+                <span class="s2">&quot;dropout_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_type</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">],</span>
+            <span class="s2">&quot;biases&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">biases</span><span class="p">],</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span> <span class="o">**</span><span class="n">metadata</span><span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Save optimizer configuration and state if requested</span>
+        <span class="k">if</span> <span class="n">save_optimizer</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compiled</span><span class="p">:</span>
+            <span class="n">optimizer_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+            <span class="n">save_dict</span><span class="p">[</span><span class="s2">&quot;optimizer_state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">optimizer_state</span>
+
+        <span class="c1"># Write to disk</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">save_dict</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model saved to: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">save_optimizer</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compiled</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimizer: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="s2">&quot;_state&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;initialized&quot;</span><span class="p">,</span> <span class="kc">False</span>
+            <span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimizer state included (training resumable)&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MLP.load">
+<a class="viewcode-back" href="../../../reference.html#neuroscope.MLP.load">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">load_optimizer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load model from disk. (.ns format)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: Path to saved model file (.ns)</span>
+<span class="sd">            load_optimizer: If True, loads optimizer state for training resume</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: (model, info) where:</span>
+<span class="sd">            - model: Loaded MLP instance</span>
+<span class="sd">            - info: ModelInfo dict with nice __repr__ for printing</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; # Load and inspect metadata</span>
+<span class="sd">            &gt;&gt;&gt; model, info = MLP.load(&#39;checkpoint.ns&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print(info)  # Shows nice formatted summary</span>
+<span class="sd">            &gt;&gt;&gt; predictions = model.predict(X_test)</span>
+
+<span class="sd">            &gt;&gt;&gt; # Load for continued training</span>
+<span class="sd">            &gt;&gt;&gt; model, info = MLP.load(&#39;checkpoint.ns&#39;, load_optimizer=True)</span>
+<span class="sd">            &gt;&gt;&gt; print(f&quot;Resuming from epoch {info[&#39;custom_metadata&#39;][&#39;epoch&#39;]}&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; model.fit(X, y, epochs=50)</span>
+
+<span class="sd">            &gt;&gt;&gt; # Access metadata programmatically</span>
+<span class="sd">            &gt;&gt;&gt; model, info = MLP.load(&#39;model.ns&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print(f&quot;Architecture: {info[&#39;model_config&#39;][&#39;layer_dims&#39;]}&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; print(f&quot;Saved at: {info[&#39;timestamp&#39;]}&quot;)</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If file doesn&#39;t exist</span>
+<span class="sd">            ValueError: If file format is invalid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filepath</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model file not found: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">save_dict</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+                    <span class="n">f</span>
+                <span class="p">)</span>  <span class="c1"># nosec B301 - Model file from trusted source</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load model file: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">required_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;model_config&quot;</span><span class="p">,</span> <span class="s2">&quot;weights&quot;</span><span class="p">,</span> <span class="s2">&quot;biases&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">save_dict</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">required_keys</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid .ns file format. Missing required keys: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="n">required_keys</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">set</span><span class="p">(</span><span class="n">save_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Reconstruct model</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">save_dict</span><span class="p">[</span><span class="s2">&quot;model_config&quot;</span><span class="p">]</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">layer_dims</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;layer_dims&quot;</span><span class="p">],</span>
+            <span class="n">hidden_activation</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;hidden_activation&quot;</span><span class="p">],</span>
+            <span class="n">out_activation</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;out_activation&quot;</span><span class="p">],</span>
+            <span class="n">init_method</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;init_method&quot;</span><span class="p">],</span>
+            <span class="n">init_seed</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;init_seed&quot;</span><span class="p">],</span>
+            <span class="n">dropout_rate</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;dropout_rate&quot;</span><span class="p">],</span>
+            <span class="n">dropout_type</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;dropout_type&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Restore weights and biases</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">save_dict</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]]</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">biases</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">save_dict</span><span class="p">[</span><span class="s2">&quot;biases&quot;</span><span class="p">]]</span>
+
+        <span class="c1"># Restore optimizer state if requested</span>
+        <span class="k">if</span> <span class="n">load_optimizer</span> <span class="ow">and</span> <span class="s2">&quot;optimizer_state&quot;</span> <span class="ow">in</span> <span class="n">save_dict</span><span class="p">:</span>
+            <span class="n">optimizer_state</span> <span class="o">=</span> <span class="n">save_dict</span><span class="p">[</span><span class="s2">&quot;optimizer_state&quot;</span><span class="p">]</span>
+            <span class="n">optimizer_type</span> <span class="o">=</span> <span class="n">optimizer_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;Adam&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Recreate optimizer instance based on saved type</span>
+            <span class="k">if</span> <span class="n">optimizer_type</span> <span class="o">==</span> <span class="s2">&quot;SGD&quot;</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">optimizer_state</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">optimizer_type</span> <span class="o">==</span> <span class="s2">&quot;SGDMomentum&quot;</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SGDMomentum</span><span class="p">(</span>
+                    <span class="n">learning_rate</span><span class="o">=</span><span class="n">optimizer_state</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">],</span>
+                    <span class="n">momentum</span><span class="o">=</span><span class="n">optimizer_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;momentum&quot;</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span>
+                    <span class="n">nesterov</span><span class="o">=</span><span class="n">optimizer_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nesterov&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">optimizer_type</span> <span class="o">==</span> <span class="s2">&quot;RMSprop&quot;</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">RMSprop</span><span class="p">(</span>
+                    <span class="n">learning_rate</span><span class="o">=</span><span class="n">optimizer_state</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">],</span>
+                    <span class="n">rho</span><span class="o">=</span><span class="n">optimizer_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rho&quot;</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span>
+                    <span class="n">eps</span><span class="o">=</span><span class="n">optimizer_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">),</span>
+                    <span class="n">momentum</span><span class="o">=</span><span class="n">optimizer_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;momentum&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">optimizer_type</span> <span class="o">==</span> <span class="s2">&quot;Adam&quot;</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span>
+                    <span class="n">learning_rate</span><span class="o">=</span><span class="n">optimizer_state</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">],</span>
+                    <span class="n">beta1</span><span class="o">=</span><span class="n">optimizer_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;beta1&quot;</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span>
+                    <span class="n">beta2</span><span class="o">=</span><span class="n">optimizer_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;beta2&quot;</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">),</span>
+                    <span class="n">eps</span><span class="o">=</span><span class="n">optimizer_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown optimizer type: </span><span class="si">{</span><span class="n">optimizer_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Restore optimizer internal state</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">optimizer_state</span><span class="p">)</span>
+
+            <span class="c1"># Set other training configurations</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">optimizer_state</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">]</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">compiled</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimizer state restored (</span><span class="si">{</span><span class="n">optimizer_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model loaded from: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">arch_str</span> <span class="o">=</span> <span class="s2">&quot; → &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;layer_dims&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Architecture: </span><span class="si">{</span><span class="n">arch_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">ModelInfo</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">,</span> <span class="s2">&quot;MODEL METADATA&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">]</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;File&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;file_path&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;N/A&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Size&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;file_size_mb&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;NeuroScope Version&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;neuroscope_version&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;unknown&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Saved At&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;unknown&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+
+                <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Architecture&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; → &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;layer_dims&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[])))</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Hidden Activation&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hidden_activation&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;N/A&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Output Activation&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;out_activation&#39;</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;Linear&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Dropout&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dropout_rate&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;has_optimizer_state&quot;</span><span class="p">):</span>
+                    <span class="n">opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;optimizer_config&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Optimizer&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;N/A&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Learning Rate&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;N/A&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Optimizer State&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> Not saved&quot;</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;CUSTOM METADATA&quot;</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+
+                <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;custom_metadata&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">if</span> <span class="n">meta</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">meta</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span>  <span class="c1"># Don&#39;t duplicate timestamp</span>
+                            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;(none)&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="n">ModelInfo</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;neuroscope_version&quot;</span><span class="p">:</span> <span class="n">save_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;neuroscope_version&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">save_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;model_config&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">,</span>
+                <span class="s2">&quot;optimizer_config&quot;</span><span class="p">:</span> <span class="n">save_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;optimizer_state&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;has_optimizer_state&quot;</span><span class="p">:</span> <span class="s2">&quot;optimizer_state&quot;</span> <span class="ow">in</span> <span class="n">save_dict</span><span class="p">,</span>
+                <span class="s2">&quot;custom_metadata&quot;</span><span class="p">:</span> <span class="n">save_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+                <span class="s2">&quot;file_path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span>
+                <span class="s2">&quot;file_size_mb&quot;</span><span class="p">:</span> <span class="n">filepath</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">info</span></div>
 </div>
 
 </pre></div>
@@ -1594,7 +1841,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=38b66d78"></script>
+</div><script src="../../../_static/documentation_options.js?v=95e61db4"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -1,7 +1,7 @@
 <!doctype html>
 <html class="no-js" lang="en" data-content_root="./">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:title" content="Advanced Usage Guide" />
 <meta property="og:type" content="website" />
@@ -14,12 +14,12 @@
 <meta property="og:image:alt" content="Comprehensive guide to advanced NeuroScope features, customization options, and best practices for neural network development. Architecture Design: Layer Configuration: Activation Function Selectio..." />
 <meta name="description" content="Comprehensive guide to advanced NeuroScope features, customization options, and best practices for neural network development. Architecture Design: Layer Configuration: Activation Function Selectio..." />
 <meta name="twitter:card" content="summary_large_image" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Technical Deep Dive: Neural Network Diagnostics" href="technical_deep_dive.html" /><link rel="prev" title="Quickstart Guide" href="quickstart.html" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Technical Deep Dive: Neural Network Diagnostics" href="technical_deep_dive.html"><link rel="prev" title="Quickstart Guide" href="quickstart.html">
 
-    <link rel="shortcut icon" href="_static/favicon.svg"/><!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
-        <title>Advanced Usage Guide - NeuroScope 0.1.0</title>
+    <link rel="shortcut icon" href="_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+        <title>Advanced Usage Guide - NeuroScope 0.2.0</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=25af2a20" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -53,8 +53,8 @@
   }
   @media not print {
     body[data-theme="dark"] {
-      --color-code-background: #2b2b2b;
-  --color-code-foreground: #f8f8f2;
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
   --color-foreground: #e2e8f0;
   --color-background: #0f172a;
   --color-background-secondary: #1e293b;
@@ -76,8 +76,8 @@
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
-        --color-code-background: #2b2b2b;
-  --color-code-foreground: #f8f8f2;
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
   --color-foreground: #e2e8f0;
   --color-background: #0f172a;
   --color-background-secondary: #1e293b;
@@ -209,14 +209,10 @@
   </symbol>
 </svg>
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
-</label>
-<label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
-</label>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
 <a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
 
@@ -226,17 +222,15 @@
   <header class="mobile-header">
     <div class="header-left">
       <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">NeuroScope 0.1.0</div></a>
+      <a href="index.html"><div class="brand">NeuroScope 0.2.0</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
           <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
           <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
           <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -244,8 +238,7 @@
         </button>
       </div>
       <label class="toc-overlay-icon toc-header-icon" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
   </header>
@@ -257,7 +250,7 @@
     <img src="_static/favicon.svg" class="sidebar-logo" alt="NeuroScope" />
     <span class="sidebar-brand-text">
       NeuroScope
-      <div class="sidebar-brand-version">0.1.0</div>
+      <div class="sidebar-brand-version">0.2.0</div>
     </span>
   </a>
 </div><form class="sidebar-search-container" method="get" action="search.html" role="search">
@@ -306,8 +299,7 @@
     <span class="visually-hidden">Edit this page</span>
   </a>
 </div><div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
               <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -315,8 +307,7 @@
             </button>
           </div>
           <label class="toc-overlay-icon toc-content-icon" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
@@ -378,14 +369,32 @@
 <h2>Training Configuration<a class="headerlink" href="#training-configuration" title="Link to this heading">¶</a></h2>
 <section id="optimizer-selection">
 <h3>Optimizer Selection<a class="headerlink" href="#optimizer-selection" title="Link to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Adam (default) - adaptive learning rate with momentum</span>
+<p>NeuroScope provides 5 optimizers with different convergence characteristics:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Adam (default) - adaptive learning rate with momentum and bias correction</span>
+<span class="c1"># Best for: Most deep learning tasks, non-stationary objectives</span>
+<span class="c1"># Hyperparameters: beta1=0.9, beta2=0.999, eps=1e-8 (built-in)</span>
 <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
 
-<span class="c1"># SGD - stochastic gradient descent</span>
+<span class="c1"># SGD - classic stochastic gradient descent</span>
+<span class="c1"># Best for: Simple problems, when you want full control</span>
 <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgd&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
 
-<span class="c1"># Note: NeuroScope currently supports &quot;adam&quot; and &quot;sgd&quot; optimizers</span>
-<span class="c1"># Adam uses built-in beta1=0.9, beta2=0.999, eps=1e-8 parameters</span>
+<span class="c1"># SGD with Momentum - accelerated gradient descent with Polyak momentum</span>
+<span class="c1"># Best for: Escaping saddle points, smoother convergence</span>
+<span class="c1"># Hyperparameters: beta=0.9 (built-in)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgdm&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+
+<span class="c1"># SGD with Nesterov Momentum - lookahead momentum for better convergence</span>
+<span class="c1"># Best for: Faster convergence than standard momentum</span>
+<span class="c1"># Hyperparameters: beta=0.9 (built-in)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgdnm&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+
+<span class="c1"># RMSprop - adaptive learning rate with moving average of squared gradients</span>
+<span class="c1"># Best for: RNNs, non-stationary objectives, mini-batch learning</span>
+<span class="c1"># Hyperparameters: beta=0.9, eps=1e-8 (built-in), optional momentum=0.0</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;rmsprop&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+
+<span class="c1"># All optimizer states are automatically saved with model.save()</span>
 </pre></div>
 </div>
 </section>
@@ -1129,7 +1138,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=38b66d78"></script>
+</div><script src="_static/documentation_options.js?v=95e61db4"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
