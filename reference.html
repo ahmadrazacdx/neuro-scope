@@ -17,7 +17,7 @@
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Visualization Gallery" href="visualization_gallery.html"><link rel="prev" title="Technical Deep Dive: Neural Network Diagnostics" href="technical_deep_dive.html">
 
     <link rel="shortcut icon" href="_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
-        <title>API Reference - NeuroScope 0.2.0</title>
+        <title>API Reference - NeuroScope 0.2.1</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -226,7 +226,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">NeuroScope 0.2.0</div></a>
+      <a href="index.html"><div class="brand">NeuroScope 0.2.1</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -250,7 +250,7 @@
     <img src="_static/favicon.svg" class="sidebar-logo" alt="NeuroScope" />
     <span class="sidebar-brand-text">
       NeuroScope
-      <div class="sidebar-brand-version">0.2.0</div>
+      <div class="sidebar-brand-version">0.2.1</div>
     </span>
   </a>
 </div><form class="sidebar-search-container" method="get" action="search.html" role="search">
@@ -2578,9 +2578,51 @@ permanently inactive.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="neuroscope.mlp.activations.ActivationFunctions.inverted_dropout_with_mask">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverted_dropout_with_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neuroscope/mlp/activations.html#ActivationFunctions.inverted_dropout_with_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuroscope.mlp.activations.ActivationFunctions.inverted_dropout_with_mask" title="Link to this definition">¶</a></dt>
+<dd><p>Inverted dropout that returns both output and mask for backpropagation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – Input array</p></li>
+<li><p><strong>rate</strong> – Dropout probability (fraction of units to drop)</p></li>
+<li><p><strong>training</strong> – Whether in training mode</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(output, mask) where mask includes the 1/(1-p) scaling</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="neuroscope.mlp.activations.ActivationFunctions.alpha_dropout">
 <em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alpha_dropout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neuroscope/mlp/activations.html#ActivationFunctions.alpha_dropout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuroscope.mlp.activations.ActivationFunctions.alpha_dropout" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuroscope.mlp.activations.ActivationFunctions.alpha_dropout_with_mask">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alpha_dropout_with_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neuroscope/mlp/activations.html#ActivationFunctions.alpha_dropout_with_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuroscope.mlp.activations.ActivationFunctions.alpha_dropout_with_mask" title="Link to this definition">¶</a></dt>
+<dd><p>Alpha dropout that returns both output and mask for backpropagation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – Input array</p></li>
+<li><p><strong>rate</strong> – Dropout probability</p></li>
+<li><p><strong>training</strong> – Whether in training mode</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(output, mask) where mask is the binary dropout mask</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -4645,7 +4687,9 @@ Speed automatically adjusts based on epoch count for smooth motion feel.
 <li><a class="reference internal" href="#neuroscope.mlp.activations.ActivationFunctions.selu"><code class="docutils literal notranslate"><span class="pre">ActivationFunctions.selu()</span></code></a></li>
 <li><a class="reference internal" href="#neuroscope.mlp.activations.ActivationFunctions.selu_derivative"><code class="docutils literal notranslate"><span class="pre">ActivationFunctions.selu_derivative()</span></code></a></li>
 <li><a class="reference internal" href="#neuroscope.mlp.activations.ActivationFunctions.inverted_dropout"><code class="docutils literal notranslate"><span class="pre">ActivationFunctions.inverted_dropout()</span></code></a></li>
+<li><a class="reference internal" href="#neuroscope.mlp.activations.ActivationFunctions.inverted_dropout_with_mask"><code class="docutils literal notranslate"><span class="pre">ActivationFunctions.inverted_dropout_with_mask()</span></code></a></li>
 <li><a class="reference internal" href="#neuroscope.mlp.activations.ActivationFunctions.alpha_dropout"><code class="docutils literal notranslate"><span class="pre">ActivationFunctions.alpha_dropout()</span></code></a></li>
+<li><a class="reference internal" href="#neuroscope.mlp.activations.ActivationFunctions.alpha_dropout_with_mask"><code class="docutils literal notranslate"><span class="pre">ActivationFunctions.alpha_dropout_with_mask()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -4824,7 +4868,7 @@ Speed automatically adjusts based on epoch count for smooth motion feel.
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=95e61db4"></script>
+</div><script src="_static/documentation_options.js?v=3ca669d2"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
