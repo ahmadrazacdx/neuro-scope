@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neuroscope"
-version = "0.2.0"
+version = "0.2.1"
 description = "A microscope for informed training of multi-layer perceptron, diagnosing training issues at granular level and accelerating learning and rapid prototyping."
 authors = ["Ahmad Raza <ahmadrazacdx@gmail.com>"]
 license = "Apache-2.0"

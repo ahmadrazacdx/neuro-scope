@@ -258,7 +258,7 @@ class MLP:
             >>> predictions = model.predict(X_test)
             >>> binary_preds = (predictions > 0.5).astype(int)  # For binary classification
         """
-        activations, _ = _ForwardPass.forward_mlp(
+        activations, _, _ = _ForwardPass.forward_mlp(
             X,
             self.weights,
             self.biases,
@@ -316,7 +316,7 @@ class MLP:
         binary_thresh=0.5,
         metric="smart",
     ):
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, _ = _ForwardPass.forward_mlp(
             X,
             weights,
             biases,
@@ -597,7 +597,7 @@ class MLP:
                     )
 
                     # Forward pass
-                    activations, z_values = _ForwardPass.forward_mlp(
+                    activations, z_values, dropout_masks = _ForwardPass.forward_mlp(
                         Xb,
                         self.weights,
                         self.biases,
@@ -614,7 +614,7 @@ class MLP:
 
                     # For monitoring: a clean snapshot without dropout to avoid false positives
                     if capture_monitor:
-                        monitor_activations, _ = _ForwardPass.forward_mlp(
+                        monitor_activations, _, _ = _ForwardPass.forward_mlp(
                             Xb,
                             self.weights,
                             self.biases,
@@ -644,6 +644,7 @@ class MLP:
                         Xb,
                         self.hidden_activation,
                         self.out_activation,
+                        dropout_masks=dropout_masks,
                     )
 
                     # Store gradients for monitoring
@@ -1063,7 +1064,7 @@ class MLP:
 
                 try:
                     # Forward pass
-                    activations, z_values = _ForwardPass.forward_mlp(
+                    activations, z_values, dropout_masks = _ForwardPass.forward_mlp(
                         Xb,
                         self.weights,
                         self.biases,
@@ -1095,6 +1096,7 @@ class MLP:
                         Xb,
                         self.hidden_activation,
                         self.out_activation,
+                        dropout_masks=dropout_masks,
                     )
 
                     # Gradient clipping
@@ -1201,7 +1203,7 @@ class MLP:
         # Training loop
         for epoch in range(epochs):
             # Forward pass
-            activations, z_values = _ForwardPass.forward_mlp(
+            activations, z_values, dropout_masks = _ForwardPass.forward_mlp(
                 X_batch,
                 self.weights,
                 self.biases,
@@ -1220,6 +1222,7 @@ class MLP:
                 X_batch,
                 self.hidden_activation,
                 self.out_activation,
+                dropout_masks=dropout_masks,
             )
 
             # Parameter updates using current learning rate

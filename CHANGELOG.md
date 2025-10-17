@@ -4,6 +4,27 @@ All notable changes to NeuroScope will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-10-17
+
+This release fixes three critical gradient computation bugs that affected backpropagation accuracy:
+
+### Fixed
+- **MSE Loss Gradient**: Fixed missing `2/n_out` scaling factor
+- **MSE with Sigmoid/Tanh**: Now correctly applies activation derivatives
+- **Dropout Backpropagation**: Masks now properly saved and applied
+- Gradient checking now passes with errors < 1e-06
+
+### Added
+- New functions: `inverted_dropout_with_mask()` and `alpha_dropout_with_mask()`
+- Comprehensive gradient verification suite
+- 20+ new tests for dropout and gradient checking
+
+### Changed
+- `forward_mlp()` now returns 3-tuple: (activations, z_values, dropout_masks)
+- `backward_mlp()` accepts optional `dropout_masks` parameter
+- All changes are backward compatible
+
+
 ## [0.2.0] - 2025-10-16
 
 ### Major Features

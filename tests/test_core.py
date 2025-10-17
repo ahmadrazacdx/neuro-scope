@@ -24,7 +24,7 @@ class TestForwardPass:
         biases = [np.array([[0.1, 0.2]]), np.array([[0.3]])]  # 1x2  # 1x1
 
         # Forward pass
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, _ = _ForwardPass.forward_mlp(
             X,
             weights,
             biases,
@@ -59,7 +59,7 @@ class TestForwardPass:
         activations = ["relu", "sigmoid", "tanh", "leaky_relu"]
 
         for activation in activations:
-            result_activations, result_z = _ForwardPass.forward_mlp(
+            result_activations, result_z, _ = _ForwardPass.forward_mlp(
                 X, weights, biases, hidden_activation=activation, training=False
             )
 
@@ -75,12 +75,12 @@ class TestForwardPass:
         biases = [np.array([[0.1]])]
 
         # Training mode with dropout
-        activations_train, _ = _ForwardPass.forward_mlp(
+        activations_train, _, _ = _ForwardPass.forward_mlp(
             X, weights, biases, dropout_rate=0.5, training=True
         )
 
         # Inference mode (no dropout)
-        activations_infer, _ = _ForwardPass.forward_mlp(
+        activations_infer, _, _ = _ForwardPass.forward_mlp(
             X, weights, biases, dropout_rate=0.5, training=False
         )
 
@@ -95,7 +95,7 @@ class TestForwardPass:
         biases = [np.array([[0.1]])]
 
         # Test sigmoid output
-        activations_sigmoid, _ = _ForwardPass.forward_mlp(
+        activations_sigmoid, _, _ = _ForwardPass.forward_mlp(
             X, weights, biases, out_activation="sigmoid", training=False
         )
         # Sigmoid output should be between 0 and 1
@@ -103,7 +103,7 @@ class TestForwardPass:
         assert np.all(output_sigmoid >= 0) and np.all(output_sigmoid <= 1)
 
         # Test linear output (None)
-        activations_linear, _ = _ForwardPass.forward_mlp(
+        activations_linear, _, _ = _ForwardPass.forward_mlp(
             X, weights, biases, out_activation=None, training=False
         )
         # Linear output can be any value
@@ -123,7 +123,7 @@ class TestBackwardPass:
         biases = [np.array([[0.1]])]
 
         # Forward pass first
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, _ = _ForwardPass.forward_mlp(
             X, weights, biases, hidden_activation="relu", training=False
         )
 
@@ -161,16 +161,16 @@ class TestBackwardPass:
         biases = [np.array([[0.1]])]
 
         # Forward pass
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, _ = _ForwardPass.forward_mlp(
             X, weights, biases, training=False
         )
 
-        loss_functions = ["mse", "bce"]
+        loss_functions = ["mse", "bce", "cce"]
 
         for loss_fn in loss_functions:
             try:
                 dW, db = _BackwardPass.backward_mlp(
-                    y, activations, z_values, weights, biases, X
+                    y, activations, z_values, weights, biases, X, loss_fn=loss_fn
                 )
 
                 # Should produce finite gradients
@@ -193,7 +193,7 @@ class TestBackwardPass:
         biases = [np.array([[0.1, 0.2]]), np.array([[0.3]])]
 
         # Forward pass
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, _ = _ForwardPass.forward_mlp(
             X, weights, biases, hidden_activation="relu", training=False
         )
 
@@ -225,7 +225,7 @@ class TestBackwardPass:
         biases = [np.array([[0.1]])]
 
         # Forward pass
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, _ = _ForwardPass.forward_mlp(
             X, weights, biases, hidden_activation="relu", training=False
         )
 
@@ -239,6 +239,104 @@ class TestBackwardPass:
         assert np.any(np.abs(dW[0]) > 1e-10)  # Not all zeros
         assert np.any(np.abs(db[0]) > 1e-10)  # Not all zeros
 
+    def test_backward_mlp_mse_with_sigmoid(self):
+        """Test backward pass with MSE loss and sigmoid output activation."""
+        X = np.array([[1.0, 2.0]])
+        y = np.array([[0.5]])
+
+        weights = [np.array([[0.3], [0.7]])]
+        biases = [np.array([[0.1]])]
+
+        # Forward pass with sigmoid output
+        activations, z_values, _ = _ForwardPass.forward_mlp(
+            X, weights, biases, out_activation="sigmoid", training=False
+        )
+
+        # Backward pass with MSE
+        dW, db = _BackwardPass.backward_mlp(
+            y,
+            activations,
+            z_values,
+            weights,
+            biases,
+            X,
+            out_activation="sigmoid",
+            loss_fn="mse",
+        )
+
+        # Should produce finite gradients
+        assert np.all(np.isfinite(dW[0]))
+        assert np.all(np.isfinite(db[0]))
+
+    def test_backward_mlp_mse_with_softmax_raises_error(self):
+        """Test that MSE with softmax raises an error."""
+        X = np.array([[1.0, 2.0]])
+        y = np.array([[1.0, 0.0]])
+
+        weights = [np.array([[0.3, 0.4], [0.7, 0.8]])]
+        biases = [np.array([[0.1, 0.2]])]
+
+        # Forward pass with softmax output
+        activations, z_values, _ = _ForwardPass.forward_mlp(
+            X, weights, biases, out_activation="softmax", training=False
+        )
+
+        # Backward pass with MSE should raise ValueError
+        with pytest.raises(ValueError, match="MSE loss with softmax"):
+            _BackwardPass.backward_mlp(
+                y,
+                activations,
+                z_values,
+                weights,
+                biases,
+                X,
+                out_activation="softmax",
+                loss_fn="mse",
+            )
+
+    def test_backward_mlp_unknown_loss_fn(self):
+        """Test that unknown loss function raises ValueError."""
+        X = np.array([[1.0, 2.0]])
+        y = np.array([[0.5]])
+
+        weights = [np.array([[0.3], [0.7]])]
+        biases = [np.array([[0.1]])]
+
+        activations, z_values, _ = _ForwardPass.forward_mlp(
+            X, weights, biases, training=False
+        )
+
+        with pytest.raises(ValueError, match="Unknown loss_fn"):
+            _BackwardPass.backward_mlp(
+                y, activations, z_values, weights, biases, X, loss_fn="unknown_loss"
+            )
+
+    def test_backward_mlp_unknown_out_activation_with_mse(self):
+        """Test that MSE with unknown activation raises ValueError."""
+        X = np.array([[1.0, 2.0]])
+        y = np.array([[0.5]])
+
+        weights = [np.array([[0.3], [0.7]])]
+        biases = [np.array([[0.1]])]
+
+        # Use a valid forward pass (no activation)
+        activations, z_values, _ = _ForwardPass.forward_mlp(
+            X, weights, biases, out_activation=None, training=False
+        )
+
+        # Now try backward with unknown activation
+        with pytest.raises(ValueError, match="Unknown out_activation"):
+            _BackwardPass.backward_mlp(
+                y,
+                activations,
+                z_values,
+                weights,
+                biases,
+                X,
+                out_activation="unknown_activation",
+                loss_fn="mse",
+            )
+
     def test_forward_raises_on_mismatched_dimensions(self):
         """Forward pass should raise a ValueError on mismatched input/weight dims."""
         X = np.array([[1.0, 2.0]])  # 1x2 input
@@ -250,6 +348,47 @@ class TestBackwardPass:
             _ForwardPass.forward_mlp(
                 X, weights, biases, hidden_activation="relu", training=False
             )
+
+    def test_backward_mlp_with_alpha_dropout_masks(self):
+        """Test backward pass with alpha dropout masks from forward pass."""
+        np.random.seed(99)
+        X = np.array([[1.0, 2.0, 3.0]])
+        y = np.array([[0.5]])
+
+        weights = [
+            np.array([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]]),  # 3x2
+            np.array([[0.7], [0.8]]),  # 2x1
+        ]
+        biases = [np.array([[0.1, 0.2]]), np.array([[0.3]])]
+
+        # Forward pass with alpha dropout
+        activations, z_values, dropout_masks = _ForwardPass.forward_mlp(
+            X,
+            weights,
+            biases,
+            hidden_activation="relu",
+            dropout_rate=0.3,
+            dropout_type="alpha",
+            training=True,
+        )
+
+        # Backward pass with alpha dropout masks
+        dW, db = _BackwardPass.backward_mlp(
+            y,
+            activations,
+            z_values,
+            weights,
+            biases,
+            X,
+            hidden_activation="relu",
+            dropout_masks=dropout_masks,
+        )
+
+        # Should produce finite gradients
+        assert np.all(np.isfinite(dW[0]))
+        assert np.all(np.isfinite(dW[1]))
+        assert np.all(np.isfinite(db[0]))
+        assert np.all(np.isfinite(db[1]))
 
 
 class TestForwardBackwardIntegration:
@@ -265,7 +404,7 @@ class TestForwardBackwardIntegration:
         biases = [np.array([[0.1, 0.2]]), np.array([[0.1]])]
 
         # Forward pass
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, _ = _ForwardPass.forward_mlp(
             X,
             weights,
             biases,
@@ -315,7 +454,7 @@ class TestForwardBackwardIntegration:
 
         for X_test in [X_small, X_large]:
             # Forward pass should handle extreme values
-            activations, z_values = _ForwardPass.forward_mlp(
+            activations, z_values, _ = _ForwardPass.forward_mlp(
                 X_test, weights, biases, training=False
             )
 
@@ -368,7 +507,7 @@ class TestWarningThrottling:
 
         # Make multiple calls - should not crash or accumulate excessive warnings
         for i in range(5):
-            activations, z_values = _ForwardPass.forward_mlp(
+            activations, z_values, _ = _ForwardPass.forward_mlp(
                 X, weights, biases, training=False
             )
             # Should complete successfully
@@ -416,13 +555,22 @@ class TestForwardPassEdgeCases:
         ]
         biases = [np.array([[0.0, 0.0]]), np.array([[0.0]])]
 
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, dropout_masks = _ForwardPass.forward_mlp(
             X, weights, biases, dropout_rate=0.2, dropout_type="alpha", training=True
         )
 
         assert len(activations) == 2
         assert activations[0].shape == (2, 2)
         assert activations[1].shape == (2, 1)
+
+        # Check dropout masks were returned
+        assert dropout_masks is not None
+        assert len(dropout_masks) == 1  # Only hidden layer has dropout
+        assert isinstance(dropout_masks[0], dict)  # Alpha dropout returns dict
+        assert "mask" in dropout_masks[0]
+        assert "a" in dropout_masks[0]
+        assert "alpha0" in dropout_masks[0]
+        assert "b" in dropout_masks[0]
 
     def test_forward_mlp_invalid_dropout_type(self):
         """Test that invalid dropout type raises ValueError."""
@@ -452,7 +600,7 @@ class TestForwardPassEdgeCases:
         ]
         biases = [np.array([[0.0, 0.0]]), np.array([[0.0]])]
 
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, _ = _ForwardPass.forward_mlp(
             X, weights, biases, hidden_activation=None
         )
 
@@ -471,7 +619,7 @@ class TestForwardPassEdgeCases:
         activation_types = ["relu", "sigmoid", "tanh", "leaky_relu", "selu"]
 
         for activation in activation_types:
-            activations, z_values = _ForwardPass.forward_mlp(
+            activations, z_values, _ = _ForwardPass.forward_mlp(
                 X, weights, biases, hidden_activation=activation
             )
 
@@ -489,7 +637,7 @@ class TestForwardPassEdgeCases:
         ]
         biases = [np.array([[0.1, 0.1]]), np.array([[0.1]])]
 
-        activations, z_values = _ForwardPass.forward_mlp(
+        activations, z_values, _ = _ForwardPass.forward_mlp(
             X, weights, biases, hidden_activation="relu"
         )
 

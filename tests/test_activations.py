@@ -371,3 +371,170 @@ class TestActivationFunctions:
         assert out.shape == x.shape
         np.testing.assert_allclose(out.sum(axis=1), 1.0, rtol=1e-12)
         assert np.all(out >= 0) and np.all(out <= 1)
+
+    def test_inverted_dropout_with_mask_training_false(self):
+        """Test inverted_dropout_with_mask returns original input when not training."""
+        x = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        output, mask = ActivationFunctions.inverted_dropout_with_mask(
+            x, rate=0.5, training=False
+        )
+
+        # Should return original input and None mask
+        np.testing.assert_array_equal(output, x)
+        assert mask is None
+
+    def test_inverted_dropout_with_mask_rate_zero(self):
+        """Test inverted_dropout_with_mask with zero dropout rate."""
+        x = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        output, mask = ActivationFunctions.inverted_dropout_with_mask(
+            x, rate=0.0, training=True
+        )
+
+        # Should return original input and None mask
+        np.testing.assert_array_equal(output, x)
+        assert mask is None
+
+    def test_inverted_dropout_with_mask_training_true(self):
+        """Test inverted_dropout_with_mask applies dropout and returns mask during training."""
+        np.random.seed(42)
+        x = np.array([[1.0, 2.0, 3.0, 4.0, 5.0]] * 100)
+        output, mask = ActivationFunctions.inverted_dropout_with_mask(
+            x, rate=0.5, training=True
+        )
+
+        # Should return a mask
+        assert mask is not None
+        assert mask.shape == x.shape
+
+        # Mask should contain scaled values (1/(1-p) or 0)
+        unique_values = np.unique(mask)
+        assert 0.0 in unique_values  # Some dropped
+        assert 2.0 in unique_values  # Some kept and scaled by 1/(1-0.5) = 2
+
+        # Output should be x * mask
+        np.testing.assert_array_equal(output, x * mask)
+
+        # Approximately 50% should be dropped
+        dropped_fraction = np.sum(mask == 0) / mask.size
+        assert 0.3 < dropped_fraction < 0.7  # Allow some variance
+
+    def test_inverted_dropout_with_mask_preserves_expected_value(self):
+        """Test that inverted dropout preserves expected value."""
+        np.random.seed(123)
+        x = np.ones((1000, 100))
+        rate = 0.3
+        output, mask = ActivationFunctions.inverted_dropout_with_mask(
+            x, rate=rate, training=True
+        )
+
+        # Expected value should be approximately preserved
+        # E[output] ≈ E[x] because of 1/(1-p) scaling
+        expected_mean = x.mean()
+        actual_mean = output.mean()
+        assert abs(actual_mean - expected_mean) < 0.1  # Within 10% due to randomness
+
+    def test_alpha_dropout_with_mask_training_false(self):
+        """Test alpha_dropout_with_mask returns original input when not training."""
+        x = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        output, mask_dict = ActivationFunctions.alpha_dropout_with_mask(
+            x, rate=0.5, training=False
+        )
+
+        # Should return original input and None mask
+        np.testing.assert_array_equal(output, x)
+        assert mask_dict is None
+
+    def test_alpha_dropout_with_mask_rate_zero(self):
+        """Test alpha_dropout_with_mask with zero dropout rate."""
+        x = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        output, mask_dict = ActivationFunctions.alpha_dropout_with_mask(
+            x, rate=0.0, training=True
+        )
+
+        # Should return original input and None mask
+        np.testing.assert_array_equal(output, x)
+        assert mask_dict is None
+
+    def test_alpha_dropout_with_mask_returns_dict(self):
+        """Test alpha_dropout_with_mask returns mask dictionary during training."""
+        np.random.seed(42)
+        x = np.array([[1.0, 2.0, 3.0, 4.0, 5.0]] * 10)
+        output, mask_dict = ActivationFunctions.alpha_dropout_with_mask(
+            x, rate=0.5, training=True
+        )
+
+        # Should return a mask dictionary
+        assert mask_dict is not None
+        assert isinstance(mask_dict, dict)
+
+        # Check dictionary contains required keys
+        assert "mask" in mask_dict
+        assert "a" in mask_dict
+        assert "alpha0" in mask_dict
+        assert "b" in mask_dict
+
+        # Mask should be binary
+        mask = mask_dict["mask"]
+        assert mask.shape == x.shape
+        unique_values = np.unique(mask)
+        assert len(unique_values) <= 2  # Should be 0s and 1s
+        assert 0.0 in unique_values or 1.0 in unique_values
+
+    def test_alpha_dropout_with_mask_parameters_valid(self):
+        """Test that alpha dropout parameters are mathematically valid."""
+        np.random.seed(99)
+        x = np.random.randn(100, 50)
+        rate = 0.4
+        output, mask_dict = ActivationFunctions.alpha_dropout_with_mask(
+            x, rate=rate, training=True
+        )
+
+        # Check parameters are finite
+        assert np.isfinite(mask_dict["a"])
+        assert np.isfinite(mask_dict["alpha0"])
+        assert np.isfinite(mask_dict["b"])
+
+        # Check parameters are scalars
+        assert isinstance(mask_dict["a"], (int, float, np.number))
+        assert isinstance(mask_dict["alpha0"], (int, float, np.number))
+        assert isinstance(mask_dict["b"], (int, float, np.number))
+
+    def test_inverted_dropout_with_mask_consistency_with_regular(self):
+        """Test that inverted_dropout_with_mask is consistent with regular inverted_dropout."""
+        np.random.seed(777)
+        x = np.array([[1.0, 2.0, 3.0, 4.0, 5.0]] * 50)
+        rate = 0.3
+
+        # Get output from mask version
+        np.random.seed(777)
+        output_mask, mask = ActivationFunctions.inverted_dropout_with_mask(
+            x, rate=rate, training=True
+        )
+
+        # Get output from regular version
+        np.random.seed(777)
+        output_regular = ActivationFunctions.inverted_dropout(
+            x, rate=rate, training=True
+        )
+
+        # Outputs should be identical (same random seed)
+        np.testing.assert_array_almost_equal(output_mask, output_regular)
+
+    def test_alpha_dropout_with_mask_consistency_with_regular(self):
+        """Test that alpha_dropout_with_mask is consistent with regular alpha_dropout."""
+        np.random.seed(888)
+        x = np.array([[1.0, 2.0, 3.0, 4.0, 5.0]] * 50)
+        rate = 0.3
+
+        # Get output from mask version
+        np.random.seed(888)
+        output_mask, mask_dict = ActivationFunctions.alpha_dropout_with_mask(
+            x, rate=rate, training=True
+        )
+
+        # Get output from regular version
+        np.random.seed(888)
+        output_regular = ActivationFunctions.alpha_dropout(x, rate=rate, training=True)
+
+        # Outputs should be identical (same random seed)
+        np.testing.assert_array_almost_equal(output_mask, output_regular, decimal=5)

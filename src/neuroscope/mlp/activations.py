@@ -129,6 +129,25 @@ class ActivationFunctions:
         return x * mask
 
     @staticmethod
+    def inverted_dropout_with_mask(x, rate=0.5, training=True):
+        """
+        Inverted dropout that returns both output and mask for backpropagation.
+
+        Args:
+            x: Input array
+            rate: Dropout probability (fraction of units to drop)
+            training: Whether in training mode
+
+        Returns:
+            tuple: (output, mask) where mask includes the 1/(1-p) scaling
+        """
+        if not training or rate == 0.0:
+            return x, None
+        keep_prob = 1 - rate
+        mask = np.random.binomial(1, keep_prob, size=x.shape) / keep_prob
+        return x * mask, mask
+
+    @staticmethod
     def alpha_dropout(x, rate=0.5, training=True):
         if not training or rate == 0:
             return x
@@ -142,3 +161,30 @@ class ActivationFunctions:
         mask = np.random.binomial(1, q, size=x.shape).astype(np.float32)
         out = a * (x_float * mask + alpha0 * (1 - mask)) + b
         return out
+
+    @staticmethod
+    def alpha_dropout_with_mask(x, rate=0.5, training=True):
+        """
+        Alpha dropout that returns both output and mask for backpropagation.
+
+        Args:
+            x: Input array
+            rate: Dropout probability
+            training: Whether in training mode
+
+        Returns:
+            tuple: (output, mask) where mask is the binary dropout mask
+        """
+        if not training or rate == 0:
+            return x, None
+        alpha = 1.6732632423543772848170429916717
+        scale = 1.0507009873554804934193349852946
+        alpha0 = -scale * alpha
+        q = 1 - rate
+        a = (q * (1.0 + rate * (alpha0**2))) ** (-0.5)
+        b = -a * (1.0 - q) * alpha0
+        x_float = x.astype(np.float32, copy=False)
+        mask = np.random.binomial(1, q, size=x.shape).astype(np.float32)
+        out = a * (x_float * mask + alpha0 * (1 - mask)) + b
+        # For alpha dropout, return the affine transform parameters too
+        return out, {"mask": mask, "a": a, "alpha0": alpha0, "b": b}

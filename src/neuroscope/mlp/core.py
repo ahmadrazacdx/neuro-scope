@@ -50,8 +50,9 @@ class _ForwardPass:
             training (bool, optional): Whether in training mode. Defaults to True.
 
         Returns:
-            tuple: (activations, z_values) where activations contains the output
-                   of each layer and z_values contains pre-activation values.
+            tuple: (activations, z_values, dropout_masks) where activations contains
+                   the output of each layer, z_values contains pre-activation values,
+                   and dropout_masks contains masks for each hidden layer (None if no dropout).
         """
         # X = input(X_train/X_test) --> (N, input_dim)
         # weights = [(inputxhidden), (hiddenxhidden), (hiddenxhidden),...,(hidden, out)] for N layers
@@ -62,6 +63,7 @@ class _ForwardPass:
         activations = (
             []
         )  # [(N, hidden_dim), (N, hidden_dim),...,(N, hidden_dim)] for all Layers
+        dropout_masks = []  # Dropout masks for backpropagation
         # First layer: input to first hidden
         A = X
         L = len(weights)
@@ -102,20 +104,26 @@ class _ForwardPass:
                         f"Unknown activation function: {hidden_activation}"
                     )
 
-                # Apply dropout to hidden layers (not output layer)
+                # Apply dropout to hidden layers (not output layer) and save mask
                 if dropout_rate > 0 and training:
                     if dropout_type == "normal":
-                        A = ActivationFunctions.inverted_dropout(
+                        A, mask = ActivationFunctions.inverted_dropout_with_mask(
                             A, dropout_rate, training
                         )
+                        dropout_masks.append(mask)
                     elif dropout_type == "alpha":
-                        A = ActivationFunctions.alpha_dropout(A, dropout_rate, training)
+                        A, mask = ActivationFunctions.alpha_dropout_with_mask(
+                            A, dropout_rate, training
+                        )
+                        dropout_masks.append(mask)
                     else:
                         raise ValueError(f"Unknown dropout type: {dropout_type}")
+                else:
+                    dropout_masks.append(None)  # No dropout for this layer
 
             activations.append(A)
 
-        return activations, z_values
+        return activations, z_values, dropout_masks
 
 
 class _BackwardPass:
@@ -181,6 +189,8 @@ class _BackwardPass:
         X,
         hidden_activation=None,
         out_activation=None,
+        loss_fn="auto",
+        dropout_masks=None,
     ):
         """
         Perform backward propagation to compute gradients.
@@ -198,6 +208,10 @@ class _BackwardPass:
             X (NDArray[np.float64]): Input data of shape (N, input_dim).
             hidden_activation (str, optional): Hidden layer activation function.
             out_activation (str, optional): Output layer activation function.
+            loss_fn (str, optional): Loss function type. Defaults to 'auto'.
+                Options: 'auto' (infer from out_activation), 'mse', 'bce', 'cce'.
+            dropout_masks (list, optional): Dropout masks from forward pass for each hidden layer.
+
 
         Returns:
             tuple: (dW, db) where dW contains weight gradients and db contains bias gradients.
@@ -241,12 +255,48 @@ class _BackwardPass:
                 "Model outputs contain NaN or Inf values. Training failed - check your data and learning rate."
             )
 
-        if out_activation is None:
+        if loss_fn == "mse":
+            # MSE loss: L = (1/(N*d)) * sum((y_true - y_pred)^2)
+            # dL/dA = (2/(N*d)) * (y_pred - y_true)
+            out_dim = AL.shape[1]
+            dL_dA = (2 / (N * out_dim)) * (AL - y_true)
+
+            # Apply output activation derivative to get dL/dZ
+            if out_activation is None:
+                dZ = dL_dA  # Linear output: dZ = dA
+            elif out_activation == "sigmoid":
+                Z_last = z_values[-1]
+                dZ = dL_dA * ActivationFunctions.sigmoid_derivative(Z_last)
+            elif out_activation == "tanh":
+                Z_last = z_values[-1]
+                dZ = dL_dA * ActivationFunctions.tanh_derivative(Z_last)
+            elif out_activation == "softmax":
+                # Softmax with MSE requires full Jacobian (too complex)
+                raise ValueError(
+                    "MSE loss with softmax activation is not supported. "
+                    "Use categorical_crossentropy loss for softmax output."
+                )
+            else:
+                raise ValueError(f"Unknown out_activation: {out_activation}")
+
+        elif loss_fn in ("bce", "binary_crossentropy"):
             dZ = (AL - y_true) / N
-        elif out_activation in ("sigmoid", "softmax"):
-            dZ = (AL - y_true) / N  # (N, out_dim)
+        elif loss_fn in ("cce", "categorical_crossentropy"):
+            dZ = (AL - y_true) / N
+        elif loss_fn == "auto":
+            if out_activation is None:
+                # Assume MSE for linear output
+                out_dim = AL.shape[1]
+                dZ = (2 / (N * out_dim)) * (AL - y_true)
+            elif out_activation in ("sigmoid", "softmax"):
+                # BCE/CCE with sigmoid/softmax
+                dZ = (AL - y_true) / N
+            else:
+                raise ValueError(f"Unsupported out_activation: {out_activation}")
         else:
-            raise ValueError("Unsupported final_activation for simplified derivative")
+            raise ValueError(
+                f"Unknown loss_fn: {loss_fn}. Use 'auto', 'mse', 'bce', or 'cce'."
+            )
 
         for layer in range(L - 1, -1, -1):
             try:
@@ -265,6 +315,19 @@ class _BackwardPass:
 
             if layer > 0:
                 dA_prev = dZ @ weights[layer].T  # (N, fan_in_prev)
+
+                # Apply dropout mask if it was used in forward pass
+                if dropout_masks is not None and dropout_masks[layer - 1] is not None:
+                    mask = dropout_masks[layer - 1]
+                    if isinstance(mask, dict):
+                        # Alpha dropout: apply inverse affine transform
+                        # In forward: out = a * (x * mask + alpha0 * (1-mask)) + b
+                        # In backward: need to apply a * mask
+                        dA_prev = mask["a"] * dA_prev * mask["mask"]
+                    else:
+                        # Inverted dropout: mask already includes 1/(1-p) scaling
+                        dA_prev = dA_prev * mask
+
                 Z_prev = z_values[layer - 1]  # Z_{l}
                 if hidden_activation is None:
                     dZ = dA_prev
