@@ -246,11 +246,10 @@ class TestBackwardPass:
         weights = [np.array([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])]
         biases = [np.array([[0.1, 0.2]])]
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             _ForwardPass.forward_mlp(
                 X, weights, biases, hidden_activation="relu", training=False
             )
-        # Forward should raise due to mismatched dimensions
 
 
 class TestForwardBackwardIntegration:
