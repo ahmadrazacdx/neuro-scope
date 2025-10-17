@@ -346,6 +346,55 @@ class TestVisualizer:
         assert result is None
         plt.close("all")
 
+    def test_plot_error_distribution(self, trained_model_with_history, sample_history):
+        """Test error distribution plotting for trained models."""
+        model, history, X, y = trained_model_with_history
+        viz = Visualizer(sample_history)
+
+        # Make predictions and compute errors
+        predictions = model.predict(X)
+
+        # Check for error distribution plot
+        if hasattr(viz, "plot_error_distribution"):
+            result = viz.plot_error_distribution(y, predictions)
+            assert result is None
+            plt.close("all")
+        elif hasattr(viz, "plot_residuals"):
+            result = viz.plot_residuals(y, predictions)
+            assert result is None
+            plt.close("all")
+        else:
+            # Fallback: just verify predictions work
+            assert predictions is not None
+            assert len(predictions) == len(X)
+
+    def test_plot_confusion_matrix_for_classification(
+        self, trained_model_with_history, sample_history
+    ):
+        """Test confusion matrix visualization for classification."""
+        model, history, X, y = trained_model_with_history
+        viz = Visualizer(sample_history)
+
+        # Get predictions
+        predictions = model.predict(X)
+
+        # Check for confusion matrix plot
+        if hasattr(viz, "plot_confusion_matrix"):
+            # Convert predictions to class labels
+            if predictions.ndim > 1 and predictions.shape[1] > 1:
+                pred_labels = np.argmax(predictions, axis=1)
+                true_labels = np.argmax(y, axis=1) if y.ndim > 1 else y
+
+                result = viz.plot_confusion_matrix(true_labels, pred_labels)
+                assert result is None
+                plt.close("all")
+        else:
+            # Fallback: just verify predictions work for classification
+            assert predictions is not None
+            assert len(predictions) == len(X)
+            # For binary classification, predictions should be in [0, 1]
+            assert np.all(predictions >= 0) and np.all(predictions <= 1)
+
 
 class TestPlotCurvesFast:
     """Test plot_curves_fast functionality specifically."""
@@ -580,4 +629,76 @@ class TestPlotCurvesFast:
         # plot_curves_fast should be disabled for regular fit
         result = viz_regular.plot_curves_fast()
         assert result is None  # Returns None after printing error
+        plt.close("all")
+
+    def test_plot_with_different_epoch_counts(self, sample_history):
+        """Test plotting with different numbers of epochs."""
+        # Test with short training (few epochs)
+        short_history = {
+            "method": "fit",
+            "history": {
+                "train_loss": [0.8, 0.6],
+                "val_loss": [0.85, 0.65],
+                "train_acc": [0.6, 0.7],
+                "val_acc": [0.58, 0.68],
+            },
+            "weights": [np.random.randn(5, 3), np.random.randn(3, 1)],
+            "biases": [np.random.randn(3), np.random.randn(1)],
+        }
+
+        viz = Visualizer(short_history)
+        result = viz.plot_learning_curves()
+        assert result is None
+        plt.close("all")
+
+        # Test with long training (many epochs)
+        long_history = sample_history.copy()
+        long_history["history"] = {
+            "train_loss": list(np.linspace(1.0, 0.1, 100)),
+            "val_loss": list(np.linspace(1.1, 0.15, 100)),
+            "train_acc": list(np.linspace(0.5, 0.95, 100)),
+            "val_acc": list(np.linspace(0.45, 0.90, 100)),
+        }
+
+        viz_long = Visualizer(long_history)
+        result = viz_long.plot_learning_curves()
+        assert result is None
+        plt.close("all")
+
+    def test_plot_with_extreme_values(self, sample_history):
+        """Test plotting with extreme loss/accuracy values."""
+        extreme_history = {
+            "method": "fit",
+            "history": {
+                "train_loss": [100.0, 10.0, 1.0, 0.1],
+                "val_loss": [105.0, 11.0, 1.2, 0.15],
+                "train_acc": [0.1, 0.5, 0.9, 0.99],
+                "val_acc": [0.05, 0.45, 0.85, 0.95],
+            },
+            "weights": [np.random.randn(5, 3), np.random.randn(3, 1)],
+            "biases": [np.random.randn(3), np.random.randn(1)],
+        }
+
+        viz = Visualizer(extreme_history)
+        # Should handle extreme values without errors
+        result = viz.plot_learning_curves()
+        assert result is None
+        plt.close("all")
+
+        # Test with very small values
+        small_history = {
+            "method": "fit",
+            "history": {
+                "train_loss": [0.001, 0.0005, 0.0001],
+                "val_loss": [0.0015, 0.0007, 0.00015],
+                "train_acc": [0.999, 0.9995, 0.9999],
+                "val_acc": [0.998, 0.999, 0.9998],
+            },
+            "weights": [np.random.randn(5, 3), np.random.randn(3, 1)],
+            "biases": [np.random.randn(3), np.random.randn(1)],
+        }
+
+        viz_small = Visualizer(small_history)
+        result = viz_small.plot_learning_curves()
+        assert result is None
         plt.close("all")

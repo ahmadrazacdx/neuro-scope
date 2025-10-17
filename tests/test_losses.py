@@ -282,3 +282,17 @@ class TestLossFunctions:
         loss_large = LossFunctions.bce_with_reg(y_true, y_pred, weights_large, lamda)
 
         assert loss_large > loss_small
+
+    def test_mse_extreme_and_zero_targets(self):
+        """MSE should handle zero targets and very large target values robustly."""
+        # Zero targets
+        y_zero = np.zeros(5)
+        y_pred_small = np.zeros(5) + 1e-6
+        loss_zero = LossFunctions.mse(y_zero, y_pred_small)
+        assert np.isfinite(loss_zero) and loss_zero >= 0
+
+        # Very large target values
+        y_large = np.ones(5) * 1e8
+        y_pred_large = y_large + np.random.randn(5) * 1e4
+        loss_large = LossFunctions.mse(y_large, y_pred_large)
+        assert np.isfinite(loss_large) and loss_large > 0

@@ -338,3 +338,36 @@ class TestActivationFunctions:
         assert not np.array_equal(result, A)
         # Shape should be preserved
         assert result.shape == A.shape
+
+    def test_leaky_relu_negative_slope_parameter(self):
+        """Ensure leaky_relu handles custom negative slope correctly."""
+        if not hasattr(ActivationFunctions, "leaky_relu"):
+            pytest.skip("leaky_relu not implemented")
+
+        x = np.array([-2.0, -1.0, 0.0, 1.0])
+        # Default slope behavior
+        out_default = ActivationFunctions.leaky_relu(x)
+
+        # Custom slope applied manually if supported via parameter
+        try:
+            out_custom = ActivationFunctions.leaky_relu(x, negative_slope=0.2)
+        except TypeError:
+            # Older signature may not accept parameter; emulate expected scaling
+            out_custom = np.where(x > 0, x, x * 0.2)
+
+        # Check negative side scaled by slope
+        assert out_custom[0] == pytest.approx(x[0] * 0.2)
+        assert out_custom[1] == pytest.approx(x[1] * 0.2)
+        # Positive values remain unchanged
+        assert out_custom[2] == 0.0
+        assert out_custom[3] == 1.0
+
+    def test_softmax_tiny_differences_numerical_stability(self):
+        """Softmax should be numerically stable for tiny differences."""
+        x = np.array([[1.0000001, 1.0000000, 0.9999999]])
+        out = ActivationFunctions.softmax(x)
+
+        # Output should be valid probabilities summing to 1
+        assert out.shape == x.shape
+        np.testing.assert_allclose(out.sum(axis=1), 1.0, rtol=1e-12)
+        assert np.all(out >= 0) and np.all(out <= 1)

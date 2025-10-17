@@ -771,3 +771,104 @@ class TestOptimizerComparison:
             # States should match
             assert new_opt.learning_rate == opt.learning_rate
             assert new_opt._state.keys() == opt._state.keys()
+
+    def test_optimizer_with_zero_gradients(self):
+        """Test that optimizers handle zero gradients correctly."""
+        optimizers = [
+            SGD(learning_rate=0.1),
+            SGDMomentum(learning_rate=0.1, momentum=0.9),
+            RMSprop(learning_rate=0.1),
+            Adam(learning_rate=0.01),
+        ]
+
+        weights = [np.array([[1.0, 2.0]])]
+        biases = [np.array([[0.5]])]
+        zero_weight_grads = [np.zeros_like(weights[0])]
+        zero_bias_grads = [np.zeros_like(biases[0])]
+
+        for opt in optimizers:
+            orig_w = weights[0].copy()
+            orig_b = biases[0].copy()
+
+            # Update with zero gradients
+            opt.update(weights, biases, zero_weight_grads, zero_bias_grads)
+
+            # Parameters should remain unchanged (or change minimally)
+            # SGD with zero grads: no change
+            # Adam/RMSprop might have tiny changes due to bias correction
+            if isinstance(opt, SGD) and not isinstance(opt, SGDMomentum):
+                np.testing.assert_array_equal(weights[0], orig_w)
+                np.testing.assert_array_equal(biases[0], orig_b)
+
+    def test_optimizer_numerical_stability_with_large_gradients(self):
+        """Test optimizers handle large gradients without NaN/Inf."""
+        optimizers = [
+            SGD(learning_rate=0.001),
+            SGDMomentum(learning_rate=0.001, momentum=0.9),
+            RMSprop(learning_rate=0.001),
+            Adam(learning_rate=0.001),
+        ]
+
+        weights = [np.array([[1.0, 2.0]])]
+        biases = [np.array([[0.5]])]
+        large_weight_grads = [np.array([[1000.0, 2000.0]])]
+        large_bias_grads = [np.array([[500.0]])]
+
+        for opt in optimizers:
+            # Update with large gradients
+            opt.update(weights, biases, large_weight_grads, large_bias_grads)
+
+            # Check no NaN or Inf values
+            assert np.isfinite(weights[0]).all()
+            assert np.isfinite(biases[0]).all()
+
+    def test_optimizer_convergence_comparison(self):
+        """Test that all optimizers can converge on a simple problem."""
+        # Simple quadratic problem: minimize (w - 5)^2
+        target = 5.0
+        num_steps = 100
+
+        results = {}
+        for name, opt in [
+            ("SGD", SGD(learning_rate=0.1)),
+            ("Momentum", SGDMomentum(learning_rate=0.1, momentum=0.9)),
+            ("Adam", Adam(learning_rate=0.1)),
+        ]:
+            w = [np.array([[0.0]])]
+            b = [np.array([[0.0]])]
+
+            for _ in range(num_steps):
+                # Gradient of (w - target)^2 is 2*(w - target)
+                grad = 2 * (w[0] - target)
+                opt.update(w, b, [grad], [np.zeros_like(b[0])])
+
+            results[name] = abs(w[0][0, 0] - target)
+
+        # All optimizers should converge close to target
+        for name, error in results.items():
+            assert error < 1.0, f"{name} did not converge (error={error})"
+
+        # At least one adaptive optimizer should exist and converge
+        assert "Adam" in results or "Momentum" in results
+
+    def test_optimizer_learning_rate_effect(self):
+        """Test that higher learning rates lead to larger parameter changes."""
+        weight_grads = [np.array([[1.0, 1.0]])]
+        bias_grads = [np.array([[1.0]])]
+
+        learning_rates = [0.001, 0.01, 0.1]
+        changes = []
+
+        for lr in learning_rates:
+            weights = [np.array([[1.0, 2.0]])]
+            biases = [np.array([[0.5]])]
+            orig_w = weights[0].copy()
+
+            opt = SGD(learning_rate=lr)
+            opt.update(weights, biases, weight_grads, bias_grads)
+
+            change = np.abs(weights[0] - orig_w).sum()
+            changes.append(change)
+
+        # Higher learning rate should cause larger changes
+        assert changes[0] < changes[1] < changes[2]

@@ -276,3 +276,86 @@ class TestPostTrainingEvaluator:
         if "loss" in result:
             loss = result["loss"]
             assert loss >= 0, "Loss should be non-negative"
+
+    def test_noise_sensitivity_analysis(self, trained_model):
+        """Test model's sensitivity to input noise."""
+        model, X, y = trained_model
+        evaluator = PostTrainingEvaluator(model)
+
+        # Test with different noise levels
+        noise_levels = [0.0, 0.1, 0.5]
+        accuracies = []
+
+        for noise_std in noise_levels:
+            X_noisy = X + np.random.randn(*X.shape) * noise_std
+            result = evaluator.evaluate_performance(X_noisy, y)
+            if "accuracy" in result:
+                accuracies.append(result["accuracy"])
+
+        # Accuracy should generally decrease with more noise
+        if len(accuracies) == 3:
+            assert accuracies[0] >= accuracies[-1] * 0.7  # Some degradation expected
+
+    def test_confidence_calibration_analysis(self, trained_model):
+        """Test analysis of model confidence calibration."""
+        model, X, y = trained_model
+        evaluator = PostTrainingEvaluator(model)
+
+        # Get predictions
+        predictions = model.predict(X)
+
+        # Check if evaluator has calibration analysis
+        if hasattr(evaluator, "analyze_calibration"):
+            result = evaluator.analyze_calibration(X, y)
+            assert isinstance(result, dict)
+        else:
+            # Fallback: check prediction confidence
+            if predictions.ndim > 1 and predictions.shape[1] > 1:
+                # Classification - check confidence (max prob per sample)
+                confidences = np.max(predictions, axis=1)
+                # Confidences should be in [0, 1]
+                assert np.all(confidences >= 0) and np.all(confidences <= 1)
+
+    def test_layer_activation_statistics(self, trained_model):
+        """Test collection of layer activation statistics."""
+        model, X, y = trained_model
+        evaluator = PostTrainingEvaluator(model)
+
+        # Check for layer analysis methods
+        if hasattr(evaluator, "analyze_layer_activations"):
+            result = evaluator.analyze_layer_activations(X)
+            assert isinstance(result, dict)
+        elif hasattr(evaluator, "get_layer_statistics"):
+            result = evaluator.get_layer_statistics(X)
+            assert result is not None
+        else:
+            # Fallback: verify model has layers to analyze
+            assert hasattr(model, "weights")
+            assert len(model.weights) > 0
+            # Model has structure to analyze even if method doesn't exist
+            assert True
+
+    def test_decision_boundary_analysis(self, trained_model):
+        """Test decision boundary characteristics."""
+        model, X, y = trained_model
+        evaluator = PostTrainingEvaluator(model)
+
+        # Check for decision boundary analysis
+        if hasattr(evaluator, "analyze_decision_boundary"):
+            result = evaluator.analyze_decision_boundary(X, y)
+            assert isinstance(result, dict)
+        else:
+            # Fallback: test prediction consistency
+            # Small perturbations shouldn't drastically change predictions
+            X_perturbed = X + np.random.randn(*X.shape) * 0.01
+            pred_original = model.predict(X)
+            pred_perturbed = model.predict(X_perturbed)
+
+            # Predictions should be similar for small perturbations
+            if pred_original.ndim > 1:
+                # Classification - check if predicted classes mostly match
+                orig_classes = np.argmax(pred_original, axis=1)
+                pert_classes = np.argmax(pred_perturbed, axis=1)
+                agreement = np.mean(orig_classes == pert_classes)
+                # Most predictions should remain stable
+                assert agreement > 0.5

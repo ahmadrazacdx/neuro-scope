@@ -597,3 +597,127 @@ class TestMLP:
         # Loss should decrease (or at least not increase significantly)
         # Allow for some numerical instability
         assert final_loss <= initial_loss * 1.1  # Allow 10% tolerance
+
+    def test_mlp_with_single_hidden_layer(self, sample_data):
+        """Test MLP with only one hidden layer."""
+        X, y = sample_data
+        input_size = X.shape[1]
+
+        # Minimal network: input -> hidden -> output
+        mlp = MLP(layer_dims=[input_size, 5, 1])
+        mlp.compile(optimizer="sgd", lr=0.01)
+
+        # Should train without errors
+        mlp.fit_fast(X, y, epochs=5, batch_size=32, verbose=False)
+
+        # Should make predictions
+        predictions = mlp.predict(X[:10])
+        assert predictions.shape == (10, 1)
+
+    def test_mlp_predict_single_sample(self, sample_data):
+        """Test prediction with a single sample."""
+        X, y = sample_data
+        input_size = X.shape[1]
+
+        mlp = MLP(layer_dims=[input_size, 10, 1])
+        mlp.compile(optimizer="sgd", lr=0.01)
+        mlp.fit_fast(X, y, epochs=3, batch_size=32, verbose=False)
+
+        # Predict with single sample (not batch)
+        single_sample = X[0:1]  # Shape (1, features)
+        prediction = mlp.predict(single_sample)
+
+        assert prediction.shape == (1, 1)
+        assert np.isfinite(prediction).all()
+
+    def test_mlp_weights_biases_attributes(self, sample_data):
+        """Test accessing weights and biases attributes."""
+        X, y = sample_data
+        input_size = X.shape[1]
+
+        mlp = MLP(layer_dims=[input_size, 10, 1])
+
+        # Access weights directly
+        assert hasattr(mlp, "weights")
+        assert hasattr(mlp, "biases")
+        assert isinstance(mlp.weights, list)
+        assert isinstance(mlp.biases, list)
+        assert len(mlp.weights) == 2  # 2 layers
+        assert mlp.weights[0].shape == (input_size, 10)
+        assert mlp.weights[1].shape == (10, 1)
+
+    def test_mlp_with_different_batch_sizes(self, sample_data):
+        """Test training with various batch sizes."""
+        X, y = sample_data
+        input_size = X.shape[1]
+
+        mlp = MLP(layer_dims=[input_size, 10, 1])
+        mlp.compile(optimizer="sgd", lr=0.01)
+
+        # Test with different batch sizes
+        for batch_size in [8, 16, 32, 64]:
+            mlp.fit_fast(X, y, epochs=2, batch_size=batch_size, verbose=False)
+
+            # Should complete without errors
+            predictions = mlp.predict(X[:5])
+            assert predictions.shape == (5, 1)
+
+    def test_mlp_evaluate_with_different_metrics(self, sample_data):
+        """Test evaluate with various metrics."""
+        X, y = sample_data
+        input_size = X.shape[1]
+
+        mlp = MLP(layer_dims=[input_size, 10, 1])
+        mlp.compile(optimizer="sgd", lr=0.01)
+        mlp.fit_fast(X, y, epochs=3, batch_size=32, verbose=False)
+
+        # Test with different metrics
+        metrics = ["mse", "mae", "rmse"]
+        for metric in metrics:
+            loss, metric_value = mlp.evaluate(X, y, metric=metric)
+            assert isinstance(loss, float)
+            assert isinstance(metric_value, float)
+            assert np.isfinite(loss)
+            assert np.isfinite(metric_value)
+
+    def test_mlp_deep_network(self, sample_data):
+        """Test MLP with many hidden layers."""
+        X, y = sample_data
+        input_size = X.shape[1]
+
+        # Create a deep network
+        mlp = MLP(layer_dims=[input_size, 20, 15, 10, 5, 1])
+        mlp.compile(optimizer="adam", lr=0.001)
+
+        # Should train without errors
+        mlp.fit_fast(X, y, epochs=3, batch_size=32, verbose=False)
+
+        # Should make predictions
+        predictions = mlp.predict(X[:10])
+        assert predictions.shape == (10, 1)
+        assert np.isfinite(predictions).all()
+
+    def test_mlp_invalid_init_method_raises_error(self):
+        """Test that invalid init_method raises ValueError (hits line 104 in mlp.py)."""
+        with pytest.raises(ValueError, match="Unknown init_method"):
+            MLP(layer_dims=[10, 5, 1], init_method="invalid_method")
+
+    def test_mlp_fit_with_zero_epochs(self):
+        """Test fit with epochs=0 validates correctly (hits line 497 in mlp.py)."""
+        mlp = MLP([5, 3, 1])
+        mlp.compile(optimizer="sgd", lr=0.01)
+
+        X = np.random.randn(10, 5)
+        y = np.random.randint(0, 2, (10, 1))
+
+        # Training with 0 epochs should raise ValueError
+        with pytest.raises(ValueError, match="epochs must be an integer >= 1"):
+            mlp.fit(X, y, epochs=0, verbose=False)
+
+    def test_utils_validate_array_with_empty_array(self):
+        """Test that validate_array_input catches empty arrays (line 165 in utils.py)."""
+        from neuroscope.mlp.utils import Utils
+
+        empty_arr = np.array([])
+        with pytest.raises(ValueError, match="cannot be empty"):
+            Utils.validate_array_input(empty_arr, "test_array")

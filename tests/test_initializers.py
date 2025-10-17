@@ -319,3 +319,36 @@ class TestWeightInits:
         assert (
             abs(actual_std - expected_std) < 0.05
         )  # Tighter tolerance for large matrices
+
+    def test_smart_init_unknown_activation(self):
+        """Test smart_init with unknown activation falls back to xavier."""
+        layer_dims = [10, 5, 1]
+
+        # Use an unknown activation
+        weights_unknown, biases_unknown = WeightInits.smart_init(
+            layer_dims, hidden_activation="unknown_activation", seed=42
+        )
+
+        # Should fall back to xavier initialization
+        weights_xavier, biases_xavier = WeightInits.xavier_init(layer_dims, seed=42)
+
+        # Should match xavier initialization
+        assert np.allclose(weights_unknown[0], weights_xavier[0])
+        assert np.allclose(weights_unknown[1], weights_xavier[1])
+
+    def test_smart_init_custom_activation(self):
+        """Test smart_init with custom activation name."""
+        layer_dims = [10, 5, 1]
+
+        # Test with various custom activation names
+        custom_activations = ["swish", "mish", "gelu", "custom"]
+
+        for activation in custom_activations:
+            weights, biases = WeightInits.smart_init(
+                layer_dims, hidden_activation=activation, seed=42
+            )
+
+            # Should complete without error and return valid weights
+            assert len(weights) == 2
+            assert len(biases) == 2
+            assert not np.allclose(weights[0], 0)

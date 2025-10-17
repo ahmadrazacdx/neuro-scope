@@ -262,6 +262,16 @@ class TestMetrics:
         acc_multi = Metrics.accuracy_multiclass(y_true_multi, y_pred_multi)
         assert acc_multi == 0.0
 
+    def test_accuracy_handles_nan_predictions(self):
+        """Ensure accuracy functions handle NaN predictions gracefully."""
+        y_true = np.array([0, 1, 0, 1])
+        y_pred = np.array([0.9, np.nan, 0.2, 0.8])
+
+        # Binary accuracy should treat NaN as incorrect prediction
+        acc = Metrics.accuracy_binary(y_true, y_pred)
+        assert isinstance(acc, float)
+        assert 0.0 <= acc <= 1.0
+
     def test_f1_score_zero_support(self):
         """Test F1 score when total support is zero."""
         # Edge case where no samples exist for any class

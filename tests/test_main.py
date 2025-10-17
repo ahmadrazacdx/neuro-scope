@@ -220,6 +220,17 @@ class TestEdgeCases:
 
         assert pkg_version == cli_version
 
+    def test_main_validate_flag_returns_error_code(self):
+        """Test that main returns error code when validation fails."""
+        # Mock validation to fail
+        with patch(
+            "neuroscope.__main__.validate_installation", return_value=False
+        ) as mock_validate:
+            with patch("sys.argv", ["neuroscope", "--validate"]):
+                exit_code = main()
+                assert exit_code == 1
+                mock_validate.assert_called_once()
+
 
 # Fixtures and utilities for testing
 @pytest.fixture

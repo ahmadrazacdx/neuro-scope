@@ -227,3 +227,36 @@ class TestUtils:
         # Should convert to list and validate
         assert isinstance(result, list)
         assert result == [10, 20, 30, 1]
+
+    def test_validate_array_dimension_error(self):
+        """Test validate_array_input with wrong dimensions (hits line 161-162)."""
+        arr_3d = np.random.randn(5, 5, 5)  # 3D array
+
+        # Expect 2D array, got 3D - should raise ValueError
+        try:
+            Utils.validate_array_input(arr_3d, "test_3d", min_dims=2, max_dims=2)
+            assert False, "Should have raised ValueError"
+        except ValueError as e:
+            assert "must have 2-2 dimensions" in str(e)
+
+    def test_check_numerical_stability_with_nan(self):
+        """Test numerical stability check catches NaN (hits line 227)."""
+        arrays_with_nan = [np.array([[1.0, 2.0], [np.nan, 4.0]])]
+
+        issues = Utils.check_numerical_stability(
+            arrays_with_nan, "test", fast_mode=False
+        )
+
+        assert len(issues) > 0
+        assert "NaN" in issues[0]
+
+    def test_check_numerical_stability_with_inf_fast_mode(self):
+        """Test numerical stability check catches Inf in fast_mode (hits line 241)."""
+        arrays_with_inf = [np.array([[1.0, 2.0], [np.inf, 4.0]])]
+
+        issues = Utils.check_numerical_stability(
+            arrays_with_inf, "test", fast_mode=True
+        )
+
+        assert len(issues) > 0
+        assert "Inf" in issues[0] or "exploded" in issues[0]

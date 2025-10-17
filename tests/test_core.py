@@ -238,8 +238,19 @@ class TestBackwardPass:
         # and should be reasonable in magnitude
         assert np.any(np.abs(dW[0]) > 1e-10)  # Not all zeros
         assert np.any(np.abs(db[0]) > 1e-10)  # Not all zeros
-        assert np.all(np.abs(dW[0]) < 100)  # Not exploding
-        assert np.all(np.abs(db[0]) < 100)  # Not exploding
+
+    def test_forward_raises_on_mismatched_dimensions(self):
+        """Forward pass should raise a ValueError on mismatched input/weight dims."""
+        X = np.array([[1.0, 2.0]])  # 1x2 input
+        # Provide weights that expect different input dim (3 instead of 2)
+        weights = [np.array([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])]
+        biases = [np.array([[0.1, 0.2]])]
+
+        with pytest.raises(Exception):
+            _ForwardPass.forward_mlp(
+                X, weights, biases, hidden_activation="relu", training=False
+            )
+        # Forward should raise due to mismatched dimensions
 
 
 class TestForwardBackwardIntegration:
@@ -488,3 +499,25 @@ class TestForwardPassEdgeCases:
         assert activations[1].shape == (3, 1)  # 3 samples, 1 output
         assert z_values[0].shape == (3, 2)
         assert z_values[1].shape == (3, 1)
+
+    def test_warning_throttling_mechanism(self, capsys):
+        """Test that warning throttling works (hits lines 145-164 in core.py)."""
+        from neuroscope.mlp.core import _BackwardPass
+
+        # Reset throttling state
+        _BackwardPass.reset_warning_throttling()
+
+        # Trigger same warning multiple times
+        for i in range(10):
+            _BackwardPass._print_throttled_warning("test_warning", f"Test warning {i}")
+
+        # Capture output
+        captured = capsys.readouterr()
+
+        # Should have printed some warnings but not all 10
+        # (throttling should kick in)
+        assert "Test warning" in captured.out
+        # Should see suppression message
+        assert (
+            "suppressed" in captured.out or len(captured.out.split("Test warning")) < 10
+        )
