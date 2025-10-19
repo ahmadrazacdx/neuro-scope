@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
 
     <link rel="shortcut icon" href="../../../_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
-        <title>neuroscope.mlp.activations - NeuroScope 0.2.1</title>
+        <title>neuroscope.mlp.activations - NeuroScope 0.2.2</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -214,7 +214,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">NeuroScope 0.2.1</div></a>
+      <a href="../../../index.html"><div class="brand">NeuroScope 0.2.2</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -238,7 +238,7 @@
     <img src="../../../_static/favicon.svg" class="sidebar-logo" alt="NeuroScope" />
     <span class="sidebar-brand-text">
       NeuroScope
-      <div class="sidebar-brand-version">0.2.1</div>
+      <div class="sidebar-brand-version">0.2.2</div>
     </span>
   </a>
 </div><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
@@ -486,14 +486,17 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">alpha_dropout</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">training</span> <span class="ow">or</span> <span class="n">rate</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">x</span>
+        <span class="c1"># Constants from SELU</span>
         <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.6732632423543772848170429916717</span>
-        <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0507009873554804934193349852946</span>  <span class="c1"># lambda</span>
-        <span class="n">alpha0</span> <span class="o">=</span> <span class="o">-</span><span class="n">scale</span> <span class="o">*</span> <span class="n">alpha</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rate</span>  <span class="c1"># Keep probability</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">rate</span> <span class="o">*</span> <span class="p">(</span><span class="n">alpha0</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">q</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha0</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0507009873554804934193349852946</span>
+        <span class="n">alpha0</span> <span class="o">=</span> <span class="o">-</span><span class="n">scale</span> <span class="o">*</span> <span class="n">alpha</span>  <span class="c1"># ≈ -1.7581</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rate</span>
+        <span class="c1"># Paper: a = (q + p*alpha&#39;^2)^(-1/2) where q = 1-p and alpha&#39; = alpha0</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">((</span><span class="n">q</span><span class="p">)</span> <span class="o">+</span> <span class="n">rate</span> <span class="o">*</span> <span class="n">alpha0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">a</span> <span class="o">*</span> <span class="n">alpha0</span> <span class="o">*</span> <span class="n">rate</span>
         <span class="n">x_float</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># a * (x * mask + alpha0 * (1 - mask)) + b</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_float</span> <span class="o">*</span> <span class="n">mask</span> <span class="o">+</span> <span class="n">alpha0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mask</span><span class="p">))</span> <span class="o">+</span> <span class="n">b</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
@@ -505,26 +508,33 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Alpha dropout that returns both output and mask for backpropagation.</span>
 
+<span class="sd">        Based on &quot;Self-Normalizing Neural Networks&quot; (Klambauer et al., 2017).</span>
+<span class="sd">        Alpha dropout maintains the self-normalizing property of SELU activations.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input array</span>
-<span class="sd">            rate: Dropout probability</span>
+<span class="sd">            rate: Dropout probability (p in the paper)</span>
 <span class="sd">            training: Whether in training mode</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            tuple: (output, mask) where mask is the binary dropout mask</span>
+<span class="sd">            tuple: (output, mask_dict) where mask_dict contains the binary dropout</span>
+<span class="sd">                mask and affine transform parameters for backpropagation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">training</span> <span class="ow">or</span> <span class="n">rate</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="c1"># Constants from SELU</span>
         <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.6732632423543772848170429916717</span>
         <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0507009873554804934193349852946</span>
-        <span class="n">alpha0</span> <span class="o">=</span> <span class="o">-</span><span class="n">scale</span> <span class="o">*</span> <span class="n">alpha</span>
+        <span class="n">alpha0</span> <span class="o">=</span> <span class="o">-</span><span class="n">scale</span> <span class="o">*</span> <span class="n">alpha</span>  <span class="c1"># ≈ -1.7581</span>
         <span class="n">q</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rate</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">rate</span> <span class="o">*</span> <span class="p">(</span><span class="n">alpha0</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">q</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha0</span>
+        <span class="c1"># Paper: a = (q + p*alpha&#39;^2)^(-1/2) where q = 1-p and alpha&#39; = alpha0</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">((</span><span class="n">q</span><span class="p">)</span> <span class="o">+</span> <span class="n">rate</span> <span class="o">*</span> <span class="n">alpha0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">a</span> <span class="o">*</span> <span class="n">alpha0</span> <span class="o">*</span> <span class="n">rate</span>
         <span class="n">x_float</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># a * (x * mask + alpha0 * (1 - mask)) + b</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_float</span> <span class="o">*</span> <span class="n">mask</span> <span class="o">+</span> <span class="n">alpha0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mask</span><span class="p">))</span> <span class="o">+</span> <span class="n">b</span>
-        <span class="c1"># For alpha dropout, return the affine transform parameters too</span>
         <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;mask&quot;</span><span class="p">:</span> <span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s2">&quot;alpha0&quot;</span><span class="p">:</span> <span class="n">alpha0</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">}</span></div>
 </div>
 
@@ -560,7 +570,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=3ca669d2"></script>
+</div><script src="../../../_static/documentation_options.js?v=1c17f339"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

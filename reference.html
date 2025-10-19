@@ -17,7 +17,7 @@
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Visualization Gallery" href="visualization_gallery.html"><link rel="prev" title="Technical Deep Dive: Neural Network Diagnostics" href="technical_deep_dive.html">
 
     <link rel="shortcut icon" href="_static/favicon.svg"><!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
-        <title>API Reference - NeuroScope 0.2.1</title>
+        <title>API Reference - NeuroScope 0.2.2</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -226,7 +226,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">NeuroScope 0.2.1</div></a>
+      <a href="index.html"><div class="brand">NeuroScope 0.2.2</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -250,7 +250,7 @@
     <img src="_static/favicon.svg" class="sidebar-logo" alt="NeuroScope" />
     <span class="sidebar-brand-text">
       NeuroScope
-      <div class="sidebar-brand-version">0.2.1</div>
+      <div class="sidebar-brand-version">0.2.2</div>
     </span>
   </a>
 </div><form class="sidebar-search-container" method="get" action="search.html" role="search">
@@ -569,7 +569,7 @@ Defaults to 50.</p></li>
 <span class="sig-name descname"><span class="pre">fit_fast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numerical_check_freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'smart'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_before_training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neuroscope/mlp/mlp.html#MLP.fit_fast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuroscope.MLP.fit_fast" title="Link to this definition">¶</a></dt>
 <dd><p>High-performance training method optimized for fast training.</p>
 <p>Ultra-fast training loop that eliminates statistics collection overhead
-and monitoring bottlenecks. Provides 10-100x speedup over standard fit()
+and monitoring bottlenecks. Provides ~5-10× speedup over standard fit()
 while maintaining identical API and training quality.</p>
 <p>Key Performance Optimizations:
 - Eliminates expensive statistics collection (main bottleneck)
@@ -577,7 +577,7 @@ while maintaining identical API and training quality.</p>
 - Streamlined training loop with only essential operations
 - Configurable evaluation frequency to reduce overhead</p>
 <p>Expected Performance:
-- 10-100x faster than fit() method
+- ~5-10× faster than fit() method
 - 60-80% less memory usage</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2283,7 +2283,7 @@ Defaults to 50.</p></li>
 <span class="sig-name descname"><span class="pre">fit_fast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_every</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numerical_check_freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'smart'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_before_training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neuroscope/mlp/mlp.html#MLP.fit_fast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuroscope.mlp.mlp.MLP.fit_fast" title="Link to this definition">¶</a></dt>
 <dd><p>High-performance training method optimized for fast training.</p>
 <p>Ultra-fast training loop that eliminates statistics collection overhead
-and monitoring bottlenecks. Provides 10-100x speedup over standard fit()
+and monitoring bottlenecks. Provides ~5-10× speedup over standard fit()
 while maintaining identical API and training quality.</p>
 <p>Key Performance Optimizations:
 - Eliminates expensive statistics collection (main bottleneck)
@@ -2291,7 +2291,7 @@ while maintaining identical API and training quality.</p>
 - Streamlined training loop with only essential operations
 - Configurable evaluation frequency to reduce overhead</p>
 <p>Expected Performance:
-- 10-100x faster than fit() method
+- ~5-10× faster than fit() method
 - 60-80% less memory usage</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2607,16 +2607,22 @@ permanently inactive.</p>
 <dt class="sig sig-object py" id="neuroscope.mlp.activations.ActivationFunctions.alpha_dropout_with_mask">
 <em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alpha_dropout_with_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neuroscope/mlp/activations.html#ActivationFunctions.alpha_dropout_with_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuroscope.mlp.activations.ActivationFunctions.alpha_dropout_with_mask" title="Link to this definition">¶</a></dt>
 <dd><p>Alpha dropout that returns both output and mask for backpropagation.</p>
+<p>Based on “Self-Normalizing Neural Networks” (Klambauer et al., 2017).
+Alpha dropout maintains the self-normalizing property of SELU activations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> – Input array</p></li>
-<li><p><strong>rate</strong> – Dropout probability</p></li>
+<li><p><strong>rate</strong> – Dropout probability (p in the paper)</p></li>
 <li><p><strong>training</strong> – Whether in training mode</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(output, mask) where mask is the binary dropout mask</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>(output, mask_dict) where mask_dict contains the binary dropout</dt><dd><p>mask and affine transform parameters for backpropagation</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
@@ -4868,7 +4874,7 @@ Speed automatically adjusts based on epoch count for smooth motion feel.
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=3ca669d2"></script>
+</div><script src="_static/documentation_options.js?v=1c17f339"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
