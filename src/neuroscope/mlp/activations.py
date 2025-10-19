@@ -151,14 +151,17 @@ class ActivationFunctions:
     def alpha_dropout(x, rate=0.5, training=True):
         if not training or rate == 0:
             return x
+        # Constants from SELU
         alpha = 1.6732632423543772848170429916717
-        scale = 1.0507009873554804934193349852946  # lambda
-        alpha0 = -scale * alpha
-        q = 1 - rate  # Keep probability
-        a = (q * (1.0 + rate * (alpha0**2))) ** (-0.5)
-        b = -a * (1.0 - q) * alpha0
+        scale = 1.0507009873554804934193349852946
+        alpha0 = -scale * alpha  # ≈ -1.7581
+        q = 1 - rate
+        # Paper: a = (q + p*alpha'^2)^(-1/2) where q = 1-p and alpha' = alpha0
+        a = ((q) + rate * alpha0**2) ** (-0.5)
+        b = -a * alpha0 * rate
         x_float = x.astype(np.float32, copy=False)
         mask = np.random.binomial(1, q, size=x.shape).astype(np.float32)
+        # a * (x * mask + alpha0 * (1 - mask)) + b
         out = a * (x_float * mask + alpha0 * (1 - mask)) + b
         return out
 
@@ -167,24 +170,31 @@ class ActivationFunctions:
         """
         Alpha dropout that returns both output and mask for backpropagation.
 
+        Based on "Self-Normalizing Neural Networks" (Klambauer et al., 2017).
+        Alpha dropout maintains the self-normalizing property of SELU activations.
+
         Args:
             x: Input array
-            rate: Dropout probability
+            rate: Dropout probability (p in the paper)
             training: Whether in training mode
 
         Returns:
-            tuple: (output, mask) where mask is the binary dropout mask
+            tuple: (output, mask_dict) where mask_dict contains the binary dropout
+                mask and affine transform parameters for backpropagation
         """
         if not training or rate == 0:
             return x, None
+
+        # Constants from SELU
         alpha = 1.6732632423543772848170429916717
         scale = 1.0507009873554804934193349852946
-        alpha0 = -scale * alpha
+        alpha0 = -scale * alpha  # ≈ -1.7581
         q = 1 - rate
-        a = (q * (1.0 + rate * (alpha0**2))) ** (-0.5)
-        b = -a * (1.0 - q) * alpha0
+        # Paper: a = (q + p*alpha'^2)^(-1/2) where q = 1-p and alpha' = alpha0
+        a = ((q) + rate * alpha0**2) ** (-0.5)
+        b = -a * alpha0 * rate
         x_float = x.astype(np.float32, copy=False)
         mask = np.random.binomial(1, q, size=x.shape).astype(np.float32)
+        # a * (x * mask + alpha0 * (1 - mask)) + b
         out = a * (x_float * mask + alpha0 * (1 - mask)) + b
-        # For alpha dropout, return the affine transform parameters too
         return out, {"mask": mask, "a": a, "alpha0": alpha0, "b": b}
