@@ -83,7 +83,7 @@ history = model.fit(X_train, y_train,
                    verbose=True
 )
 
-# Fast training - 10-100x speedup! without monitors
+# Fast training - ~5-10× speedup! without monitors
 history = model.fit_fast(
     X_train, y_train, 
     X_val=X_val, y_val=y_val,

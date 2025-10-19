@@ -4,6 +4,11 @@ All notable changes to NeuroScope will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [0.2.2] - 2025-10-19
+
+This release fixes critical alpha dropout implementation bug and incoporates reimplementation according to official paper Klambauer et al. (2017).
+
 ## [0.2.1] - 2025-10-17
 
 This release fixes three critical gradient computation bugs that affected backpropagation accuracy:
@@ -229,7 +234,7 @@ NeuroScope's first stable release provides a comprehensive framework for neural 
 
 #### High-Performance Training
 - **Standard Training** (`fit()`) - Full diagnostic capabilities with monitoring
-- **Fast Training** (`fit_fast()`) - Optimized for fast training with 10-80x speedup
+- **Fast Training** (`fit_fast()`) - Optimized for fast training with ~5-10× speedup
 - **Batch Processing** - Efficient mini-batch gradient descent
 - **Early Stopping** - Automatic training termination on convergence
 - **Learning Rate Scheduling** - Adaptive learning rate adjustment
@@ -258,7 +263,7 @@ NeuroScope's first stable release provides a comprehensive framework for neural 
 - **Regression** - Linear activation with MSE loss
 
 ### Key Metrics & Performance
-- **Training Speed** - Up to 80x faster with `fit_fast()` mode
+- **Training Speed** - ~5-10× faster with `fit_fast()` mode
 - **Memory Efficiency** - 60-80% memory reduction in fast mode
 - **Cross-Platform** - Windows, macOS, Linux support
 - **Python Compatibility** - Python 3.11+ support

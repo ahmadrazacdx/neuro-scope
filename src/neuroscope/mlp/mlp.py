@@ -943,7 +943,7 @@ class MLP:
         High-performance training method optimized for fast training.
 
         Ultra-fast training loop that eliminates statistics collection overhead
-        and monitoring bottlenecks. Provides 10-100x speedup over standard fit()
+        and monitoring bottlenecks. Provides ~5-10× speedup over standard fit()
         while maintaining identical API and training quality.
 
         Key Performance Optimizations:
@@ -953,7 +953,7 @@ class MLP:
         - Configurable evaluation frequency to reduce overhead
 
         Expected Performance:
-        - 10-100x faster than fit() method
+        - ~5-10× faster than fit() method
         - 60-80% less memory usage
 
         Args:

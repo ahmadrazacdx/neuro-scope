@@ -191,7 +191,7 @@ history = model.fit(
 # ----------------------------------------------------------------------------------------------------
 
 
-# Ultra-fast training - 10-100x speedup!
+# Ultra-fast training - ~5-10× speedup!
 history = model.fit_fast(
     X_train, y_train, X_val, y_val,
     epochs=100, 

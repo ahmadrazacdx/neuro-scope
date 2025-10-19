@@ -36,7 +36,7 @@
 - **Model Persistence**: Complete save/load system with optimizer state preservation
 
 ### High-Performance Training
-- **Ultra-Fast Training**: `fit_fast()` method with 10-80x speedup over standard training
+- **Ultra-Fast Training**: `fit_fast()` method with $\approx$ 5-10× speedup over standard training
 - **Memory Efficient**: 60-80% memory reduction with optimized batch processing
 - **Flexible Performance**: Choose between speed (`fit_fast()`) and diagnostics (`fit()`)
 
@@ -92,7 +92,7 @@ model = MLP([784, 128, 64, 10],
 # Choose your optimizer: "adam", "sgd", "sgdm", "sgdnm", "rmsprop"
 model.compile(optimizer="adam", lr=1e-3)
 
-# Ultra-fast training - 10-100x speedup!
+# Ultra-fast training - ~5-10× speedup!
 history = model.fit_fast(
     X_train, y_train, X_val, y_val,
     epochs=100, 
