@@ -174,39 +174,6 @@ weights, biases = he_init([784, 128, 10])
 | **Ease of Use** | Intuitive | Complex | Complex | Simple |
 | **MLP Focus** | Specialized | General | General | Limited |
 
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/ahmadrazacdx/neuro-scope.git
-cd neuro-scope
-
-# Set up development environment
-make dev
-
-# Run tests
-make test
-
-# Build documentation
-make docs
-```
-
-## License
-
-Distributed under the terms of the [Apache 2.0 license][license],
-NeuroScope is free and open source software.
-
-## Issues & Support
-
-If you encounter any problems:
-- **[File an Issue](https://github.com/ahmadrazacdx/neuro-scope/issues)**: Bug reports and feature requests
-- **[Discussions](https://github.com/ahmadrazacdx/neuro-scope/discussions)**: Questions and community support
-- **[Documentation](https://www.neuroscope.dev/)**: Comprehensive guides and API reference
-
 ## Acknowledgments
 
 We extend our sincere gratitude to the following individuals and works that have profoundly influenced the development of NeuroScope:
