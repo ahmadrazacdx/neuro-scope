@@ -146,7 +146,7 @@ weights, biases = he_init([784, 128, 10])
 
 ## Documentation
 
-- **[Full Documentation](https://www.neuroscope.dev/)**: Complete API reference and guides
+- **[Full Documentation](https://ahmadrazacdx.github.io/neuro-scope/)**: Complete API reference and guides
 - **[Quickstart Guide](https://www.neuroscope.dev/quickstart.html)**: Get up and running in minutes
 - **[API Reference](https://www.neuroscope.dev/reference.html)**: Detailed function and class documentation
 - **[Examples](https://github.com/ahmadrazacdx/neuro-scope/tree/main/examples)**: Jupyter notebooks and scripts
@@ -237,7 +237,6 @@ NeuroScope is free and open source software.
 If you encounter any problems:
 - **[File an Issue](https://github.com/ahmadrazacdx/neuro-scope/issues)**: Bug reports and feature requests
 - **[Discussions](https://github.com/ahmadrazacdx/neuro-scope/discussions)**: Questions and community support
-- **[Documentation](https://www.neuroscope.dev/)**: Comprehensive guides and API reference
 
 <!-- github-only -->
 
